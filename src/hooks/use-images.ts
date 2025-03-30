@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { AirbnbImage } from '@/types/image';
 import { getImages, addImage, updateImage, deleteImage, uploadImage } from '@/services/supabase-images';
@@ -12,26 +13,26 @@ export const useImages = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const loadImages = async () => {
-      try {
-        setLoading(true);
-        const fetchedImages = await getImages();
-        setImages(fetchedImages);
-      } catch (error) {
-        console.error('Error loading images:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to load images from database',
-          variant: 'destructive',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadImages();
+  const loadImages = useCallback(async () => {
+    try {
+      setLoading(true);
+      const fetchedImages = await getImages();
+      setImages(fetchedImages);
+    } catch (error) {
+      console.error('Error loading images:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load images from database',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   }, [toast]);
+
+  useEffect(() => {
+    loadImages();
+  }, [loadImages]);
 
   const handleAddImage = async () => {
     if (!newImageUrl || !newImageAlt) {
@@ -77,19 +78,30 @@ export const useImages = () => {
   const handleAddUploadedImage = async (file: File, alt: string) => {
     try {
       setLoading(true);
-      console.log('Starting upload process for file:', file.name);
+      console.log('Starting upload process for file:', file.name, 'size:', file.size, 'type:', file.type);
       
-      const url = await uploadImage(file);
-      
-      if (!url) {
-        throw new Error('Failed to upload image to storage');
+      let url: string | null;
+      try {
+        url = await uploadImage(file);
+        
+        if (!url) {
+          throw new Error('Failed to upload image to storage');
+        }
+        
+        console.log('File uploaded successfully, URL:', url);
+      } catch (uploadError: any) {
+        console.error('Upload error:', uploadError);
+        toast({
+          title: 'Upload Failed',
+          description: uploadError.message || 'Failed to upload to Supabase storage',
+          variant: 'destructive',
+        });
+        throw uploadError;
       }
-      
-      console.log('File uploaded successfully, URL:', url);
       
       const newImage: AirbnbImage = {
         url,
-        alt,
+        alt: alt || file.name,
       };
       
       console.log('Adding image to database:', newImage);
@@ -263,6 +275,10 @@ export const useImages = () => {
     }
   };
 
+  const refreshImages = () => {
+    loadImages();
+  };
+
   return {
     images,
     loading,
@@ -278,6 +294,7 @@ export const useImages = () => {
     handleRemoveImage,
     handleEditImage,
     handleUpdateImage,
-    handleAddUploadedImage
+    handleAddUploadedImage,
+    refreshImages
   };
 };

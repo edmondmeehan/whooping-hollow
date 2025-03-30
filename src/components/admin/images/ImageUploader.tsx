@@ -66,6 +66,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
       clearInterval(intervalId);
       setUploadProgress(100);
       
+      toast({
+        title: 'Upload initiated',
+        description: 'Your image is being processed...',
+      });
+      
     } catch (error: any) {
       console.error('Error uploading image:', error);
       setUploadError(error.message || 'There was a problem uploading your image');
@@ -82,6 +87,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
       // Reset the file input
       e.target.value = '';
     }
+  };
+
+  const triggerFileInput = () => {
+    document.getElementById('image-upload')?.click();
   };
 
   return (
@@ -138,7 +147,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
           </p>
         </div>
         <div className="flex justify-end">
-          <Button variant="outline" disabled={isUploading}>
+          <Button variant="outline" onClick={triggerFileInput} disabled={isUploading}>
             <Upload className="h-4 w-4 mr-2" />
             {isUploading ? 'Uploading...' : 'Upload Image'}
           </Button>

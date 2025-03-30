@@ -113,10 +113,10 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     const fileName = `${Math.random().toString(36).substring(2, 15)}-${Date.now()}.${fileExt}`;
     const filePath = `properties/${fileName}`;
 
-    console.log('Uploading image to Supabase storage:', filePath);
+    console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
 
     // Upload the file to Supabase storage
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError, data: uploadData } = await supabase.storage
       .from('images')
       .upload(filePath, file, {
         cacheControl: '3600',
@@ -127,6 +127,8 @@ export const uploadImage = async (file: File): Promise<string | null> => {
       console.error('Error uploading image to storage:', uploadError);
       throw uploadError;
     }
+
+    console.log('Upload successful, data:', uploadData);
 
     // Get the public URL
     const { data } = supabase.storage
