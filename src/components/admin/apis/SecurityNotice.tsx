@@ -10,9 +10,10 @@ const SecurityNotice: React.FC = () => {
       </CardHeader>
       <CardContent>
         <p className="text-amber-700 text-sm">
-          For demonstration purposes, API keys are stored in the browser's local storage. 
+          For demonstration purposes, API keys and Cloudinary URL are stored in the browser's local storage. 
           In a production environment, these should be securely stored on a server with proper encryption.
           The Resend API allows you to send up to 100 emails per day on their free tier.
+          Consider connecting to Supabase for more secure API key management.
         </p>
       </CardContent>
     </Card>

@@ -78,5 +78,6 @@ export const getIconForApi = (name: string) => {
   if (name.toLowerCase().includes('payment')) return 'CreditCard';
   if (name.toLowerCase().includes('booking')) return 'CalendarCheck';
   if (name.toLowerCase().includes('resend')) return 'Send';
+  if (name.toLowerCase().includes('cloudinary')) return 'Cloud';
   return 'Lock';
 };

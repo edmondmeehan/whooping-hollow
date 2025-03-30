@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +8,8 @@ import { useApiKeys } from './apis/apiKeyUtils';
 import ApiKeyCard from './apis/ApiKeyCard';
 import AddApiKeyForm from './apis/AddApiKeyForm';
 import SecurityNotice from './apis/SecurityNotice';
+import { cloudinaryConfig } from '@/services/cloudinary-config';
+import CloudinaryUrlForm from './apis/CloudinaryUrlForm';
 
 const AdminApis = () => {
   const { toast } = useToast();
@@ -19,9 +21,24 @@ const AdminApis = () => {
     deleteApiKey, 
     addApiKey 
   } = useApiKeys();
+  
+  const [cloudinaryUrl, setCloudinaryUrl] = useState('');
+
+  useEffect(() => {
+    // Load the Cloudinary URL on component mount
+    const savedUrl = cloudinaryConfig.getCloudinaryUrl();
+    if (savedUrl) {
+      setCloudinaryUrl(savedUrl);
+    }
+  }, []);
 
   const handleSaveApiKeys = () => {
     saveApiKeys();
+    // Also save the Cloudinary URL if it exists
+    if (cloudinaryUrl) {
+      cloudinaryConfig.setCloudinaryUrl(cloudinaryUrl);
+    }
+    
     toast({
       title: "API Keys Saved",
       description: "Your API keys have been securely saved.",
@@ -55,12 +72,27 @@ const AdminApis = () => {
     }
   };
 
+  const handleUpdateCloudinaryUrl = (url: string) => {
+    setCloudinaryUrl(url);
+    toast({
+      title: "Cloudinary URL Updated",
+      description: "Your Cloudinary URL has been updated. Don't forget to save your changes.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Third-Party API Keys</h2>
         <p className="text-muted-foreground">Manage API keys for integration with external services.</p>
       </div>
+
+      <Separator />
+      
+      <CloudinaryUrlForm 
+        cloudinaryUrl={cloudinaryUrl} 
+        onUpdateCloudinaryUrl={handleUpdateCloudinaryUrl} 
+      />
 
       <Separator />
 

@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, ExternalLink, CalendarCheck, CreditCard, Lock, Mail } from 'lucide-react';
+import { Trash2, ExternalLink, CalendarCheck, CreditCard, Lock, Mail, Send, Cloud } from 'lucide-react';
 import { ApiKey } from './apiKeyUtils';
 
 interface ApiKeyCardProps {
@@ -25,6 +25,8 @@ const ApiKeyCard: React.FC<ApiKeyCardProps> = ({
     if (name.toLowerCase().includes('email')) return <Mail className="h-5 w-5" />;
     if (name.toLowerCase().includes('payment')) return <CreditCard className="h-5 w-5" />;
     if (name.toLowerCase().includes('booking')) return <CalendarCheck className="h-5 w-5" />;
+    if (name.toLowerCase().includes('resend')) return <Send className="h-5 w-5" />;
+    if (name.toLowerCase().includes('cloudinary')) return <Cloud className="h-5 w-5" />;
     return <Lock className="h-5 w-5" />;
   };
 
