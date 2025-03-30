@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
 
@@ -12,19 +11,14 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
 
     // Attempt to check connection by making a simple ping query
     try {
-      // Use a simple health check query that doesn't rely on a specific table
-      const { error: pingError } = await supabase.rpc('postgres_version').single();
-      
-      if (pingError) {
-        // If we can't connect or RPC doesn't exist, try a simple select on the existing table as fallback
-        const { error: fallbackError } = await supabase
-          .from('property_images')
-          .select('count(*)', { count: 'exact', head: true });
+      // Use a direct query on property_images table instead of RPC
+      const { error: connectionError } = await supabase
+        .from('property_images')
+        .select('count()', { count: 'exact', head: true });
           
-        if (fallbackError) {
-          console.error('Supabase connection test failed:', fallbackError);
-          throw new Error('Could not connect to Supabase database. Please check your connection.');
-        }
+      if (connectionError) {
+        console.error('Supabase connection test failed:', connectionError);
+        throw new Error('Could not connect to Supabase database. Please check your connection.');
       }
     } catch (connectionError: any) {
       console.error('Supabase connection test failed:', connectionError);
