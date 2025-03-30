@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ImageIcon, PlusIcon, TrashIcon, UploadIcon, Edit } from 'lucide-react';
+import { ImageIcon, PlusIcon, TrashIcon, UploadIcon, Edit, FileText } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { fetchAirbnbImages } from '@/utils/airbnbScraper';
@@ -19,6 +20,7 @@ const AdminImages = () => {
   const [loading, setLoading] = useState(true);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newImageAlt, setNewImageAlt] = useState('');
+  const [multipleUrls, setMultipleUrls] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { toast } = useToast();
 
@@ -68,6 +70,45 @@ const AdminImages = () => {
     });
   };
 
+  const handleAddMultipleImages = () => {
+    if (!multipleUrls.trim()) {
+      toast({
+        title: 'Validation Error',
+        description: 'Please enter at least one URL',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Split input by newlines and filter out empty lines
+    const urlList = multipleUrls.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+
+    if (urlList.length === 0) {
+      toast({
+        title: 'Validation Error',
+        description: 'No valid URLs found',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Create new image objects
+    const newImages = urlList.map((url, index) => ({
+      url,
+      alt: `Property Image ${images.length + index + 1}`
+    }));
+
+    setImages([...images, ...newImages]);
+    setMultipleUrls('');
+
+    toast({
+      title: 'Success',
+      description: `Added ${newImages.length} images successfully`,
+    });
+  };
+
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...images];
     updatedImages.splice(index, 1);
@@ -109,8 +150,13 @@ const AdminImages = () => {
     <div>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Manage Property Images</h2>
-        <Card>
-          <CardContent className="pt-6">
+        
+        {/* Single Image Form */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-lg">Add Single Image</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid md:grid-cols-2 gap-4 mb-4">
               <Input 
                 placeholder="Image URL" 
@@ -135,6 +181,32 @@ const AdminImages = () => {
                   Add Image
                 </Button>
               )}
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Multiple Images Form */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Add Multiple Images</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4">
+              <Textarea 
+                placeholder="Enter one image URL per line" 
+                value={multipleUrls}
+                onChange={(e) => setMultipleUrls(e.target.value)}
+                className="min-h-[120px]"
+              />
+              <p className="text-sm text-muted-foreground mt-2">
+                Enter one URL per line. Descriptions will be auto-generated.
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={handleAddMultipleImages} variant="secondary">
+                <FileText className="h-4 w-4 mr-2" />
+                Add Multiple Images
+              </Button>
             </div>
           </CardContent>
         </Card>
