@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Booking, BookingStatus } from '@/types/booking';
 import StatusBadge from './StatusBadge';
 import StatusSelect from './StatusSelect';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { MessageCircle, User, Calendar, Users, Phone, Mail } from 'lucide-react';
 
 interface BookingDetailsModalProps {
@@ -29,6 +29,18 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
   onStatusChange
 }) => {
   if (!booking) return null;
+
+  // Format dates properly
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM dd, yyyy');
+    } catch (error) {
+      return 'Invalid date';
+    }
+  };
+
+  // Calculate total guests
+  const totalGuests = booking.adults + (booking.children || 0);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -56,7 +68,7 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
             <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
             <div>
               <h3 className="font-medium">Dates</h3>
-              <p>{booking.dates}</p>
+              <p>{formatDate(booking.checkIn)} - {formatDate(booking.checkOut)}</p>
             </div>
           </div>
 
@@ -64,7 +76,7 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
             <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
             <div>
               <h3 className="font-medium">Guests</h3>
-              <p>{booking.guests} {booking.guests === 1 ? 'person' : 'people'}</p>
+              <p>{totalGuests} {totalGuests === 1 ? 'person' : 'people'}</p>
             </div>
           </div>
 
