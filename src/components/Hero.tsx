@@ -1,35 +1,48 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Button } from './ui/button';
 import { getHeroImage } from '@/utils/airbnbScraper';
 import { Skeleton } from './ui/skeleton';
+import { useHeroFeatures } from '@/hooks/use-hero-features';
 
 const Hero = () => {
-  const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null);
+  const { heroFeatures } = useHeroFeatures();
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const listingId = '1314531825053234635'; // This should be configurable
-  const videoUrl = "https://d3ioifgscy1qpn.cloudfront.net/videos/general/footer_video.mov.65e79d1da7050.mp4";
-
+  
+  // Check if we have features and set loading state
   useEffect(() => {
-    const loadHeroImage = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const imageUrl = await getHeroImage(listingId);
-        setHeroImageUrl(imageUrl);
-        console.log("Hero image loaded:", imageUrl);
-      } catch (err) {
-        console.error("Error loading hero image:", err);
-        setError("Failed to load hero image");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadHeroImage();
-  }, [listingId]);
-
+    if (heroFeatures && heroFeatures.length > 0) {
+      setLoading(false);
+    }
+  }, [heroFeatures]);
+  
+  // Function to cycle to the next feature
+  const cycleFeature = useCallback(() => {
+    if (heroFeatures.length <= 1) return;
+    setCurrentFeatureIndex(prevIndex => 
+      prevIndex >= heroFeatures.length - 1 ? 0 : prevIndex + 1
+    );
+  }, [heroFeatures.length]);
+  
+  // Auto cycle features every 10 seconds
+  useEffect(() => {
+    if (heroFeatures.length <= 1) return;
+    
+    const intervalId = setInterval(cycleFeature, 10000);
+    return () => clearInterval(intervalId);
+  }, [cycleFeature, heroFeatures.length]);
+  
+  // Get current feature
+  const currentFeature = heroFeatures[currentFeatureIndex] || {
+    id: "",
+    title: "",
+    subtitle: "",
+    imageUrl: "",
+    videoUrl: ""
+  };
+  
   // Default linear gradient while image loads
   const defaultStyle = {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))`,
@@ -38,8 +51,8 @@ const Hero = () => {
   };
   
   // Hero style with loaded image (as fallback)
-  const heroBackgroundStyle = heroImageUrl ? {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${heroImageUrl}')`,
+  const heroBackgroundStyle = currentFeature.imageUrl ? {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${currentFeature.imageUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   } : defaultStyle;
@@ -49,21 +62,29 @@ const Hero = () => {
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full z-0">
         <div className="absolute inset-0 bg-black/40 z-10"></div>
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          poster={heroImageUrl || undefined}
-        >
-          <source src={videoUrl} type="video/mp4" />
-          {/* Fallback to static image if video fails */}
+        {currentFeature.videoUrl ? (
+          <video
+            key={currentFeature.id} // Key to force recreation when feature changes
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            poster={currentFeature.imageUrl || undefined}
+          >
+            <source src={currentFeature.videoUrl} type="video/mp4" />
+            {/* Fallback to static image if video fails */}
+            <div 
+              className="absolute inset-0 w-full h-full" 
+              style={heroBackgroundStyle}
+            ></div>
+          </video>
+        ) : (
           <div 
             className="absolute inset-0 w-full h-full" 
             style={heroBackgroundStyle}
           ></div>
-        </video>
+        )}
       </div>
       
       <div className="container-custom px-4 py-32 md:py-48 relative z-20">
@@ -91,10 +112,10 @@ const Hero = () => {
         ) : (
           <>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6">
-              Whooping Hollow Haven
+              {currentFeature.title}
             </h1>
             <p className="text-white text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto">
-              A luxurious retreat in the heart of East Hampton
+              {currentFeature.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button className="bg-hamptons-accent text-hamptons-dark text-lg font-medium hover:bg-hamptons-accent/90 px-8 py-6">
@@ -116,6 +137,22 @@ const Hero = () => {
                 </a>
               </Button>
             </div>
+            
+            {/* Feature Indicators (only show if multiple features) */}
+            {heroFeatures.length > 1 && (
+              <div className="flex justify-center mt-8 gap-2">
+                {heroFeatures.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentFeatureIndex(index)}
+                    className={`h-2 w-8 rounded-full transition-all duration-300 ${
+                      index === currentFeatureIndex ? 'bg-white' : 'bg-white/40'
+                    }`}
+                    aria-label={`Go to feature ${index + 1}`}
+                  ></button>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
