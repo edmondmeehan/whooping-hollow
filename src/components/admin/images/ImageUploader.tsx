@@ -71,6 +71,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
         description: 'Your image is being processed...',
       });
       
+      // Reset after a delay to provide visual feedback
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(0);
+      }, 1500);
+      
     } catch (error: any) {
       console.error('Error uploading image:', error);
       setUploadError(error.message || 'There was a problem uploading your image');
@@ -79,11 +85,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
         description: error.message || 'There was a problem uploading your image',
         variant: 'destructive',
       });
+      setIsUploading(false);
+      setUploadProgress(0);
     } finally {
-      setTimeout(() => {
-        setIsUploading(false);
-        setUploadProgress(0);
-      }, 1000);
       // Reset the file input
       e.target.value = '';
     }

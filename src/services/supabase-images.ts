@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
 
@@ -11,7 +12,7 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
 
     // Attempt to check connection by making a simple ping query
     try {
-      // Simple select query that is type-safe
+      // Simple select query that is type-safe and minimal
       const { error: connectionError } = await supabase
         .from('property_images')
         .select('id')

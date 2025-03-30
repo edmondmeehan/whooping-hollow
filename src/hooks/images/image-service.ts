@@ -24,7 +24,9 @@ export const useImageService = () => {
 
   const fetchImages = async () => {
     try {
+      console.log('Attempting to fetch images from Supabase');
       const fetchedImages = await getImages();
+      console.log('Successfully fetched images:', fetchedImages);
       return fetchedImages;
     } catch (error: any) {
       console.error('Error loading images:', error);
@@ -41,6 +43,7 @@ export const useImageService = () => {
 
   const createImage = async (newImage: AirbnbImage) => {
     try {
+      console.log('Attempting to create image in Supabase:', newImage);
       const addedImage = await addImage(newImage);
       if (addedImage) {
         toast({
