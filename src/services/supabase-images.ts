@@ -115,6 +115,18 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
 
+    // Sign in anonymously to allow uploads with the RLS policy
+    // This is a workaround since the admin panel uses simple password authentication
+    // In a production app, you would use proper Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
+    
+    if (authError) {
+      console.error('Error signing in anonymously:', authError);
+      throw new Error(`Authentication error: ${authError.message}`);
+    }
+    
+    console.log('Anonymous authentication successful:', authData);
+
     // Upload the file to Supabase storage
     const { error: uploadError, data: uploadData } = await supabase.storage
       .from('images')
