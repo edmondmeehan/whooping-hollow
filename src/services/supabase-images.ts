@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
 
@@ -11,10 +12,10 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
 
     // Attempt to check connection by making a simple ping query
     try {
-      // Use a direct query on property_images table instead of RPC
+      // Use a simple count query that is type-safe
       const { error: connectionError } = await supabase
         .from('property_images')
-        .select('count()', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true });
           
       if (connectionError) {
         console.error('Supabase connection test failed:', connectionError);
