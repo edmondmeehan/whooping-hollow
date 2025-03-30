@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
 
@@ -148,22 +147,7 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
 
-    // Check if storage bucket exists
-    const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
-    
-    if (bucketsError) {
-      console.error('Error checking storage buckets:', bucketsError);
-      throw new Error('Could not access Supabase storage. Please check your Supabase setup and permissions.');
-    }
-    
-    const imagesBucketExists = buckets?.some(bucket => bucket.name === 'images');
-    
-    if (!imagesBucketExists) {
-      console.error('The "images" storage bucket does not exist');
-      throw new Error('The "images" storage bucket does not exist in Supabase. Please create it in the Supabase dashboard.');
-    }
-
-    // Upload the file to Supabase storage with the public policy we created
+    // Upload the file to Supabase storage
     const { error: uploadError, data: uploadData } = await supabase.storage
       .from('images')
       .upload(filePath, file, {
@@ -173,9 +157,16 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     if (uploadError) {
       console.error('Error uploading image to storage:', uploadError);
+      
+      // Provide more specific error messages based on error type
+      if (uploadError.message.includes('No such bucket')) {
+        throw new Error('The "images" storage bucket does not exist in Supabase. Please create it in the Supabase dashboard.');
+      }
+      
       if (uploadError.message.includes('permission') || uploadError.message.includes('access')) {
         throw new Error('Permission denied: Check your storage bucket policies in Supabase.');
       }
+      
       throw uploadError;
     }
 
