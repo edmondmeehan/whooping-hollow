@@ -7,17 +7,21 @@ import { AirbnbImage } from '@/types/image';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Validate that we have the required credentials
+// Log warning but don't throw error immediately - we'll handle this in the service methods
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase credentials. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
-  // Throw a more descriptive error during initialization
-  throw new Error('Supabase credentials are missing. Please check your environment variables.');
+  console.warn('Missing Supabase credentials. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create client only if credentials are available
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 export const getImages = async (): Promise<AirbnbImage[]> => {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      throw new Error('Supabase credentials are missing. Please check your environment variables.');
+    }
+
     const { data, error } = await supabase
       .from('property_images')
       .select('*')
@@ -37,6 +41,11 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
 
 export const addImage = async (image: AirbnbImage): Promise<AirbnbImage | null> => {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      throw new Error('Supabase credentials are missing. Please check your environment variables.');
+    }
+
     const { data, error } = await supabase
       .from('property_images')
       .insert([{ url: image.url, alt: image.alt }])
@@ -57,6 +66,11 @@ export const addImage = async (image: AirbnbImage): Promise<AirbnbImage | null> 
 
 export const updateImage = async (id: number, image: AirbnbImage): Promise<AirbnbImage | null> => {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      throw new Error('Supabase credentials are missing. Please check your environment variables.');
+    }
+
     const { data, error } = await supabase
       .from('property_images')
       .update({ url: image.url, alt: image.alt })
@@ -78,6 +92,11 @@ export const updateImage = async (id: number, image: AirbnbImage): Promise<Airbn
 
 export const deleteImage = async (id: number): Promise<boolean> => {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      throw new Error('Supabase credentials are missing. Please check your environment variables.');
+    }
+
     const { error } = await supabase
       .from('property_images')
       .delete()
@@ -97,6 +116,11 @@ export const deleteImage = async (id: number): Promise<boolean> => {
 
 export const uploadImage = async (file: File): Promise<string | null> => {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      throw new Error('Supabase credentials are missing. Please check your environment variables.');
+    }
+
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
     const filePath = `properties/${fileName}`;

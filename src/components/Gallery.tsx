@@ -5,9 +5,11 @@ import GalleryCarousel from './gallery/GalleryCarousel';
 import GalleryGrid from './gallery/GalleryGrid';
 import GalleryLoading from './gallery/GalleryLoading';
 import GalleryError from './gallery/GalleryError';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Gallery = () => {
-  const { images, loading, error } = useGalleryImages();
+  const { images, loading, error, usingDemoImages } = useGalleryImages();
 
   return (
     <section className="section-padding bg-gray-50" id="gallery">
@@ -23,10 +25,19 @@ const Gallery = () => {
             </p>
           )}
           
-          {!loading && !error && (
+          {!loading && !error && !usingDemoImages && (
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Take a visual tour of our beautiful Whooping Hollow property.
             </p>
+          )}
+
+          {usingDemoImages && (
+            <Alert variant="warning" className="max-w-3xl mx-auto mb-6 mt-4 bg-amber-50 border-amber-200">
+              <AlertCircle className="h-4 w-4 text-amber-600" />
+              <AlertDescription className="text-amber-800">
+                Demo Mode: Showing sample images. To see your own images, configure Supabase in the admin panel.
+              </AlertDescription>
+            </Alert>
           )}
         </div>
 
@@ -41,13 +52,13 @@ const Gallery = () => {
           </>
         )}
 
-        {error && (
+        {error && !usingDemoImages && (
           <div className="text-center">
             <GalleryError error={error} />
           </div>
         )}
 
-        {!loading && !error && (
+        {!loading && (usingDemoImages || !error) && (
           <>
             {/* Mobile carousel for smaller screens */}
             <div className="md:hidden">
