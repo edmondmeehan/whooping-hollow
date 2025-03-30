@@ -54,7 +54,7 @@ const Footer = () => {
 
           <div>
             <h3 className="text-xl font-serif font-medium mb-4">Contact</h3>
-            <p className="text-gray-300 mb-2">26 Whooping Hollow</p>
+            <p className="text-gray-300 mb-2">Whooping Hollow</p>
             <p className="text-gray-300 mb-2">East Hampton, NY</p>
             <p className="text-gray-300 mb-4">United States</p>
             <a 

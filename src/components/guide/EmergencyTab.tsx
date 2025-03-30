@@ -18,7 +18,7 @@ const EmergencyTab = () => {
           <div className="bg-red-50 p-4 rounded-lg border border-red-100">
             <h3 className="font-medium text-red-800 mb-2">In case of emergency, dial 911</h3>
             <p className="text-sm text-red-700">
-              Our exact address is: 26 Whooping Hollow Road, East Hampton, NY
+              Our exact address is: [Address available in guest guide]
             </p>
           </div>
           
@@ -156,7 +156,7 @@ const EmergencyTab = () => {
             <h3 className="font-medium mb-2">In Case of Medical Emergency</h3>
             <ol className="list-decimal pl-6 space-y-1">
               <li>Call 911 immediately</li>
-              <li>Provide the address: 26 Whooping Hollow Road, East Hampton, NY</li>
+              <li>Provide the property address (available in the guest guide)</li>
               <li>Follow dispatcher instructions until help arrives</li>
               <li>If possible, contact the property owner or manager</li>
             </ol>
