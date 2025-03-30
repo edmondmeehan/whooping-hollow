@@ -144,11 +144,11 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     // Create a unique file name
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random().toString(36).substring(2, 15)}-${Date.now()}.${fileExt}`;
-    const filePath = `properties/${fileName}`;
+    const filePath = `${fileName}`;  // Simplified path without subfolder
 
     console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
 
-    // Check if the images bucket exists
+    // First, explicitly check if the bucket exists and try to create it if it doesn't
     try {
       const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
       
@@ -157,11 +157,13 @@ export const uploadImage = async (file: File): Promise<string | null> => {
         throw new Error('Could not access Supabase storage. Please check your Supabase setup and permissions.');
       }
       
+      console.log('Available buckets:', buckets?.map(b => b.name).join(', ') || 'none');
+      
       const imagesBucketExists = buckets?.some(bucket => bucket.name === 'images');
       
       if (!imagesBucketExists) {
-        console.error('The "images" storage bucket does not exist');
-        throw new Error('The "images" storage bucket does not exist in Supabase. Please create it in the Supabase dashboard.');
+        console.error('The "images" storage bucket does not exist in Supabase');
+        throw new Error('The "images" storage bucket does not exist in Supabase. Please verify it was created successfully in your SQL migration.');
       }
       
       console.log('Images bucket exists, proceeding with upload');
@@ -171,6 +173,7 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     }
 
     // Upload the file to Supabase storage
+    console.log('Attempting to upload file to bucket "images"');
     const { error: uploadError, data: uploadData } = await supabase.storage
       .from('images')
       .upload(filePath, file, {
@@ -180,10 +183,11 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     if (uploadError) {
       console.error('Error uploading image to storage:', uploadError);
+      console.error('Error code:', uploadError.code, 'Error message:', uploadError.message);
       
       // Provide more specific error messages based on error type
-      if (uploadError.message.includes('No such bucket')) {
-        throw new Error('The "images" storage bucket does not exist in Supabase. Please create it in the Supabase dashboard.');
+      if (uploadError.message.includes('No such bucket') || uploadError.message.includes('not found')) {
+        throw new Error('The "images" storage bucket could not be found. Please verify it was created correctly in Supabase.');
       }
       
       if (uploadError.message.includes('permission') || uploadError.message.includes('access')) {
