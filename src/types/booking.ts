@@ -6,8 +6,10 @@ export interface Booking {
   name: string;
   email: string;
   phone: string;
-  dates: string;
-  guests: number;
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  children?: number;
   status: BookingStatus;
   message?: string;
   created_at?: string;

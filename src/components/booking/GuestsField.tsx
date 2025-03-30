@@ -13,24 +13,24 @@ const GuestsField: React.FC<GuestsFieldProps> = ({ form }) => {
   return (
     <FormField
       control={form.control}
-      name="guests"
+      name="adults"
       rules={{ required: "Number of guests is required" }}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Number of Guests</FormLabel>
+          <FormLabel>Number of Adults</FormLabel>
           <Select 
-            onValueChange={field.onChange} 
-            defaultValue={field.value}
+            onValueChange={(value) => field.onChange(parseInt(value))} 
+            defaultValue={field.value?.toString()}
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select number of guests" />
+                <SelectValue placeholder="Select number of adults" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                 <SelectItem key={num} value={num.toString()}>
-                  {num} {num === 1 ? 'guest' : 'guests'}
+                  {num} {num === 1 ? 'adult' : 'adults'}
                 </SelectItem>
               ))}
             </SelectContent>

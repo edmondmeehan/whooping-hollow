@@ -11,23 +11,23 @@ interface LocationFieldProps {
 }
 
 const LocationField: React.FC<LocationFieldProps> = ({ form }) => {
-  const [selectedLocation, setSelectedLocation] = useState<string>(form.getValues().location || 'montauk');
+  const [selectedLocation, setSelectedLocation] = useState<string>(form.getValues().property || 'whooping_hollow');
 
   const handleLocationChange = (value: string) => {
-    form.setValue('location', value as 'montauk' | 'nashville');
+    form.setValue('property', value as any);
     setSelectedLocation(value);
   };
 
   // Initialize with the form's default value
   useEffect(() => {
-    setSelectedLocation(form.getValues().location);
+    setSelectedLocation(form.getValues().property);
   }, [form]);
 
   return (
     <div className="space-y-2">
       <FormField
         control={form.control}
-        name="location"
+        name="property"
         rules={{ required: "Please select a location" }}
         render={({ field }) => (
           <FormItem>
@@ -44,8 +44,9 @@ const LocationField: React.FC<LocationFieldProps> = ({ form }) => {
                   <SelectValue placeholder="Select a location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="montauk">Whooping Hollow Haven (Montauk, NY)</SelectItem>
-                  <SelectItem value="nashville">Nashville Properties</SelectItem>
+                  <SelectItem value="whooping_hollow">Whooping Hollow Haven (Montauk, NY)</SelectItem>
+                  <SelectItem value="nashville_downtown">Nashville Downtown</SelectItem>
+                  <SelectItem value="nashville_music_row">Nashville Music Row</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>
@@ -54,7 +55,7 @@ const LocationField: React.FC<LocationFieldProps> = ({ form }) => {
         )}
       />
       
-      {selectedLocation === 'nashville' && <NashvilleProperties />}
+      {selectedLocation !== 'whooping_hollow' && <NashvilleProperties />}
     </div>
   );
 };

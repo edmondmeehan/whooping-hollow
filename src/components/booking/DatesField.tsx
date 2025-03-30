@@ -16,54 +16,92 @@ interface DatesFieldProps {
 
 const DatesField: React.FC<DatesFieldProps> = ({ form }) => {
   return (
-    <FormField
-      control={form.control}
-      name="dates"
-      rules={{ required: "Please select your stay dates" }}
-      render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel>Stay Dates</FormLabel>
-          <Popover>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {field.value?.from ? (
-                    field.value.to ? (
-                      <>
-                        {format(field.value.from, "LLL dd, y")} -{" "}
-                        {format(field.value.to, "LLL dd, y")}
-                      </>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <FormField
+        control={form.control}
+        name="checkIn"
+        rules={{ required: "Check-in date is required" }}
+        render={({ field }) => (
+          <FormItem className="flex flex-col">
+            <FormLabel>Check-in Date</FormLabel>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value ? (
+                      format(field.value, "LLL dd, y")
                     ) : (
-                      format(field.value.from, "LLL dd, y")
-                    )
-                  ) : (
-                    <span>Select your stay dates</span>
-                  )}
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={field.value?.from}
-                selected={field.value}
-                onSelect={field.onChange}
-                numberOfMonths={2}
-              />
-            </PopoverContent>
-          </Popover>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+                      <span>Select check-in date</span>
+                    )}
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  initialFocus
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  disabled={(date) => date < new Date()}
+                />
+              </PopoverContent>
+            </Popover>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      
+      <FormField
+        control={form.control}
+        name="checkOut"
+        rules={{ required: "Check-out date is required" }}
+        render={({ field }) => (
+          <FormItem className="flex flex-col">
+            <FormLabel>Check-out Date</FormLabel>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value ? (
+                      format(field.value, "LLL dd, y")
+                    ) : (
+                      <span>Select check-out date</span>
+                    )}
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  initialFocus
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  disabled={(date) => {
+                    const checkIn = form.getValues().checkIn;
+                    return date < (checkIn ? new Date(checkIn) : new Date());
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
   );
 };
 

@@ -5,7 +5,7 @@ import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { BookingFormValues } from '@/types/bookingForm';
+import { BookingFormValues, BookingFormData } from '@/types/bookingForm';
 import { sendBookingConfirmation, sendAdminNotification } from '@/utils/emailUtils';
 
 // Import form field components
@@ -24,8 +24,9 @@ const BookingForm: React.FC = () => {
       lastName: '',
       email: '',
       phone: '',
-      location: 'montauk',
-      guests: '2',
+      property: 'whooping_hollow',
+      adults: 2,
+      children: 0,
       specialRequests: ''
     }
   });
@@ -44,12 +45,27 @@ const BookingForm: React.FC = () => {
         return;
       }
       
+      // Convert BookingFormValues to BookingFormData format for email utils
+      const emailData: BookingFormData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        location: data.property,
+        dates: { 
+          from: data.checkIn,
+          to: data.checkOut
+        },
+        guests: String(data.adults + (data.children || 0)),
+        specialRequests: data.specialRequests
+      };
+      
       // Send confirmation email to guest
-      const emailSent = await sendBookingConfirmation(data);
+      const emailSent = await sendBookingConfirmation(emailData);
       
       if (emailSent) {
         // Send notification to admin
-        await sendAdminNotification(data);
+        await sendAdminNotification(emailData);
         
         toast.success('Booking request submitted successfully!', {
           description: 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'

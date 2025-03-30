@@ -62,8 +62,9 @@ const BookingTable: React.FC<BookingTableProps> = ({
                 <TableCell>
                   <StatusSelect
                     currentStatus={booking.status}
-                    onStatusChange={(newStatus) => {
-                      onStatusChange(booking.id, newStatus);
+                    bookingId={booking.id}
+                    onStatusChange={(bookingId, newStatus) => {
+                      onStatusChange(bookingId, newStatus);
                       // Stop propagation to prevent opening the modal
                       event?.stopPropagation();
                     }}

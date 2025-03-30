@@ -7,7 +7,7 @@ import { cloudinaryConfig } from '@/services/cloudinary-config';
  */
 export const simulateCloudinaryUpload = async (
   file: File, 
-  onProgress: (progress: number) => void
+  onProgress: React.Dispatch<React.SetStateAction<number>>
 ): Promise<string> => {
   // Simulate network delay and progress
   const intervalId = setInterval(() => {

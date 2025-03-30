@@ -20,7 +20,8 @@ export const bookingFormSchema = z.object({
   }),
   adults: z.number().min(1, "At least 1 adult is required"),
   children: z.number().min(0).optional(),
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  firstName: z.string().min(2, "First name must be at least 2 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   specialRequests: z.string().optional(),
@@ -29,3 +30,15 @@ export const bookingFormSchema = z.object({
 export type BookingFormValues = z.infer<typeof bookingFormSchema> & {
   status?: BookingStatus;
 };
+
+// Add this type to match with emailUtils.ts
+export interface BookingFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  location: string;
+  dates: { from: Date; to?: Date };
+  guests: string;
+  specialRequests?: string;
+}
