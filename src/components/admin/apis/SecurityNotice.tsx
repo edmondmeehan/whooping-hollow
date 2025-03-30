@@ -12,6 +12,7 @@ const SecurityNotice: React.FC = () => {
         <p className="text-amber-700 text-sm">
           For demonstration purposes, API keys are stored in the browser's local storage. 
           In a production environment, these should be securely stored on a server with proper encryption.
+          The Resend API allows you to send up to 100 emails per day on their free tier.
         </p>
       </CardContent>
     </Card>

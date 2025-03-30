@@ -15,7 +15,8 @@ export const useApiKeys = () => {
       { id: '1', name: 'Airbnb API', key: '', isVisible: false },
       { id: '2', name: 'Email Service', key: '', isVisible: false },
       { id: '3', name: 'Payment Gateway', key: '', isVisible: false },
-      { id: '4', name: 'Booking System', key: '', isVisible: false }
+      { id: '4', name: 'Booking System', key: '', isVisible: false },
+      { id: '5', name: 'Resend API', key: '', isVisible: false }
     ];
   });
 
@@ -76,5 +77,6 @@ export const getIconForApi = (name: string) => {
   if (name.toLowerCase().includes('email')) return 'Mail';
   if (name.toLowerCase().includes('payment')) return 'CreditCard';
   if (name.toLowerCase().includes('booking')) return 'CalendarCheck';
+  if (name.toLowerCase().includes('resend')) return 'Send';
   return 'Lock';
 };

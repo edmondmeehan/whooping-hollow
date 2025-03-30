@@ -1,8 +1,7 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Users, MapPin } from 'lucide-react';
+import { Calendar as CalendarIcon, Users } from 'lucide-react';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { sendBookingConfirmation, sendAdminNotification } from '@/utils/emailUtils';
 
 type PropertyLocation = "montauk" | "nashville";
 
@@ -30,6 +30,7 @@ interface BookingFormValues {
 }
 
 const BookDirect = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<BookingFormValues>({
     defaultValues: {
       firstName: '',
@@ -42,16 +43,46 @@ const BookDirect = () => {
     }
   });
 
-  const onSubmit = (data: BookingFormValues) => {
-    console.log('Form submitted:', data);
+  const onSubmit = async (data: BookingFormValues) => {
+    setIsSubmitting(true);
     
-    // In a real app, you would send this data to your server
-    // For now, we'll just show a success toast
-    toast.success('Booking request submitted successfully!', {
-      description: 'We will contact you shortly with your special discount.'
-    });
-    
-    form.reset();
+    try {
+      console.log('Form submitted:', data);
+      
+      // Validate email format
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(data.email)) {
+        toast.error('Please enter a valid email address');
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Send confirmation email to guest
+      const emailSent = await sendBookingConfirmation(data);
+      
+      if (emailSent) {
+        // Send notification to admin
+        await sendAdminNotification(data);
+        
+        toast.success('Booking request submitted successfully!', {
+          description: 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
+        });
+        
+        form.reset();
+      } else {
+        // Email failed but we'll still process the booking
+        toast.success('Booking request submitted', {
+          description: 'Your request was received, but there was an issue sending the confirmation email. We\'ll contact you soon.'
+        });
+      }
+    } catch (error) {
+      console.error('Error processing booking:', error);
+      toast.error('There was a problem processing your booking request', {
+        description: 'Please try again later or contact us directly.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -264,7 +295,9 @@ const BookDirect = () => {
                   )}
                 />
                 
-                <Button type="submit" className="w-full">Submit Booking Request</Button>
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit Booking Request'}
+                </Button>
               </form>
             </Form>
           </Card>
