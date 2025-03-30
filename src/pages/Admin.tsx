@@ -7,7 +7,8 @@ import {
   BookIcon,
   HomeIcon,
   Link2Icon,
-  LayoutIcon
+  LayoutIcon,
+  Shield
 } from 'lucide-react';
 
 import AdminNavbar from '@/components/admin/AdminNavbar';
@@ -19,10 +20,49 @@ import AdminApis from '@/components/admin/AdminApis';
 import AdminHero from '@/components/admin/AdminHero';
 import AdminLogin from '@/components/admin/AdminLogin';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useNavigate } from 'react-router-dom';
+
+const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [lastActivity, setLastActivity] = useState(Date.now());
   const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  // Handle user activity 
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
+    const resetTimer = () => {
+      setLastActivity(Date.now());
+    };
+    
+    // Attach event listeners to track user activity
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('keypress', resetTimer);
+    window.addEventListener('click', resetTimer);
+    window.addEventListener('scroll', resetTimer);
+    
+    // Check for inactivity
+    const interval = setInterval(() => {
+      const now = Date.now();
+      if (now - lastActivity > INACTIVITY_TIMEOUT) {
+        // Log out due to inactivity
+        handleLogout(true);
+      }
+    }, 60000); // Check every minute
+    
+    return () => {
+      // Clean up event listeners
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keypress', resetTimer);
+      window.removeEventListener('click', resetTimer);
+      window.removeEventListener('scroll', resetTimer);
+      clearInterval(interval);
+    };
+  }, [isAuthenticated, lastActivity]);
   
   useEffect(() => {
     // Check for existing admin session on component mount
@@ -34,6 +74,10 @@ const Admin = () => {
       // If session hasn't expired, login automatically
       if (expiryTime > new Date()) {
         setIsAuthenticated(true);
+        setLastActivity(Date.now());
+      } else {
+        // Clear expired session
+        localStorage.removeItem('adminSession');
       }
     }
   }, []);
@@ -43,6 +87,7 @@ const Admin = () => {
     // In a real app, this should be replaced with proper authentication
     if (password === 'admin123') {
       setIsAuthenticated(true);
+      setLastActivity(Date.now());
       toast({
         title: "Login successful",
         description: "Welcome to the admin area",
@@ -56,13 +101,25 @@ const Admin = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = (isInactivity = false) => {
     localStorage.removeItem('adminSession');
     setIsAuthenticated(false);
-    toast({
-      title: "Logged out",
-      description: "You have been logged out of the admin area",
-    });
+    
+    if (isInactivity) {
+      toast({
+        title: "Session expired",
+        description: "You have been logged out due to inactivity",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Logged out",
+        description: "You have been logged out of the admin area",
+      });
+    }
+    
+    // Redirect to home page after logout
+    navigate('/');
   };
 
   if (!isAuthenticated) {
@@ -71,9 +128,21 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminNavbar onLogout={handleLogout} />
+      <AdminNavbar onLogout={() => handleLogout(false)} />
       <div className="container-custom py-8">
-        <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+          <div className="flex items-center bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm">
+            <Shield className="h-4 w-4 mr-1" />
+            <span>Secure Admin Area</span>
+          </div>
+        </div>
+        
+        <Alert className="mb-6 bg-blue-50 border-blue-200">
+          <AlertDescription className="text-blue-700">
+            Your session will expire after 15 minutes of inactivity. Any changes will be lost if not saved.
+          </AlertDescription>
+        </Alert>
         
         <Tabs defaultValue="images" className="w-full">
           <TabsList className="grid grid-cols-6 mb-8">

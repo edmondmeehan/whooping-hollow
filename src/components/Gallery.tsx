@@ -69,12 +69,6 @@ const Gallery = () => {
             <div className="hidden md:block">
               <GalleryGrid images={images} />
             </div>
-
-            <div className="mt-12 text-center">
-              <p className="text-gray-600">
-                Manage these images in the <a href="/admin" className="text-coastal-600 hover:underline">Admin Panel</a>.
-              </p>
-            </div>
           </>
         )}
       </div>

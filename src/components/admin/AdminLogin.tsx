@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { LockIcon } from 'lucide-react';
+import { LockIcon, ShieldCheck } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface AdminLoginProps {
   onLogin: (password: string) => void;
@@ -11,9 +12,57 @@ interface AdminLoginProps {
 
 const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [password, setPassword] = useState('');
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
   
+  // Check for existing lockout
   useEffect(() => {
-    // Check for existing admin session
+    const storedLockout = localStorage.getItem('adminLockout');
+    if (storedLockout) {
+      const lockoutData = JSON.parse(storedLockout);
+      const currentTime = new Date().getTime();
+      const expiryTime = lockoutData.expiry;
+      
+      if (currentTime < expiryTime) {
+        setIsLocked(true);
+        setLockoutTime(expiryTime);
+        setTimeRemaining(Math.ceil((expiryTime - currentTime) / 1000));
+      } else {
+        // Clear expired lockout
+        localStorage.removeItem('adminLockout');
+      }
+    }
+    
+    // Load failed attempts
+    const storedAttempts = localStorage.getItem('adminFailedAttempts');
+    if (storedAttempts) {
+      setFailedAttempts(parseInt(storedAttempts));
+    }
+  }, []);
+  
+  // Update countdown timer
+  useEffect(() => {
+    if (isLocked && timeRemaining > 0) {
+      const timer = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setIsLocked(false);
+            localStorage.removeItem('adminLockout');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    }
+  }, [isLocked, timeRemaining]);
+  
+  // Check for existing admin session
+  useEffect(() => {
     const adminSession = localStorage.getItem('adminSession');
     if (adminSession) {
       const sessionData = JSON.parse(adminSession);
@@ -32,18 +81,53 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Set admin session with 60 minute expiry
+    if (isLocked) return;
+    
+    // Check password
     if (password === 'admin123') {
+      // Reset failed attempts on successful login
+      setFailedAttempts(0);
+      localStorage.setItem('adminFailedAttempts', '0');
+      
+      // Set admin session with 30 minute expiry (reduced from 60 minutes)
       const expiry = new Date();
-      expiry.setMinutes(expiry.getMinutes() + 60);
+      expiry.setMinutes(expiry.getMinutes() + 30);
       
       localStorage.setItem('adminSession', JSON.stringify({
         password,
         expiry: expiry.toISOString()
       }));
+      
+      onLogin(password);
+    } else {
+      // Increment failed attempts
+      const newFailedAttempts = failedAttempts + 1;
+      setFailedAttempts(newFailedAttempts);
+      localStorage.setItem('adminFailedAttempts', newFailedAttempts.toString());
+      
+      // Lock account after 3 failed attempts
+      if (newFailedAttempts >= 3) {
+        const lockoutDuration = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const expiryTime = new Date().getTime() + lockoutDuration;
+        
+        setIsLocked(true);
+        setLockoutTime(expiryTime);
+        setTimeRemaining(Math.ceil(lockoutDuration / 1000));
+        
+        localStorage.setItem('adminLockout', JSON.stringify({
+          expiry: expiryTime
+        }));
+      }
     }
     
-    onLogin(password);
+    // Clear password input
+    setPassword('');
+  };
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   return (
@@ -52,7 +136,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         <CardHeader>
           <div className="flex justify-center mb-4">
             <div className="bg-hamptons-accent/10 p-3 rounded-full">
-              <LockIcon className="h-6 w-6 text-hamptons-accent" />
+              <ShieldCheck className="h-6 w-6 text-hamptons-accent" />
             </div>
           </div>
           <CardTitle className="text-center text-2xl">Admin Login</CardTitle>
@@ -63,12 +147,30 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <div className="space-y-4">
+              {isLocked && (
+                <Alert variant="destructive" className="mb-4">
+                  <LockIcon className="h-4 w-4" />
+                  <AlertDescription>
+                    Too many failed attempts. Please try again in {formatTime(timeRemaining)}.
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              {!isLocked && failedAttempts > 0 && (
+                <Alert variant="warning" className="mb-4">
+                  <AlertDescription>
+                    Incorrect password. Attempts remaining: {3 - failedAttempts}.
+                  </AlertDescription>
+                </Alert>
+              )}
+              
               <Input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="text-center"
+                disabled={isLocked}
               />
               <p className="text-xs text-muted-foreground text-center">
                 For demo purposes, use: admin123
@@ -76,8 +178,12 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90">
-              Login
+            <Button 
+              type="submit" 
+              className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90"
+              disabled={isLocked}
+            >
+              {isLocked ? `Locked (${formatTime(timeRemaining)})` : 'Login'}
             </Button>
           </CardFooter>
         </form>
