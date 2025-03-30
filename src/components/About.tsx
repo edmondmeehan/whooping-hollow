@@ -1,8 +1,12 @@
 
 import React from 'react';
 import { MapPin, Users, Home, Star } from 'lucide-react';
+import { useProperties } from '../hooks/use-properties';
 
 const About = () => {
+  const { propertiesData } = useProperties();
+  const { featured } = propertiesData;
+
   return (
     <section id="about" className="section-padding bg-hamptons-light">
       <div className="container-custom">
@@ -18,13 +22,10 @@ const About = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h3 className="text-2xl font-serif font-semibold text-hamptons-dark mb-4">
-              Your Hamptons Getaway
+              {featured.name}
             </h3>
             <p className="text-gray-600 mb-6">
-              Nestled in the prestigious town of East Hampton, our property at 26 Whooping Hollow 
-              offers a serene escape from the hustle and bustle of city life. With spacious 
-              interiors, modern amenities, and a tranquil setting, it's the perfect place for 
-              your vacation.
+              {featured.description}
             </p>
             <p className="text-gray-600 mb-6">
               Whether you're looking to explore the beautiful beaches, visit local vineyards, 
@@ -35,7 +36,7 @@ const About = () => {
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="flex items-center">
                 <MapPin className="text-coastal-600 mr-2" size={20} />
-                <span className="text-gray-700">East Hampton, NY</span>
+                <span className="text-gray-700">{featured.location}</span>
               </div>
               <div className="flex items-center">
                 <Users className="text-coastal-600 mr-2" size={20} />
@@ -54,8 +55,8 @@ const About = () => {
 
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" 
-              alt="Whooping Hollow House" 
+              src={featured.image} 
+              alt={featured.name} 
               className="rounded-lg shadow-xl w-full h-auto object-cover"
             />
             <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg hidden md:block">
