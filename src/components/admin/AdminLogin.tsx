@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +7,7 @@ import { LockIcon, ShieldCheck, UserIcon, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { authenticateAdmin } from '@/services/admin-users-storage';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { Link } from 'react-router-dom';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -176,9 +178,14 @@ const AdminLogin = () => {
                 />
               </div>
               
-              <p className="text-xs text-muted-foreground text-center">
-                For demo purposes, use: eddie@please.co / brickhouse5150
-              </p>
+              <div className="flex justify-end">
+                <Link 
+                  to="/admin/forgot-password" 
+                  className="text-xs text-hamptons-accent hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
           </CardContent>
           <CardFooter>
