@@ -26,15 +26,24 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
     onStatusChange(bookingId, newStatus as BookingStatus);
   };
 
+  const statusOptions = [
+    { value: 'new', label: 'New' },
+    { value: 'confirmed', label: 'Confirmed' },
+    { value: 'cancelled', label: 'Cancelled' },
+    { value: 'blocked', label: 'Blocked' }
+  ];
+
   return (
     <Select onValueChange={handleStatusChange} defaultValue={currentStatus}>
       <SelectTrigger className={variant === 'compact' ? 'w-[120px]' : 'w-full'}>
         <SelectValue placeholder="Change status" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="new">New</SelectItem>
-        <SelectItem value="confirmed">Confirmed</SelectItem>
-        <SelectItem value="cancelled">Cancelled</SelectItem>
+        {statusOptions.map(option => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );
