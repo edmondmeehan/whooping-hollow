@@ -24,6 +24,9 @@ const Navbar = () => {
             <Link to="/" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
               Home
             </Link>
+            <Link to="/guide" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
+              Guest Guide
+            </Link>
             <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90" asChild>
               <Link to="/properties" className="flex items-center">
                 Book Now
@@ -51,6 +54,13 @@ const Navbar = () => {
               onClick={toggleMenu}
             >
               Home
+            </Link>
+            <Link 
+              to="/guide" 
+              className="block py-2 text-hamptons-dark hover:text-coastal-600 transition-colors"
+              onClick={toggleMenu}
+            >
+              Guest Guide
             </Link>
             <Button className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90" asChild>
               <Link 

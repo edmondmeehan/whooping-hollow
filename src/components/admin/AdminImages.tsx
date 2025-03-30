@@ -1,17 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import SingleImageForm from './images/SingleImageForm';
 import MultipleImagesForm from './images/MultipleImagesForm';
 import ImagesGallery from './images/ImagesGallery';
+import DraggableImagesGallery from './images/DraggableImagesGallery';
 import ImageUploader from './images/ImageUploader';
 import CloudinaryUploader from './images/CloudinaryUploader';
 import { useImages } from '@/hooks/use-images';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ImageIcon, Link, Upload, Cloud, RefreshCcw } from 'lucide-react';
+import { ImageIcon, Link, Upload, Cloud, RefreshCcw, List, ArrowsUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AirbnbImage } from '@/types/image';
 
 const AdminImages = () => {
+  const [viewMode, setViewMode] = useState<'list' | 'reorder'>('list');
   const {
     images,
     loading,
@@ -32,6 +35,13 @@ const AdminImages = () => {
     handleAddUploadedImage,
     handleInlineUpdateImage
   } = useImages();
+
+  const handleReorderImages = async (reorderedImages: AirbnbImage[]) => {
+    // In a real app, you would make an API call to update the order in the database
+    // For now, we'll just update the local state
+    console.log('Reordered images:', reorderedImages);
+    // Implement order persistence logic here
+  };
 
   return (
     <div>
@@ -91,14 +101,32 @@ const AdminImages = () => {
       <div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">Image Gallery Database</h3>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={refreshImages} 
-            className="flex items-center gap-2"
-          >
-            <RefreshCcw className="h-4 w-4" /> Refresh Images
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setViewMode(viewMode === 'list' ? 'reorder' : 'list')}
+              className="flex items-center gap-2"
+            >
+              {viewMode === 'list' ? (
+                <>
+                  <ArrowsUpDown className="h-4 w-4" /> Reorder Mode
+                </>
+              ) : (
+                <>
+                  <List className="h-4 w-4" /> List Mode
+                </>
+              )}
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={refreshImages} 
+              className="flex items-center gap-2"
+            >
+              <RefreshCcw className="h-4 w-4" /> Refresh Images
+            </Button>
+          </div>
         </div>
         
         {error && (
@@ -109,14 +137,26 @@ const AdminImages = () => {
           </Alert>
         )}
         
-        <ImagesGallery
-          images={images}
-          loading={loading}
-          error={error}
-          onEdit={handleEditImage}
-          onRemove={handleRemoveImage}
-          onInlineUpdate={handleInlineUpdateImage}
-        />
+        {viewMode === 'list' ? (
+          <ImagesGallery
+            images={images}
+            loading={loading}
+            error={error}
+            onEdit={handleEditImage}
+            onRemove={handleRemoveImage}
+            onInlineUpdate={handleInlineUpdateImage}
+          />
+        ) : (
+          <DraggableImagesGallery
+            images={images}
+            loading={loading}
+            error={error}
+            onEdit={handleEditImage}
+            onRemove={handleRemoveImage}
+            onInlineUpdate={handleInlineUpdateImage}
+            onReorder={handleReorderImages}
+          />
+        )}
       </div>
     </div>
   );

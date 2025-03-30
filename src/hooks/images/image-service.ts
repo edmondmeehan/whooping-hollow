@@ -48,12 +48,30 @@ export const useImageService = () => {
     }
   }, [toast]);
 
+  const reorderImages = async (reorderedImages: AirbnbImage[]) => {
+    try {
+      // In a real app, this would update the order in the database
+      // For now, we'll just update the local cache
+      console.log('Reordering images:', reorderedImages);
+      
+      // Update cache
+      imageCache.set(reorderedImages);
+      setCachedImages(reorderedImages);
+      
+      return true;
+    } catch (error) {
+      console.error('Error reordering images:', error);
+      return false;
+    }
+  };
+
   return {
     fetchImages,
     createImage,
     modifyImage, 
     removeImage,
     uploadImageFile,
+    reorderImages,
     cachedImages
   };
 };

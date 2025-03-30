@@ -8,7 +8,7 @@ export const useImageEditOperations = (images: AirbnbImage[], setImages: React.D
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newImageAlt, setNewImageAlt] = useState('');
-  const { modifyImage, removeImage } = useImageService();
+  const { modifyImage, removeImage, reorderImages } = useImageService();
   const { toast } = useToast();
 
   const handleRemoveImage = async (index: number) => {
@@ -110,6 +110,30 @@ export const useImageEditOperations = (images: AirbnbImage[], setImages: React.D
     }
   };
 
+  const handleReorderImages = async (reorderedImages: AirbnbImage[]) => {
+    try {
+      setLoading(true);
+      const success = await reorderImages(reorderedImages);
+      
+      if (success) {
+        setImages(reorderedImages);
+        toast({
+          title: 'Success',
+          description: 'Image order updated successfully',
+        });
+      }
+    } catch (error) {
+      console.error('Error in handleReorderImages:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update image order',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     editingIndex,
     newImageUrl,
@@ -119,6 +143,7 @@ export const useImageEditOperations = (images: AirbnbImage[], setImages: React.D
     handleEditImage,
     handleUpdateImage,
     handleRemoveImage,
-    handleInlineUpdateImage
+    handleInlineUpdateImage,
+    handleReorderImages
   };
 };
