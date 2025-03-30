@@ -36,7 +36,7 @@ const Gallery = () => {
   // Loading state
   if (loading) {
     return (
-      <section className="section-padding bg-gray-50">
+      <section className="section-padding bg-gray-50" id="gallery">
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-hamptons-dark mb-4">
@@ -90,7 +90,7 @@ const Gallery = () => {
   }
 
   return (
-    <section className="section-padding bg-gray-50">
+    <section className="section-padding bg-gray-50" id="gallery">
       <div className="container-custom">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-hamptons-dark mb-4">

@@ -20,40 +20,76 @@ export const fetchAirbnbImages = async (listingId: string): Promise<AirbnbImage[
     
     return [
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/dd42ec84-5df3-43bf-9da9-ce67e57f1422.jpeg?im_w=1200',
-        alt: 'House Exterior',
+        url: 'public/lovable-uploads/30f7ae55-434a-4043-b35b-112c7d4ed22b.png',
+        alt: 'Living Room with Fireplace',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/d06bcbbe-1aee-4a23-9c01-d1c1e8b39ef6.jpeg?im_w=1200',
-        alt: 'Living Room',
+        url: 'public/lovable-uploads/987843e4-639a-47ab-a2f0-f3cd3e70c57b.png',
+        alt: 'Guest Bedroom with Twin Beds',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/1c2ba6ef-cdee-4d46-805e-77ad68a81905.jpeg?im_w=1200',
-        alt: 'Kitchen',
+        url: 'public/lovable-uploads/ef3e93d0-3727-4b7e-9f25-b9d3bbad9db6.png',
+        alt: 'Open Concept Living and Dining Area',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/98a96c23-79be-47b5-a97d-3a8889cf1f83.jpeg?im_w=1200',
+        url: 'public/lovable-uploads/4e4c9c8a-e85d-4048-97ab-0443bec264d0.png',
+        alt: 'Backyard with Pool',
+      },
+      {
+        url: 'public/lovable-uploads/7290b63d-0f32-4f86-b97a-a38e3530dd45.png',
+        alt: 'Modern Kitchen',
+      },
+      {
+        url: 'public/lovable-uploads/eb259cdc-7e17-446f-96ce-f62d7eb072ba.png',
         alt: 'Master Bedroom',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/8bea76df-ec38-4ee9-9f5e-ae7ebc3a3c11.jpeg?im_w=1200',
-        alt: 'Bathroom',
+        url: 'public/lovable-uploads/f6dd8635-cd4c-488a-ad01-66405d87d519.png',
+        alt: 'Another View of Guest Bedroom',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/e17bd9fa-1a3f-48da-88e1-9a3200468198.jpeg?im_w=1200',
-        alt: 'Patio',
+        url: 'public/lovable-uploads/2c85f1fd-f59c-4b3a-a58f-ff0fb8d40ff8.png',
+        alt: 'Modern Bathroom with Shower',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/e4ccb460-0493-4ddc-aaa7-49ddd938cfa5.jpeg?im_w=1200',
-        alt: 'Pool Area',
+        url: 'public/lovable-uploads/5d6caf99-ca2e-48fd-a411-f4f1528065e2.png',
+        alt: 'Half Bathroom',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/e8c6da0f-ea99-4102-9776-26022dda8b4c.jpeg?im_w=1200',
-        alt: 'Outdoor Space',
+        url: 'public/lovable-uploads/1f1401af-4d60-4a7a-ae57-31f802c5cd46.png',
+        alt: 'Living Room Detail',
       },
       {
-        url: 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/d60a9597-bb3d-4f5c-812a-cfd0308d5a33.jpeg?im_w=1200',
-        alt: 'Bedroom 2',
+        url: 'public/lovable-uploads/a0878096-5c7e-4dba-849a-29101c017206.png',
+        alt: 'Kitchen from Another Angle',
+      },
+      {
+        url: 'public/lovable-uploads/834d30cd-0bc9-419d-9199-8ec3a0f57827.png',
+        alt: 'Dining Area',
+      },
+      {
+        url: 'public/lovable-uploads/e1a5f500-fed3-415e-aaf6-17848b88cad5.png',
+        alt: 'Backyard from Different Angle',
+      },
+      {
+        url: 'public/lovable-uploads/c913ac65-38e1-4219-b90a-f5b27ff0ce75.png',
+        alt: 'Front of House',
+      },
+      {
+        url: 'public/lovable-uploads/c36111be-3814-4d6c-9c05-f5176d4108d5.png',
+        alt: 'Master Bedroom from Another Angle',
+      },
+      {
+        url: 'public/lovable-uploads/67e5846d-3a2a-4a50-afc4-fedeafe6398c.png',
+        alt: 'Another Bedroom',
+      },
+      {
+        url: 'public/lovable-uploads/9b636bbe-3394-489d-b617-3e7034c3ec86.png',
+        alt: 'Bathroom with Vanity',
+      },
+      {
+        url: 'public/lovable-uploads/8cb89b30-2e65-46f1-919a-c8ff82644f22.png',
+        alt: 'Master Bedroom with Queen Bed',
       },
     ];
   } catch (error) {
