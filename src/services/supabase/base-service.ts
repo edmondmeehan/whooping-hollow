@@ -17,7 +17,7 @@ export const validateSupabaseConnection = () => {
  * Tests the connection to Supabase
  * @throws Error if connection test fails
  */
-export const testSupabaseConnection = async (tableName: "property_images") => {
+export const testSupabaseConnection = async (tableName: string) => {
   try {
     // Simple select query to check connection
     const { error: connectionError } = await supabase

@@ -13,7 +13,7 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
     validateSupabaseConnection();
 
     // Test connection to the property_images table
-    await testSupabaseConnection("property_images");
+    await testSupabaseConnection('property_images');
 
     console.log('Connection to Supabase successful, fetching images...');
     const { data, error } = await supabase
