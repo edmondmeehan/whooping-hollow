@@ -1,4 +1,3 @@
-
 import { AirbnbImage } from '@/types/image';
 import { getImages, addImage, updateImage, deleteImage, uploadImage } from '@/services/supabase-images';
 import { useToast } from '@/hooks/use-toast';
@@ -174,8 +173,8 @@ export const useImageService = () => {
   return {
     fetchImages,
     createImage,
-    modifyImage, 
-    removeImage,
+    modifyImage: updateImage, 
+    removeImage: deleteImage,
     uploadImageFile
   };
 };

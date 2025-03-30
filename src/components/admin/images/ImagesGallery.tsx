@@ -28,6 +28,7 @@ const ImagesGallery: React.FC<ImagesGalleryProps> = ({
   const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null);
   const [editingAlt, setEditingAlt] = useState('');
   const [editingUrl, setEditingUrl] = useState('');
+  const [imageLoadErrors, setImageLoadErrors] = useState<Record<number, boolean>>({});
 
   const handleStartEditing = (index: number) => {
     setEditingRowIndex(index);
@@ -48,6 +49,13 @@ const ImagesGallery: React.FC<ImagesGalleryProps> = ({
       });
     }
     setEditingRowIndex(null);
+  };
+
+  const handleImageError = (index: number) => {
+    setImageLoadErrors(prev => ({
+      ...prev,
+      [index]: true
+    }));
   };
 
   if (loading) {
@@ -93,16 +101,20 @@ const ImagesGallery: React.FC<ImagesGalleryProps> = ({
             </TableRow>
           ) : (
             images.map((image, index) => (
-              <TableRow key={index}>
+              <TableRow key={image.id || index}>
                 <TableCell>
-                  <img 
-                    src={image.url} 
-                    alt={image.alt} 
-                    className="w-16 h-12 object-cover rounded" 
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=200';
-                    }}
-                  />
+                  {imageLoadErrors[index] ? (
+                    <div className="w-16 h-12 bg-gray-200 rounded flex items-center justify-center">
+                      <AlertCircle className="h-6 w-6 text-gray-400" />
+                    </div>
+                  ) : (
+                    <img 
+                      src={image.url} 
+                      alt={image.alt} 
+                      className="w-16 h-12 object-cover rounded" 
+                      onError={() => handleImageError(index)}
+                    />
+                  )}
                 </TableCell>
                 <TableCell className="max-w-xs">
                   {editingRowIndex === index ? (

@@ -41,9 +41,9 @@ export const useImages = () => {
     loadImages();
   }, [loadImages]);
 
-  const refreshImages = () => {
+  const refreshImages = useCallback(() => {
     loadImages();
-  };
+  }, [loadImages]);
 
   return {
     images,

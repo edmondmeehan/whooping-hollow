@@ -31,9 +31,15 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       const addedImage = await createImage(newImage);
       
       if (addedImage) {
-        setImages([addedImage, ...images]);
+        // Use the callback form of setImages to ensure we're working with the latest state
+        setImages(prevImages => [addedImage, ...prevImages]);
         setNewImageUrl('');
         setNewImageAlt('');
+        
+        toast({
+          title: 'Success',
+          description: 'Image added successfully to database',
+        });
       }
     } catch (error) {
       console.error('Error in handleAddImage:', error);
@@ -56,7 +62,13 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       const addedImage = await createImage(newImage);
       
       if (addedImage) {
-        setImages([addedImage, ...images]);
+        // Use the callback form of setImages to ensure we're working with the latest state
+        setImages(prevImages => [addedImage, ...prevImages]);
+        
+        toast({
+          title: 'Success',
+          description: 'Image uploaded and added successfully to database',
+        });
       }
     } catch (error: any) {
       console.error('Error in handleAddUploadedImage:', error);
@@ -105,7 +117,8 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       }
       
       if (newImages.length > 0) {
-        setImages([...newImages, ...images]);
+        // Use the callback form of setImages to ensure we're working with the latest state
+        setImages(prevImages => [...newImages, ...prevImages]);
         setMultipleUrls('');
         
         toast({

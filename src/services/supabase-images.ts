@@ -44,7 +44,12 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
       throw error;
     }
 
-    console.log('Successfully fetched images:', data?.length || 0, 'images found');
+    if (!data || data.length === 0) {
+      console.log('No images found in database');
+      return [];
+    }
+
+    console.log('Successfully fetched images:', data.length, 'images found');
     return data as AirbnbImage[];
   } catch (error: any) {
     console.error('Error in getImages:', error);
