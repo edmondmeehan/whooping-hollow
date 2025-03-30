@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Form, FormProvider, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
 import { Waves, Anchor, MapPin, Music, Info } from 'lucide-react';
@@ -21,7 +21,7 @@ const AdminLocalArea = () => {
     defaultValues: {
       title: localAreaData.eastHampton.title,
       description: localAreaData.eastHampton.description,
-      highlights: localAreaData.eastHampton.highlights,
+      highlights: localAreaData.eastHampton.highlights.join('\n'),
       imageUrl: localAreaData.eastHampton.imageUrl,
     }
   });
@@ -31,7 +31,7 @@ const AdminLocalArea = () => {
     defaultValues: {
       title: localAreaData.sagHarbor.title,
       description: localAreaData.sagHarbor.description,
-      highlights: localAreaData.sagHarbor.highlights,
+      highlights: localAreaData.sagHarbor.highlights.join('\n'),
       imageUrl: localAreaData.sagHarbor.imageUrl,
     }
   });
@@ -198,61 +198,63 @@ const AdminLocalArea = () => {
               <CardTitle>East Hampton Content</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={eastHamptonForm.handleSubmit(handleEastHamptonSubmit)} className="space-y-4">
-                <FormField
-                  control={eastHamptonForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Section Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="East Hampton: Coastal Elegance" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={eastHamptonForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={3} placeholder="Description of East Hampton..." />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={eastHamptonForm.control}
-                  name="highlights"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Highlights (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={6} placeholder="Enter each highlight on a new line..." />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={eastHamptonForm.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image URL</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="https://example.com/image.jpg" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit">Save East Hampton Content</Button>
-              </form>
+              <FormProvider {...eastHamptonForm}>
+                <form onSubmit={eastHamptonForm.handleSubmit(handleEastHamptonSubmit)} className="space-y-4">
+                  <FormField
+                    control={eastHamptonForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Section Title</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="East Hampton: Coastal Elegance" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={eastHamptonForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} placeholder="Description of East Hampton..." />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={eastHamptonForm.control}
+                    name="highlights"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Highlights (one per line)</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={6} placeholder="Enter each highlight on a new line..." />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={eastHamptonForm.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Image URL</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="https://example.com/image.jpg" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button type="submit">Save East Hampton Content</Button>
+                </form>
+              </FormProvider>
             </CardContent>
           </Card>
         </TabsContent>
@@ -263,61 +265,63 @@ const AdminLocalArea = () => {
               <CardTitle>Sag Harbor Content</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={sagHarborForm.handleSubmit(handleSagHarborSubmit)} className="space-y-4">
-                <FormField
-                  control={sagHarborForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Section Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Sag Harbor: Historic & Artsy Harbor Town" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={sagHarborForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={3} placeholder="Description of Sag Harbor..." />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={sagHarborForm.control}
-                  name="highlights"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Highlights (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={6} placeholder="Enter each highlight on a new line..." />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={sagHarborForm.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image URL</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="https://example.com/image.jpg" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit">Save Sag Harbor Content</Button>
-              </form>
+              <FormProvider {...sagHarborForm}>
+                <form onSubmit={sagHarborForm.handleSubmit(handleSagHarborSubmit)} className="space-y-4">
+                  <FormField
+                    control={sagHarborForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Section Title</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Sag Harbor: Historic & Artsy Harbor Town" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={sagHarborForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} placeholder="Description of Sag Harbor..." />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={sagHarborForm.control}
+                    name="highlights"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Highlights (one per line)</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={6} placeholder="Enter each highlight on a new line..." />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={sagHarborForm.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Image URL</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="https://example.com/image.jpg" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button type="submit">Save Sag Harbor Content</Button>
+                </form>
+              </FormProvider>
             </CardContent>
           </Card>
         </TabsContent>
@@ -328,39 +332,41 @@ const AdminLocalArea = () => {
               <CardTitle>Nearby Favorites</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={nearbyFavoritesForm.handleSubmit(handleNearbyFavoritesSubmit)} className="space-y-4">
-                <FormField
-                  control={nearbyFavoritesForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Section Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Nearby Favorites" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={nearbyFavoritesForm.control}
-                  name="favorites"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Favorites (Name|Description|Distance - one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          {...field} 
-                          rows={8} 
-                          placeholder="Wölffer Estate Vineyard|Wine tasting with a view|20 min drive" 
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit">Save Nearby Favorites</Button>
-              </form>
+              <FormProvider {...nearbyFavoritesForm}>
+                <form onSubmit={nearbyFavoritesForm.handleSubmit(handleNearbyFavoritesSubmit)} className="space-y-4">
+                  <FormField
+                    control={nearbyFavoritesForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Section Title</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Nearby Favorites" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={nearbyFavoritesForm.control}
+                    name="favorites"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Favorites (Name|Description|Distance - one per line)</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            {...field} 
+                            rows={8} 
+                            placeholder="Wölffer Estate Vineyard|Wine tasting with a view|20 min drive" 
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button type="submit">Save Nearby Favorites</Button>
+                </form>
+              </FormProvider>
             </CardContent>
           </Card>
         </TabsContent>
@@ -371,52 +377,54 @@ const AdminLocalArea = () => {
               <CardTitle>Summer Events</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={summerEventsForm.handleSubmit(handleSummerEventsSubmit)} className="space-y-4">
-                <FormField
-                  control={summerEventsForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Section Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Summer Events in East Hampton & Sag Harbor" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={summerEventsForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={3} placeholder="Description of Summer Events..." />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={summerEventsForm.control}
-                  name="events"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Events (Name|Description|Dates|Activities - one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          {...field} 
-                          rows={10} 
-                          placeholder="Sag Harbor American Music Festival|An annual celebration featuring a diverse range of musical performances|Typically held in late September|Enjoy live music spanning genres from jazz to folk" 
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit">Save Summer Events</Button>
-              </form>
+              <FormProvider {...summerEventsForm}>
+                <form onSubmit={summerEventsForm.handleSubmit(handleSummerEventsSubmit)} className="space-y-4">
+                  <FormField
+                    control={summerEventsForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Section Title</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Summer Events in East Hampton & Sag Harbor" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={summerEventsForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} placeholder="Description of Summer Events..." />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={summerEventsForm.control}
+                    name="events"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Events (Name|Description|Dates|Activities - one per line)</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            {...field} 
+                            rows={10} 
+                            placeholder="Sag Harbor American Music Festival|An annual celebration featuring a diverse range of musical performances|Typically held in late September|Enjoy live music spanning genres from jazz to folk" 
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button type="submit">Save Summer Events</Button>
+                </form>
+              </FormProvider>
             </CardContent>
           </Card>
         </TabsContent>
@@ -427,39 +435,41 @@ const AdminLocalArea = () => {
               <CardTitle>Insider Tips</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={insiderTipsForm.handleSubmit(handleInsiderTipsSubmit)} className="space-y-4">
-                <FormField
-                  control={insiderTipsForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Section Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Insider Tips" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={insiderTipsForm.control}
-                  name="tips"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tips (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          {...field} 
-                          rows={8} 
-                          placeholder="Avoid beach parking headaches by taking a local bike or shuttle." 
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit">Save Insider Tips</Button>
-              </form>
+              <FormProvider {...insiderTipsForm}>
+                <form onSubmit={insiderTipsForm.handleSubmit(handleInsiderTipsSubmit)} className="space-y-4">
+                  <FormField
+                    control={insiderTipsForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Section Title</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Insider Tips" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={insiderTipsForm.control}
+                    name="tips"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tips (one per line)</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            {...field} 
+                            rows={8} 
+                            placeholder="Avoid beach parking headaches by taking a local bike or shuttle." 
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button type="submit">Save Insider Tips</Button>
+                </form>
+              </FormProvider>
             </CardContent>
           </Card>
         </TabsContent>
