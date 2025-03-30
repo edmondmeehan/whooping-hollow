@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { Save } from 'lucide-react';
+import { Save, AlertTriangle } from 'lucide-react';
 import { useApiKeys } from './apis/apiKeyUtils';
 import ApiKeyCard from './apis/ApiKeyCard';
 import AddApiKeyForm from './apis/AddApiKeyForm';
@@ -24,6 +24,7 @@ const AdminApis = () => {
   } = useApiKeys();
   
   const [cloudinaryUrl, setCloudinaryUrl] = useState('');
+  const [hasWeatherApiKey, setHasWeatherApiKey] = useState(false);
 
   useEffect(() => {
     // Load the Cloudinary URL on component mount
@@ -36,6 +37,16 @@ const AdminApis = () => {
     ensureApiKeyExists('OpenWeatherMap API', '');
   }, [ensureApiKeyExists]);
 
+  useEffect(() => {
+    // Check if the OpenWeatherMap API key is set
+    const weatherKey = apiKeys.find(api => 
+      api.name.toLowerCase().includes('weather') || 
+      api.name.toLowerCase().includes('openweather')
+    );
+    
+    setHasWeatherApiKey(!!weatherKey && !!weatherKey.key && weatherKey.key.trim() !== '');
+  }, [apiKeys]);
+
   const handleSaveApiKeys = () => {
     saveApiKeys();
     // Also save the Cloudinary URL if it exists
@@ -43,10 +54,24 @@ const AdminApis = () => {
       cloudinaryConfig.setCloudinaryUrl(cloudinaryUrl);
     }
     
-    toast({
-      title: "API Keys Saved",
-      description: "Your API keys have been securely saved.",
-    });
+    // Check if we have a weather API key after saving
+    const weatherKey = apiKeys.find(api => 
+      api.name.toLowerCase().includes('weather') || 
+      api.name.toLowerCase().includes('openweather')
+    );
+    
+    if (weatherKey && weatherKey.key && weatherKey.key.trim() !== '') {
+      toast({
+        title: "API Keys Saved",
+        description: "Your API keys have been securely saved.",
+      });
+    } else {
+      toast({
+        title: "API Keys Saved",
+        description: "Weather functionality requires an OpenWeatherMap API key.",
+        variant: "warning"
+      });
+    }
   };
 
   const handleDeleteApiKey = (id: string) => {
@@ -92,6 +117,27 @@ const AdminApis = () => {
       </div>
 
       <Separator />
+      
+      {!hasWeatherApiKey && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start space-x-3">
+          <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
+          <div>
+            <h3 className="font-medium text-amber-800">Weather Widget Needs API Key</h3>
+            <p className="text-sm text-amber-700">
+              To display real weather data, add your OpenWeatherMap API key below. 
+              You can get a free API key by signing up at{' '}
+              <a 
+                href="https://home.openweathermap.org/users/sign_up" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                OpenWeatherMap
+              </a>.
+            </p>
+          </div>
+        </div>
+      )}
       
       <CloudinaryUrlForm 
         cloudinaryUrl={cloudinaryUrl} 
