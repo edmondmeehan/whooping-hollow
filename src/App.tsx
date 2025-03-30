@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Properties from "./pages/Properties";
 import BookDirect from "./pages/BookDirect";
 import ForgotPassword from "./components/admin/ForgotPassword";
+import LocalArea from "./pages/LocalArea";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/admin/forgot-password" element={<ForgotPassword />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/book-direct" element={<BookDirect />} />
+          <Route path="/local-area" element={<LocalArea />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
