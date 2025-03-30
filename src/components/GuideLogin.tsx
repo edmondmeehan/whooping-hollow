@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookIcon } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { BookIcon, UserIcon, LockIcon, EyeIcon, EyeOffIcon } from 'lucide-react';
+import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 interface GuideLoginProps {
   onLogin: (username: string, password: string) => boolean;
@@ -14,34 +14,41 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { toast } = useToast();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { guideCredentials } = useGuideCredentials();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
     if (!username || !password) {
-      toast({
-        title: "Error",
-        description: "Please enter both username and password",
-        variant: "destructive",
-      });
+      setError('Please enter both username and password');
       return;
     }
     
-    const success = onLogin(username, password);
+    setIsLoading(true);
     
-    if (!success) {
-      setError('Invalid username or password');
-      toast({
-        title: "Login Failed",
-        description: "Invalid username or password. Please try again.",
-        variant: "destructive",
-      });
+    try {
+      // Simulate network delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const success = onLogin(username, password);
+      
+      if (!success) {
+        setError('Invalid username or password');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 pt-20">
+    <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 pt-20">
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex justify-center mb-4">
@@ -57,29 +64,63 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <div className="space-y-4">
-              <Input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <UserIcon className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="pl-10"
+                  disabled={isLoading}
+                />
+              </div>
+              
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <LockIcon className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10 pr-10"
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+                  onClick={toggleShowPassword}
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-4 w-4" />
+                  ) : (
+                    <EyeIcon className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              
               {error && (
                 <p className="text-sm text-red-500 text-center">{error}</p>
               )}
-              <p className="text-xs text-muted-foreground text-center">
-                For demo purposes, try the credentials configured in the Admin area
-              </p>
+              
+              <div className="bg-amber-50 p-3 rounded-md text-amber-800 text-sm">
+                <p className="font-medium">Demo Credentials:</p>
+                <p>Username: <span className="font-mono">{guideCredentials.username}</span></p>
+                <p>Password: <span className="font-mono">{guideCredentials.password}</span></p>
+              </div>
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full bg-coastal-600 hover:bg-coastal-700">
-              Access Guide
+            <Button 
+              type="submit" 
+              className="w-full bg-coastal-600 hover:bg-coastal-700"
+              disabled={isLoading}
+            >
+              {isLoading ? "Authenticating..." : "Access Guide"}
             </Button>
           </CardFooter>
         </form>

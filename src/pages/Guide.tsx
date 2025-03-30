@@ -4,10 +4,12 @@ import GuideBanner from '@/components/GuideBanner';
 import GuideTabs from '@/components/GuideTabs';
 import GuideLogin from '@/components/GuideLogin';
 import { useGuideCredentials } from '@/hooks/use-guide-credentials';
+import { useToast } from '@/hooks/use-toast';
 
 const Guide = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { guideCredentials } = useGuideCredentials();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if user was previously authenticated in this session
@@ -22,9 +24,32 @@ const Guide = () => {
       setIsAuthenticated(true);
       // Store authentication state for this session
       sessionStorage.setItem('guideAuthenticated', 'true');
+      
+      toast({
+        title: "Login Successful",
+        description: "Welcome to the Guest Guide",
+      });
+      
       return true;
     }
+    
+    toast({
+      title: "Login Failed",
+      description: "Invalid username or password",
+      variant: "destructive",
+    });
+    
     return false;
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('guideAuthenticated');
+    
+    toast({
+      title: "Logged Out",
+      description: "You have been logged out of the Guest Guide",
+    });
   };
 
   return (
@@ -32,7 +57,17 @@ const Guide = () => {
       <GuideBanner />
       <div className="container-custom py-8">
         {isAuthenticated ? (
-          <GuideTabs />
+          <>
+            <div className="flex justify-end mb-6">
+              <button 
+                onClick={handleLogout}
+                className="text-sm text-gray-600 hover:text-coastal-600 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+            <GuideTabs />
+          </>
         ) : (
           <GuideLogin onLogin={handleLogin} />
         )}
