@@ -13,3 +13,5 @@ export interface GuideSection {
 export type GuideSections = {
   [key: string]: GuideSection[];
 };
+
+export type GuideTabKey = 'welcome' | 'house' | 'local' | 'checkout' | 'emergency';
