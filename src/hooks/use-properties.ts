@@ -32,7 +32,7 @@ const defaultPropertiesData: PropertiesData = {
   nashville: [
     {
       id: "nash-retreat",
-      name: "Nashville Retreat",
+      name: "The Jailhouse Rock",
       location: "Nashville, TN",
       description: "A cozy urban retreat in the heart of Music City.",
       image: "https://images.unsplash.com/photo-1593955552559-74fc086de229?auto=format&fit=crop&q=80",
@@ -40,7 +40,7 @@ const defaultPropertiesData: PropertiesData = {
     },
     {
       id: "music-row",
-      name: "Music Row Residence",
+      name: "The Gibson",
       location: "Nashville, TN",
       description: "Modern living space with great access to Nashville's famous music venues.",
       image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80",
@@ -48,7 +48,7 @@ const defaultPropertiesData: PropertiesData = {
     },
     {
       id: "nash-classic",
-      name: "Nashville Classic",
+      name: "Let the Good Times Roll",
       location: "Nashville, TN",
       description: "Charming property with classic Nashville character and modern amenities.",
       image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&q=80",
