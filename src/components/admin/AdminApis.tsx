@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Airbnb,
+  ExternalLink,
   CalendarCheck,
   CreditCard,
   Lock,
@@ -98,7 +98,7 @@ const AdminApis = () => {
   };
 
   const getIconForApi = (name: string) => {
-    if (name.toLowerCase().includes('airbnb')) return <Airbnb className="h-5 w-5" />;
+    if (name.toLowerCase().includes('airbnb')) return <ExternalLink className="h-5 w-5" />;
     if (name.toLowerCase().includes('email')) return <Mail className="h-5 w-5" />;
     if (name.toLowerCase().includes('payment')) return <CreditCard className="h-5 w-5" />;
     if (name.toLowerCase().includes('booking')) return <CalendarCheck className="h-5 w-5" />;
