@@ -16,7 +16,8 @@ export const useApiKeys = () => {
       { id: '2', name: 'Email Service', key: '', isVisible: false },
       { id: '3', name: 'Payment Gateway', key: '', isVisible: false },
       { id: '4', name: 'Booking System', key: '', isVisible: false },
-      { id: '5', name: 'Resend API', key: '', isVisible: false }
+      { id: '5', name: 'Resend API', key: '', isVisible: false },
+      { id: '6', name: 'OpenWeatherMap API', key: '', isVisible: false }
     ];
   });
 
@@ -62,13 +63,35 @@ export const useApiKeys = () => {
     return true;
   };
 
+  const ensureApiKeyExists = (name: string, defaultKey: string = '') => {
+    const exists = apiKeys.some(api => 
+      api.name.toLowerCase() === name.toLowerCase() ||
+      api.name.toLowerCase().includes(name.toLowerCase())
+    );
+    
+    if (!exists) {
+      const newApi = {
+        id: Date.now().toString(),
+        name,
+        key: defaultKey,
+        isVisible: false
+      };
+      
+      setApiKeys(prev => [...prev, newApi]);
+      return true;
+    }
+    
+    return false;
+  };
+
   return {
     apiKeys,
     toggleVisibility,
     updateApiKey,
     saveApiKeys,
     deleteApiKey,
-    addApiKey
+    addApiKey,
+    ensureApiKeyExists
   };
 };
 
@@ -79,5 +102,6 @@ export const getIconForApi = (name: string) => {
   if (name.toLowerCase().includes('booking')) return 'CalendarCheck';
   if (name.toLowerCase().includes('resend')) return 'Send';
   if (name.toLowerCase().includes('cloudinary')) return 'Cloud';
+  if (name.toLowerCase().includes('weather')) return 'Cloud';
   return 'Lock';
 };

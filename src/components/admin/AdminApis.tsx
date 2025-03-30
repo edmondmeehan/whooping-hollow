@@ -19,7 +19,8 @@ const AdminApis = () => {
     updateApiKey, 
     saveApiKeys, 
     deleteApiKey, 
-    addApiKey 
+    addApiKey,
+    ensureApiKeyExists
   } = useApiKeys();
   
   const [cloudinaryUrl, setCloudinaryUrl] = useState('');
@@ -30,7 +31,10 @@ const AdminApis = () => {
     if (savedUrl) {
       setCloudinaryUrl(savedUrl);
     }
-  }, []);
+    
+    // Ensure we have an OpenWeatherMap API key entry
+    ensureApiKeyExists('OpenWeatherMap API', '');
+  }, [ensureApiKeyExists]);
 
   const handleSaveApiKeys = () => {
     saveApiKeys();

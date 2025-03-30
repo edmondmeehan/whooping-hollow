@@ -27,6 +27,7 @@ const ApiKeyCard: React.FC<ApiKeyCardProps> = ({
     if (name.toLowerCase().includes('booking')) return <CalendarCheck className="h-5 w-5" />;
     if (name.toLowerCase().includes('resend')) return <Send className="h-5 w-5" />;
     if (name.toLowerCase().includes('cloudinary')) return <Cloud className="h-5 w-5" />;
+    if (name.toLowerCase().includes('weather')) return <Cloud className="h-5 w-5" />;
     return <Lock className="h-5 w-5" />;
   };
 

@@ -61,17 +61,33 @@ export const getIconForCondition = (condition: string): React.ReactNode => {
 // Get the OpenWeatherMap API key from localStorage
 export const getOpenWeatherApiKey = (): string => {
   // Try to find an existing API key from the stored API keys
-  const savedApiKeys = localStorage.getItem('whh_api_keys');
-  if (savedApiKeys) {
-    const apiKeys = JSON.parse(savedApiKeys);
-    const weatherApiKey = apiKeys.find((api: any) => 
-      api.name.toLowerCase().includes('weather') || 
-      api.name.toLowerCase().includes('openweather')
-    );
-    
-    if (weatherApiKey && weatherApiKey.key) {
-      return weatherApiKey.key;
+  try {
+    const savedApiKeys = localStorage.getItem('whh_api_keys');
+    if (savedApiKeys) {
+      const apiKeys = JSON.parse(savedApiKeys);
+      
+      // Try to find a key specifically for OpenWeatherMap
+      const weatherApiKey = apiKeys.find((api: any) => 
+        api.name.toLowerCase().includes('weather') || 
+        api.name.toLowerCase().includes('openweather')
+      );
+      
+      if (weatherApiKey && weatherApiKey.key && weatherApiKey.key.trim() !== '') {
+        console.log('Using OpenWeather API key from storage:', weatherApiKey.name);
+        return weatherApiKey.key;
+      }
+      
+      // If no specific weather key, check all keys for one that might be for weather
+      for (const api of apiKeys) {
+        if (api.key && api.key.trim() !== '' && 
+            (api.name.toLowerCase().includes('api') || api.name.toLowerCase().includes('key'))) {
+          console.log('Using potential API key from storage:', api.name);
+          return api.key;
+        }
+      }
     }
+  } catch (err) {
+    console.error('Error parsing API keys from localStorage:', err);
   }
   
   // Default key as fallback (though it's likely expired/invalid)
