@@ -6,40 +6,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useProperties } from '@/hooks/use-properties';
 
 const Properties = () => {
-  const whHavenProperty = {
-    name: "Whooping Hollow Haven",
-    location: "Montauk, NY",
-    description: "Experience the ultimate Hamptons getaway at our luxurious retreat, nestled in the picturesque surroundings of Montauk.",
-    image: "/hero-image.jpg",
-    airbnbLink: "https://www.airbnb.com/rooms/1314531825053234635?adults=1&children=0&infants=0&pets=0&wishlist_item_id=11004381825188&check_in=2025-06-27&check_out=2025-06-29&source_impression_id=p3_1740712889_P3Dil4tMhv8FPk2o",
-    directLink: "https://staymarquis.com/properties/the-ranch-modern"
-  };
-  
-  const nashvilleProperties = [
-    {
-      name: "Nashville Retreat",
-      location: "Nashville, TN",
-      description: "A cozy urban retreat in the heart of Music City.",
-      image: "https://images.unsplash.com/photo-1593955552559-74fc086de229?auto=format&fit=crop&q=80",
-      airbnbLink: "https://www.airbnb.com/rooms/610077025200442937?adults=1&children=0&infants=0&pets=0&wishlist_item_id=11004416940518&source_impression_id=p3_1743342584_P34YaDGCeLx4fCtQ"
-    },
-    {
-      name: "Music Row Residence",
-      location: "Nashville, TN",
-      description: "Modern living space with great access to Nashville's famous music venues.",
-      image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80",
-      airbnbLink: "https://www.airbnb.com/rooms/610164155811801435?adults=1&children=0&infants=0&pets=0&wishlist_item_id=11004416940406&source_impression_id=p3_1743342643_P3Y85Vlhdjnz4XY-"
-    },
-    {
-      name: "Nashville Classic",
-      location: "Nashville, TN",
-      description: "Charming property with classic Nashville character and modern amenities.",
-      image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&q=80",
-      airbnbLink: "https://www.airbnb.com/rooms/14503480?adults=1&children=0&infants=0&pets=0&wishlist_item_id=11004381824416&source_impression_id=p3_1743342657_P3L9ImegiCm9iq3_"
-    }
-  ];
+  const { propertiesData } = useProperties();
+  const { featured, nashville } = propertiesData;
 
   return (
     <div className="min-h-screen bg-background">
@@ -59,34 +30,51 @@ const Properties = () => {
             <div className="md:flex">
               <div className="md:w-1/2">
                 <img 
-                  src={whHavenProperty.image} 
-                  alt={whHavenProperty.name}
+                  src={featured.image} 
+                  alt={featured.name}
                   className="h-64 md:h-full w-full object-cover"
                 />
               </div>
               <div className="md:w-1/2 p-8">
                 <div className="flex items-center mb-2">
                   <MapPin className="h-5 w-5 text-hamptons-accent mr-2" />
-                  <span className="text-sm text-gray-600">{whHavenProperty.location}</span>
+                  <span className="text-sm text-gray-600">{featured.location}</span>
                 </div>
-                <h3 className="text-2xl font-serif font-bold mb-3">{whHavenProperty.name}</h3>
-                <p className="text-gray-600 mb-6">{whHavenProperty.description}</p>
+                <h3 className="text-2xl font-serif font-bold mb-3">{featured.name}</h3>
+                <p className="text-gray-600 mb-6">{featured.description}</p>
                 <div className="space-y-3">
-                  <Button className="w-full" asChild>
-                    <a href={whHavenProperty.airbnbLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-                      Book on Airbnb <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                  <Button variant="outline" className="w-full" asChild>
-                    <a href={whHavenProperty.directLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-                      Book Directly <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                  <Button variant="secondary" className="w-full" asChild>
-                    <Link to="/book-direct" className="flex items-center justify-center">
-                      Request Direct Booking Discount
-                    </Link>
-                  </Button>
+                  {featured.directLink ? (
+                    <>
+                      <Button className="w-full" asChild>
+                        <Link to="/book-direct" className="flex items-center justify-center">
+                          Book Directly & Save
+                        </Link>
+                      </Button>
+                      <Button variant="outline" className="w-full" asChild>
+                        <a href={featured.directLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                          View on Official Site <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                      <Button variant="secondary" className="w-full" asChild>
+                        <a href={featured.airbnbLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                          View on Airbnb <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button className="w-full" asChild>
+                        <Link to="/book-direct" className="flex items-center justify-center">
+                          Request Direct Booking
+                        </Link>
+                      </Button>
+                      <Button variant="secondary" className="w-full" asChild>
+                        <a href={featured.airbnbLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                          View on Airbnb <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -97,8 +85,8 @@ const Properties = () => {
         <div>
           <h2 className="text-2xl font-serif font-semibold mb-6">Our Nashville Properties</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {nashvilleProperties.map((property, index) => (
-              <Card key={index} className="card-hover">
+            {nashville.map((property, index) => (
+              <Card key={property.id} className="card-hover">
                 <div className="relative h-48 overflow-hidden rounded-t-lg">
                   <img 
                     src={property.image} 
@@ -116,8 +104,20 @@ const Properties = () => {
                 <CardContent>
                   <p className="text-gray-600">{property.description}</p>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col space-y-2">
                   <Button className="w-full" asChild>
+                    <Link to="/book-direct" className="flex items-center justify-center">
+                      Book Directly & Save
+                    </Link>
+                  </Button>
+                  {property.directLink && (
+                    <Button variant="outline" className="w-full" asChild>
+                      <a href={property.directLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                        View Official Site <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                  <Button variant="secondary" className="w-full" asChild>
                     <a href={property.airbnbLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
                       View on Airbnb <ExternalLink className="ml-2 h-4 w-4" />
                     </a>

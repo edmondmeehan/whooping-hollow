@@ -15,18 +15,16 @@ const CTA = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
           <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90 text-lg px-8 py-6">
-            <a 
-              href="https://www.airbnb.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              to="/book-direct"
               className="flex items-center"
             >
-              Book on Airbnb
-            </a>
+              Book Directly & Save
+            </Link>
           </Button>
           <Button variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
-            <Link to="/guide" className="flex items-center">
-              View Guest Guide
+            <Link to="/properties" className="flex items-center">
+              View All Properties
             </Link>
           </Button>
         </div>
