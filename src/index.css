@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -98,8 +97,8 @@
 }
 
 .hero-section {
-  @apply relative min-h-[80vh] bg-cover bg-center;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/hero-image.jpg');
+  @apply relative min-h-[80vh];
+  /* Background image is now set directly in the Hero component */
 }
 
 .container-custom {
