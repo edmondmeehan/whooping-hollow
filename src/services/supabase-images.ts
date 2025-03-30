@@ -20,13 +20,20 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
           
       if (connectionError) {
         console.error('Supabase connection test failed:', connectionError);
-        throw new Error('Could not connect to Supabase database. Please check your connection.');
+        
+        // Check specifically for table existence issues
+        if (connectionError.message.includes('does not exist')) {
+          throw new Error('The property_images table does not exist in the database. Please check your Supabase setup.');
+        }
+        
+        throw new Error('Could not connect to Supabase database. Please check your connection and credentials.');
       }
     } catch (connectionError: any) {
       console.error('Supabase connection test failed:', connectionError);
-      throw new Error('Could not connect to Supabase database. Please check your connection.');
+      throw new Error(connectionError.message || 'Could not connect to Supabase database. Please check your connection.');
     }
 
+    console.log('Connection to Supabase successful, fetching images...');
     const { data, error } = await supabase
       .from('property_images')
       .select('*')
@@ -37,8 +44,9 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
       throw error;
     }
 
+    console.log('Successfully fetched images:', data?.length || 0, 'images found');
     return data as AirbnbImage[];
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in getImages:', error);
     throw error;
   }
@@ -51,6 +59,7 @@ export const addImage = async (image: AirbnbImage): Promise<AirbnbImage | null> 
       throw new Error('Supabase credentials are missing. Please check your environment variables.');
     }
 
+    console.log('Adding image to Supabase:', image);
     const { data, error } = await supabase
       .from('property_images')
       .insert([{ url: image.url, alt: image.alt }])
@@ -62,8 +71,9 @@ export const addImage = async (image: AirbnbImage): Promise<AirbnbImage | null> 
       throw error;
     }
 
+    console.log('Image added successfully:', data);
     return data as AirbnbImage;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in addImage:', error);
     throw error;
   }
@@ -133,6 +143,21 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
 
+    // Check if storage bucket exists
+    const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+    
+    if (bucketsError) {
+      console.error('Error checking storage buckets:', bucketsError);
+      throw new Error('Could not access Supabase storage. Please check your Supabase setup and permissions.');
+    }
+    
+    const imagesBucketExists = buckets?.some(bucket => bucket.name === 'images');
+    
+    if (!imagesBucketExists) {
+      console.error('The "images" storage bucket does not exist');
+      throw new Error('The "images" storage bucket does not exist in Supabase. Please create it in the Supabase dashboard.');
+    }
+
     // Upload the file to Supabase storage with the public policy we created
     const { error: uploadError, data: uploadData } = await supabase.storage
       .from('images')
@@ -143,6 +168,9 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     if (uploadError) {
       console.error('Error uploading image to storage:', uploadError);
+      if (uploadError.message.includes('permission') || uploadError.message.includes('access')) {
+        throw new Error('Permission denied: Check your storage bucket policies in Supabase.');
+      }
       throw uploadError;
     }
 
@@ -155,7 +183,7 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     console.log('Image successfully uploaded, public URL:', data.publicUrl);
     return data.publicUrl;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in uploadImage:', error);
     throw error;
   }

@@ -4,12 +4,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
-import { Edit, ImageIcon, TrashIcon, Check, X } from 'lucide-react';
+import { Edit, ImageIcon, TrashIcon, Check, X, AlertCircle } from 'lucide-react';
 import { AirbnbImage } from '@/types/image';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ImagesGalleryProps {
   images: AirbnbImage[];
   loading: boolean;
+  error?: string | null;
   onEdit: (index: number) => void;
   onRemove: (index: number) => void;
   onInlineUpdate?: (index: number, updatedImage: AirbnbImage) => void;
@@ -18,6 +20,7 @@ interface ImagesGalleryProps {
 const ImagesGallery: React.FC<ImagesGalleryProps> = ({
   images,
   loading,
+  error,
   onEdit,
   onRemove,
   onInlineUpdate
@@ -57,6 +60,15 @@ const ImagesGallery: React.FC<ImagesGalleryProps> = ({
     );
   }
 
+  if (error) {
+    return (
+      <Alert variant="destructive" className="mb-4">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -75,6 +87,7 @@ const ImagesGallery: React.FC<ImagesGalleryProps> = ({
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <ImageIcon className="h-12 w-12 mb-2" />
                   <p>No images available</p>
+                  <p className="text-sm mt-2">Try uploading an image or adding one by URL</p>
                 </div>
               </TableCell>
             </TableRow>
