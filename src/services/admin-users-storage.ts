@@ -1,3 +1,4 @@
+
 // This file manages admin users in local storage
 
 export interface AdminUser {
@@ -53,11 +54,15 @@ export const saveAdminUsers = (users: AdminUser[]): void => {
 };
 
 export const findAdminByEmail = (email: string): AdminUser | undefined => {
+  if (!email) return undefined;
+  
   const users = getAdminUsers();
-  return users.find(user => user.email.toLowerCase() === email.toLowerCase());
+  return users.find(user => user.email && user.email.toLowerCase() === email.toLowerCase());
 };
 
 export const authenticateAdmin = (email: string, password: string): AdminUser | null => {
+  if (!email || !password) return null;
+  
   const user = findAdminByEmail(email);
   if (!user) return null;
   
@@ -75,10 +80,12 @@ export const authenticateAdmin = (email: string, password: string): AdminUser | 
 };
 
 export const addAdminUser = (email: string, password: string, name?: string, role: 'admin' | 'editor' = 'editor'): boolean => {
+  if (!email || !password) return false;
+  
   const users = getAdminUsers();
   
   // Check if user already exists
-  if (users.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+  if (users.some(user => user.email && user.email.toLowerCase() === email.toLowerCase())) {
     return false;
   }
   
@@ -96,8 +103,10 @@ export const addAdminUser = (email: string, password: string, name?: string, rol
 };
 
 export const updateAdminUser = (email: string, updates: Partial<AdminUser>): boolean => {
+  if (!email) return false;
+  
   const users = getAdminUsers();
-  const index = users.findIndex(user => user.email.toLowerCase() === email.toLowerCase());
+  const index = users.findIndex(user => user.email && user.email.toLowerCase() === email.toLowerCase());
   
   if (index === -1) return false;
   
@@ -116,12 +125,14 @@ export const updateAdminUser = (email: string, updates: Partial<AdminUser>): boo
 };
 
 export const deleteAdminUser = (email: string): boolean => {
+  if (!email) return false;
+  
   const users = getAdminUsers();
   
   // Don't allow deleting the last admin
   if (users.length <= 1) return false;
   
-  const filteredUsers = users.filter(user => user.email.toLowerCase() !== email.toLowerCase());
+  const filteredUsers = users.filter(user => user.email && user.email.toLowerCase() !== email.toLowerCase());
   
   // If no users were removed, return false
   if (filteredUsers.length === users.length) return false;
@@ -132,6 +143,7 @@ export const deleteAdminUser = (email: string): boolean => {
 
 // Utility function to update avatar URL
 export const updateUserAvatar = (email: string, avatarUrl: string): boolean => {
+  if (!email || !avatarUrl) return false;
   return updateAdminUser(email, { avatarUrl });
 };
 

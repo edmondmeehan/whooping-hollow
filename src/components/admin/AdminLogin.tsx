@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +18,6 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   
-  // Check for existing lockout
   useEffect(() => {
     const storedLockout = localStorage.getItem('adminLockout');
     if (storedLockout) {
@@ -32,19 +30,16 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         setLockoutTime(expiryTime);
         setTimeRemaining(Math.ceil((expiryTime - currentTime) / 1000));
       } else {
-        // Clear expired lockout
         localStorage.removeItem('adminLockout');
       }
     }
     
-    // Load failed attempts
     const storedAttempts = localStorage.getItem('adminFailedAttempts');
     if (storedAttempts) {
       setFailedAttempts(parseInt(storedAttempts));
     }
   }, []);
   
-  // Update countdown timer
   useEffect(() => {
     if (isLocked && timeRemaining > 0) {
       const timer = setInterval(() => {
@@ -63,21 +58,18 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
     }
   }, [isLocked, timeRemaining]);
   
-  // Check for existing admin session
   useEffect(() => {
     const adminSession = localStorage.getItem('adminSession');
     if (adminSession) {
       const sessionData = JSON.parse(adminSession);
       const expiryTime = new Date(sessionData.expiry);
       
-      // If session hasn't expired, login automatically
       if (expiryTime > new Date()) {
         onLogin({ 
           email: sessionData.email,
           role: sessionData.role
         });
       } else {
-        // Clear expired session
         localStorage.removeItem('adminSession');
       }
     }
@@ -88,15 +80,12 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
     
     if (isLocked) return;
     
-    // Authenticate user with email/password
     const adminUser = authenticateAdmin(email, password);
     
     if (adminUser) {
-      // Reset failed attempts on successful login
       setFailedAttempts(0);
       localStorage.setItem('adminFailedAttempts', '0');
       
-      // Set admin session with 30 minute expiry
       const expiry = new Date();
       expiry.setMinutes(expiry.getMinutes() + 30);
       
@@ -111,14 +100,12 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         role: adminUser.role
       });
     } else {
-      // Increment failed attempts
       const newFailedAttempts = failedAttempts + 1;
       setFailedAttempts(newFailedAttempts);
       localStorage.setItem('adminFailedAttempts', newFailedAttempts.toString());
       
-      // Lock account after 3 failed attempts
       if (newFailedAttempts >= 3) {
-        const lockoutDuration = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const lockoutDuration = 5 * 60 * 1000;
         const expiryTime = new Date().getTime() + lockoutDuration;
         
         setIsLocked(true);
@@ -131,7 +118,6 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
       }
     }
     
-    // Clear password input
     setPassword('');
   };
 
@@ -168,9 +154,9 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
               )}
               
               {!isLocked && failedAttempts > 0 && (
-                <Alert variant="warning" className="mb-4">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
+                <Alert className="mb-4 bg-amber-50 border-amber-200">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                  <AlertDescription className="text-amber-600">
                     Invalid credentials. Attempts remaining: {3 - failedAttempts}.
                   </AlertDescription>
                 </Alert>
