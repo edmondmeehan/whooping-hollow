@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
 
@@ -9,9 +10,22 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
       throw new Error('Supabase credentials are missing. Please check your environment variables.');
     }
 
-    // Attempt to check connection by making a simple query
+    // Attempt to check connection by making a simple ping query
     try {
-      await supabase.from('_postgrest_reserved_command').select('*').limit(1).throwOnError();
+      // Use a simple health check query that doesn't rely on a specific table
+      const { error: pingError } = await supabase.rpc('postgres_version').single();
+      
+      if (pingError) {
+        // If we can't connect or RPC doesn't exist, try a simple select on the existing table as fallback
+        const { error: fallbackError } = await supabase
+          .from('property_images')
+          .select('count(*)', { count: 'exact', head: true });
+          
+        if (fallbackError) {
+          console.error('Supabase connection test failed:', fallbackError);
+          throw new Error('Could not connect to Supabase database. Please check your connection.');
+        }
+      }
     } catch (connectionError: any) {
       console.error('Supabase connection test failed:', connectionError);
       throw new Error('Could not connect to Supabase database. Please check your connection.');

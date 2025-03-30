@@ -25,6 +25,14 @@ const GalleryImage: React.FC<GalleryImageProps> = ({ image, index }) => {
     return fallbackImages[index % fallbackImages.length];
   };
   
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error(`Error loading image ${index}:`, image.url);
+    setHasError(true);
+    setIsLoading(false);
+    // Set a fallback image on error
+    (e.target as HTMLImageElement).src = getFallbackImage();
+  };
+  
   return (
     <AspectRatio ratio={4/3}>
       {isLoading && !hasError && (
@@ -36,13 +44,7 @@ const GalleryImage: React.FC<GalleryImageProps> = ({ image, index }) => {
         className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading && !hasError ? 'opacity-0' : 'opacity-100'}`}
         loading="lazy"
         onLoad={() => setIsLoading(false)}
-        onError={(e) => {
-          console.error(`Error loading image ${index}:`, image.url, e);
-          setHasError(true);
-          setIsLoading(false);
-          // Set a fallback image on error
-          (e.target as HTMLImageElement).src = getFallbackImage();
-        }}
+        onError={handleImageError}
       />
     </AspectRatio>
   );
