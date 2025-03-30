@@ -20,7 +20,8 @@ export const useWeather = (location: string) => {
         setError(null);
       } catch (err) {
         console.error('Error fetching weather data:', err);
-        setError("Failed to load weather data");
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load weather data';
+        setError(errorMessage);
         setLoading(false);
         toast({
           title: "Weather Data Error",

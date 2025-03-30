@@ -58,9 +58,29 @@ export const getIconForCondition = (condition: string): React.ReactNode => {
   }
 };
 
+// Get the OpenWeatherMap API key from localStorage
+export const getOpenWeatherApiKey = (): string => {
+  // Try to find an existing API key from the stored API keys
+  const savedApiKeys = localStorage.getItem('whh_api_keys');
+  if (savedApiKeys) {
+    const apiKeys = JSON.parse(savedApiKeys);
+    const weatherApiKey = apiKeys.find((api: any) => 
+      api.name.toLowerCase().includes('weather') || 
+      api.name.toLowerCase().includes('openweather')
+    );
+    
+    if (weatherApiKey && weatherApiKey.key) {
+      return weatherApiKey.key;
+    }
+  }
+  
+  // Default key as fallback (though it's likely expired/invalid)
+  return '7f2a84e55a3ab15a8df0886f3db6876d';
+};
+
 export const fetchWeatherData = async (location: string): Promise<WeatherData> => {
-  // OpenWeatherMap API - Using a more reliable API key structure
-  const apiKey = '7f2a84e55a3ab15a8df0886f3db6876d'; // Free API key for demo purposes
+  // Get the API key from localStorage or use the default
+  const apiKey = getOpenWeatherApiKey();
   const city = encodeURIComponent(location.split(',')[0].trim()); // Extract and encode city from location
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
   
