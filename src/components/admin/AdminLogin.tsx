@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,18 +6,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { LockIcon, ShieldCheck, UserIcon, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { authenticateAdmin } from '@/services/admin-users-storage';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 
-interface AdminLoginProps {
-  onLogin: (adminData: { email: string; role: string }) => void;
-}
-
-const AdminLogin = ({ onLogin }: AdminLoginProps) => {
+const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  
+  const { handleLogin } = useAdminAuth();
   
   useEffect(() => {
     const storedLockout = localStorage.getItem('adminLockout');
@@ -57,23 +57,6 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
       return () => clearInterval(timer);
     }
   }, [isLocked, timeRemaining]);
-  
-  useEffect(() => {
-    const adminSession = localStorage.getItem('adminSession');
-    if (adminSession) {
-      const sessionData = JSON.parse(adminSession);
-      const expiryTime = new Date(sessionData.expiry);
-      
-      if (expiryTime > new Date()) {
-        onLogin({ 
-          email: sessionData.email,
-          role: sessionData.role
-        });
-      } else {
-        localStorage.removeItem('adminSession');
-      }
-    }
-  }, [onLogin]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,9 +78,11 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         expiry: expiry.toISOString()
       }));
       
-      onLogin({ 
+      handleLogin({ 
         email: adminUser.email,
-        role: adminUser.role
+        role: adminUser.role,
+        name: adminUser.name,
+        avatarUrl: adminUser.avatarUrl
       });
     } else {
       const newFailedAttempts = failedAttempts + 1;
