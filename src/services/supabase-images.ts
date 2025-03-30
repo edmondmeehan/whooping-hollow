@@ -5,7 +5,16 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
   try {
     // Check if Supabase is configured
     if (!supabase) {
+      console.error('Supabase client is not initialized');
       throw new Error('Supabase credentials are missing. Please check your environment variables.');
+    }
+
+    // Attempt to check connection by making a simple query
+    try {
+      await supabase.from('_postgrest_reserved_command').select('*').limit(1).throwOnError();
+    } catch (connectionError: any) {
+      console.error('Supabase connection test failed:', connectionError);
+      throw new Error('Could not connect to Supabase database. Please check your connection.');
     }
 
     const { data, error } = await supabase

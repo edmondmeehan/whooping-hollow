@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { AirbnbImage } from '@/types/image';
 import { getImages } from '@/services/supabase-images';
+import { fetchAirbnbImages } from '@/utils/airbnbScraper';
 
 // Demo images to show when Supabase is not configured or has no data
 const demoImages: AirbnbImage[] = [
@@ -21,6 +22,19 @@ const demoImages: AirbnbImage[] = [
     id: 3,
     url: 'https://images.unsplash.com/photo-1565183997392-2f6f122e5912?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
     alt: 'Demo Kitchen',
+    created_at: new Date().toISOString()
+  },
+  // Add a few more for variety
+  {
+    id: 4,
+    url: 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
+    alt: 'Beautiful Patio',
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 5,
+    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
+    alt: 'Modern Home Exterior',
     created_at: new Date().toISOString()
   }
 ];
@@ -53,17 +67,26 @@ export const useGalleryImages = () => {
       } catch (err: any) {
         console.error("Error loading gallery images:", err);
         
-        // Provide a more detailed error message if Supabase credentials are missing
-        if (err.message && err.message.includes('Supabase credentials are missing')) {
-          // Use demo images in this case
-          console.log("Using demo images since Supabase is not configured");
+        // Fallback to scraper images if Supabase fails
+        try {
+          const scrapedImages = await fetchAirbnbImages('1314531825053234635');
+          if (scrapedImages && scrapedImages.length > 0) {
+            console.log("Fallback to scraped images");
+            setImages(scrapedImages);
+            setUsingDemoImages(true);
+            setError("Could not connect to the database. Using fallback images.");
+          } else {
+            // If scraper also fails, use demo images
+            console.log("Using demo images since Supabase and scraper failed");
+            setImages(demoImages);
+            setUsingDemoImages(true);
+            setError("Demo mode: Supabase connection failed. Using sample images.");
+          }
+        } catch (scrapeErr) {
+          console.log("Using demo images as final fallback");
           setImages(demoImages);
           setUsingDemoImages(true);
           setError("Demo mode: Supabase is not configured. Using sample images.");
-        } else {
-          setError("Failed to load gallery images from the database");
-          setImages(demoImages);
-          setUsingDemoImages(true);
         }
       } finally {
         setLoading(false);
