@@ -183,7 +183,7 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     if (uploadError) {
       console.error('Error uploading image to storage:', uploadError);
-      console.error('Error code:', uploadError.code, 'Error message:', uploadError.message);
+      console.error('Error message:', uploadError.message);
       
       // Provide more specific error messages based on error type
       if (uploadError.message.includes('No such bucket') || uploadError.message.includes('not found')) {
