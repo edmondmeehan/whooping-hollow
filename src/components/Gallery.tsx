@@ -32,7 +32,7 @@ const Gallery = () => {
           )}
 
           {usingDemoImages && (
-            <Alert variant="warning" className="max-w-3xl mx-auto mb-6 mt-4 bg-amber-50 border-amber-200">
+            <Alert variant="default" className="max-w-3xl mx-auto mb-6 mt-4 bg-amber-50 border-amber-200">
               <AlertCircle className="h-4 w-4 text-amber-600" />
               <AlertDescription className="text-amber-800">
                 Demo Mode: Showing sample images. To see your own images, configure Supabase in the admin panel.
