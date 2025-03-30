@@ -1,6 +1,32 @@
 import { AirbnbImage } from '@/types/image';
 import { getImages, addImage, updateImage, deleteImage, uploadImage } from '@/services/supabase-images';
 import { useToast } from '@/hooks/use-toast';
+import { useState, useCallback } from 'react';
+
+// In-memory cache with expiration
+const imageCache = {
+  data: null as AirbnbImage[] | null,
+  timestamp: 0,
+  
+  get() {
+    // Check if cache exists and is less than 5 minutes old
+    const currentTime = Date.now();
+    if (this.data && (currentTime - this.timestamp) < 5 * 60 * 1000) {
+      return this.data;
+    }
+    return null;
+  },
+  
+  set(images: AirbnbImage[]) {
+    this.data = images;
+    this.timestamp = Date.now();
+  },
+  
+  clear() {
+    this.data = null;
+    this.timestamp = 0;
+  }
+};
 
 // Fallback demo images when database connection fails
 const demoAdminImages: AirbnbImage[] = [
@@ -20,12 +46,26 @@ const demoAdminImages: AirbnbImage[] = [
 
 export const useImageService = () => {
   const { toast } = useToast();
+  const [cachedImages, setCachedImages] = useState<AirbnbImage[] | null>(null);
 
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
+    // First, check the in-memory cache
+    const cachedResult = imageCache.get();
+    if (cachedResult) {
+      console.log('Returning images from cache');
+      setCachedImages(cachedResult);
+      return cachedResult;
+    }
+
     try {
       console.log('Attempting to fetch images from Supabase');
       const fetchedImages = await getImages();
       console.log('Successfully fetched images:', fetchedImages);
+      
+      // Store in cache
+      imageCache.set(fetchedImages);
+      setCachedImages(fetchedImages);
+      
       return fetchedImages;
     } catch (error: any) {
       console.error('Error loading images:', error);
@@ -36,15 +76,19 @@ export const useImageService = () => {
       });
       
       // Return demo images as fallback
+      imageCache.set(demoAdminImages);
+      setCachedImages(demoAdminImages);
       return demoAdminImages;
     }
-  };
+  }, [toast]);
 
   const createImage = async (newImage: AirbnbImage) => {
     try {
       console.log('Attempting to create image in Supabase:', newImage);
       const addedImage = await addImage(newImage);
       if (addedImage) {
+        // Clear cache to force refetch
+        imageCache.clear();
         toast({
           title: 'Success',
           description: 'Image added successfully to database',
@@ -79,6 +123,8 @@ export const useImageService = () => {
     try {
       const updatedImage = await updateImage(id, image);
       if (updatedImage) {
+        // Clear cache to force refetch
+        imageCache.clear();
         toast({
           title: 'Success',
           description: 'Image updated successfully in database',
@@ -113,6 +159,8 @@ export const useImageService = () => {
     try {
       const success = await deleteImage(id);
       if (success) {
+        // Clear cache to force refetch
+        imageCache.clear();
         toast({
           title: 'Success',
           description: 'Image removed successfully from database',
@@ -147,6 +195,9 @@ export const useImageService = () => {
         throw new Error('Failed to upload image to storage');
       }
       
+      // Clear cache to force refetch
+      imageCache.clear();
+      
       console.log('File uploaded successfully, URL:', url);
       return url;
     } catch (uploadError: any) {
@@ -175,6 +226,7 @@ export const useImageService = () => {
     createImage,
     modifyImage: updateImage, 
     removeImage: deleteImage,
-    uploadImageFile
+    uploadImageFile,
+    cachedImages
   };
 };
