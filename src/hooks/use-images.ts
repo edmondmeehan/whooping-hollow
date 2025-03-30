@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { AirbnbImage } from '@/types/image';
@@ -78,30 +77,37 @@ export const useImages = () => {
   const handleAddUploadedImage = async (file: File, alt: string) => {
     try {
       setLoading(true);
+      console.log('Starting upload process for file:', file.name);
+      
       const url = await uploadImage(file);
       
-      if (url) {
-        const newImage: AirbnbImage = {
-          url,
-          alt,
-        };
-        
-        const addedImage = await addImage(newImage);
-        
-        if (addedImage) {
-          setImages([addedImage, ...images]);
-          
-          toast({
-            title: 'Success',
-            description: 'Image uploaded and saved to database',
-          });
-        }
+      if (!url) {
+        throw new Error('Failed to upload image to storage');
       }
-    } catch (error) {
-      console.error('Error uploading image:', error);
+      
+      console.log('File uploaded successfully, URL:', url);
+      
+      const newImage: AirbnbImage = {
+        url,
+        alt,
+      };
+      
+      console.log('Adding image to database:', newImage);
+      const addedImage = await addImage(newImage);
+      
+      if (addedImage) {
+        setImages([addedImage, ...images]);
+        
+        toast({
+          title: 'Success',
+          description: 'Image uploaded and saved to database',
+        });
+      }
+    } catch (error: any) {
+      console.error('Error in handleAddUploadedImage:', error);
       toast({
         title: 'Error',
-        description: 'Failed to upload image',
+        description: error.message || 'Failed to upload image',
         variant: 'destructive',
       });
     } finally {
@@ -119,7 +125,6 @@ export const useImages = () => {
       return;
     }
 
-    // Split input by newlines and filter out empty lines
     const urlList = multipleUrls.split('\n')
       .map(line => line.trim())
       .filter(line => line.length > 0);
@@ -137,7 +142,6 @@ export const useImages = () => {
       setLoading(true);
       const newImages = [];
       
-      // Create new image objects and add to database
       for (const url of urlList) {
         const newImage: AirbnbImage = {
           url,

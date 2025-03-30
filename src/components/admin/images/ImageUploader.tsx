@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Upload, ImagePlus, Loader2 } from 'lucide-react';
+import { Upload, ImagePlus, Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ImageUploaderProps {
   onImageUploaded: (file: File, alt: string) => void;
@@ -12,6 +13,7 @@ interface ImageUploaderProps {
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +21,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
     if (!files || files.length === 0) return;
 
     const file = files[0];
+    setUploadError(null);
+    
     // Check if file is an image
     if (!file.type.match('image.*')) {
+      setUploadError('Please upload an image file (JPEG, PNG, etc.)');
       toast({
         title: 'Invalid file type',
         description: 'Please upload an image file (JPEG, PNG, etc.)',
@@ -31,6 +36,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
 
     // Check file size (limit to 5MB)
     if (file.size > 5 * 1024 * 1024) {
+      setUploadError('Please upload an image smaller than 5MB');
       toast({
         title: 'File too large',
         description: 'Please upload an image smaller than 5MB',
@@ -54,16 +60,18 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
       const imageAlt = file.name.split('.')[0] || 'Uploaded image';
       
       // Process the upload through our hook
+      console.log('Starting image upload process for file:', file.name);
       onImageUploaded(file, imageAlt);
       
       clearInterval(intervalId);
       setUploadProgress(100);
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image:', error);
+      setUploadError(error.message || 'There was a problem uploading your image');
       toast({
         title: 'Upload failed',
-        description: 'There was a problem uploading your image',
+        description: error.message || 'There was a problem uploading your image',
         variant: 'destructive',
       });
     } finally {
@@ -82,6 +90,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
         <CardTitle className="text-lg">Upload Images to Supabase Storage</CardTitle>
       </CardHeader>
       <CardContent>
+        {uploadError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{uploadError}</AlertDescription>
+          </Alert>
+        )}
+        
         <div className="mb-4">
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors">
             <input

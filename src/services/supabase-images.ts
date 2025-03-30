@@ -108,23 +108,32 @@ export const uploadImage = async (file: File): Promise<string | null> => {
       throw new Error('Supabase credentials are missing. Please check your environment variables.');
     }
 
+    // Create a unique file name
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    const fileName = `${Math.random().toString(36).substring(2, 15)}-${Date.now()}.${fileExt}`;
     const filePath = `properties/${fileName}`;
 
-    const { error } = await supabase.storage
-      .from('images')
-      .upload(filePath, file);
+    console.log('Uploading image to Supabase storage:', filePath);
 
-    if (error) {
-      console.error('Error uploading image:', error);
-      throw error;
+    // Upload the file to Supabase storage
+    const { error: uploadError } = await supabase.storage
+      .from('images')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (uploadError) {
+      console.error('Error uploading image to storage:', uploadError);
+      throw uploadError;
     }
 
+    // Get the public URL
     const { data } = supabase.storage
       .from('images')
       .getPublicUrl(filePath);
 
+    console.log('Image successfully uploaded, public URL:', data.publicUrl);
     return data.publicUrl;
   } catch (error) {
     console.error('Error in uploadImage:', error);
