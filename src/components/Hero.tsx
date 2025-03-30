@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { getHeroImage } from '@/utils/airbnbScraper';
@@ -8,6 +9,7 @@ const Hero = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const listingId = '1314531825053234635'; // This should be configurable
+  const videoUrl = "https://d3ioifgscy1qpn.cloudfront.net/videos/general/footer_video.mov.65e79d1da7050.mp4";
 
   useEffect(() => {
     const loadHeroImage = async () => {
@@ -35,18 +37,36 @@ const Hero = () => {
     backgroundPosition: 'center',
   };
   
-  // Hero style with loaded image
+  // Hero style with loaded image (as fallback)
   const heroBackgroundStyle = heroImageUrl ? {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${heroImageUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   } : defaultStyle;
 
-  console.log("Hero background style:", heroBackgroundStyle);
-
   return (
-    <div className="hero-section flex items-center justify-center text-center" style={heroBackgroundStyle}>
-      <div className="container-custom px-4 py-32 md:py-48">
+    <div className="hero-section flex items-center justify-center text-center relative overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <div className="absolute inset-0 bg-black/40 z-10"></div>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover"
+          poster={heroImageUrl || undefined}
+        >
+          <source src={videoUrl} type="video/mp4" />
+          {/* Fallback to static image if video fails */}
+          <div 
+            className="absolute inset-0 w-full h-full" 
+            style={heroBackgroundStyle}
+          ></div>
+        </video>
+      </div>
+      
+      <div className="container-custom px-4 py-32 md:py-48 relative z-20">
         {loading ? (
           <>
             <div className="mx-auto mb-6">
