@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,35 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				coastal: {
+					50: '#f0f9ff',
+					100: '#e0f2fe',
+					200: '#bae6fd',
+					300: '#7dd3fc',
+					400: '#38bdf8',
+					500: '#0ea5e9',
+					600: '#0284c7',
+					700: '#0369a1',
+					800: '#075985',
+					900: '#0c4a6e',
+				},
+				sand: {
+					50: '#faf8f1',
+					100: '#f5efe0',
+					200: '#e9ddc0',
+					300: '#dbc69b',
+					400: '#c9aa72',
+					500: '#bb9356',
+					600: '#ad7c45',
+					700: '#8f633a',
+					800: '#745134',
+					900: '#5f432e',
+				},
+				hamptons: {
+					dark: '#1E3A44',
+					light: '#F9F7F3',
+					accent: '#D7B377',
 				}
 			},
 			borderRadius: {
@@ -89,7 +119,14 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				serif: ['Playfair Display', 'serif'],
+			},
+			backgroundImage: {
+				'hero-pattern': "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/hero-image.jpg')",
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
