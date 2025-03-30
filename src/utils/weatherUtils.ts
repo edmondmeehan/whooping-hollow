@@ -13,6 +13,51 @@ export interface WeatherData {
   icon: React.ReactNode;
 }
 
+// Separate function to map weather codes to icons
+export const getWeatherIcon = (weatherCode: number): React.ReactNode => {
+  if (weatherCode >= 200 && weatherCode < 300) {
+    return <CloudLightning className="text-purple-500 h-10 w-10" />;
+  } else if (weatherCode >= 300 && weatherCode < 400) {
+    return <CloudDrizzle className="text-blue-400 h-10 w-10" />;
+  } else if (weatherCode >= 500 && weatherCode < 600) {
+    return <CloudRain className="text-blue-500 h-10 w-10" />;
+  } else if (weatherCode >= 600 && weatherCode < 700) {
+    return <CloudSnow className="text-blue-200 h-10 w-10" />;
+  } else if (weatherCode >= 700 && weatherCode < 800) {
+    return <Wind className="text-gray-400 h-10 w-10" />;
+  } else if (weatherCode === 800) {
+    return <Sun className="text-yellow-500 h-10 w-10" />;
+  } else if (weatherCode > 800) {
+    return <Cloud className="text-gray-500 h-10 w-10" />;
+  }
+  
+  // Default icon for unknown weather codes
+  return <Cloud className="text-gray-500 h-10 w-10" />;
+};
+
+// Function to map weather condition strings to icons for simulated data
+export const getIconForCondition = (condition: string): React.ReactNode => {
+  switch (condition) {
+    case 'Clear':
+      return <Sun className="text-yellow-500 h-10 w-10" />;
+    case 'Partly Cloudy':
+    case 'Cloudy':
+      return <Cloud className="text-gray-500 h-10 w-10" />;
+    case 'Rain':
+      return <CloudRain className="text-blue-500 h-10 w-10" />;
+    case 'Thunderstorm':
+      return <CloudLightning className="text-purple-500 h-10 w-10" />;
+    case 'Snow':
+      return <CloudSnow className="text-blue-200 h-10 w-10" />;
+    case 'Drizzle':
+      return <CloudDrizzle className="text-blue-400 h-10 w-10" />;
+    case 'Windy':
+      return <Wind className="text-gray-400 h-10 w-10" />;
+    default:
+      return <Sun className="text-yellow-500 h-10 w-10" />;
+  }
+};
+
 export const fetchWeatherData = async (location: string): Promise<WeatherData> => {
   // OpenWeatherMap API - Using a more reliable API key structure
   const apiKey = '7f2a84e55a3ab15a8df0886f3db6876d'; // Free API key for demo purposes
@@ -30,25 +75,9 @@ export const fetchWeatherData = async (location: string): Promise<WeatherData> =
   const data = await response.json();
   console.log('Weather data received:', data);
   
-  // Select icon based on OpenWeatherMap condition code
-  let icon;
+  // Get weather icon based on OpenWeatherMap condition code
   const weatherCode = data.weather[0].id;
-  
-  if (weatherCode >= 200 && weatherCode < 300) {
-    icon = <CloudLightning className="text-purple-500 h-10 w-10" />;
-  } else if (weatherCode >= 300 && weatherCode < 400) {
-    icon = <CloudDrizzle className="text-blue-400 h-10 w-10" />;
-  } else if (weatherCode >= 500 && weatherCode < 600) {
-    icon = <CloudRain className="text-blue-500 h-10 w-10" />;
-  } else if (weatherCode >= 600 && weatherCode < 700) {
-    icon = <CloudSnow className="text-blue-200 h-10 w-10" />;
-  } else if (weatherCode >= 700 && weatherCode < 800) {
-    icon = <Wind className="text-gray-400 h-10 w-10" />;
-  } else if (weatherCode === 800) {
-    icon = <Sun className="text-yellow-500 h-10 w-10" />;
-  } else if (weatherCode > 800) {
-    icon = <Cloud className="text-gray-500 h-10 w-10" />;
-  }
+  const icon = getWeatherIcon(weatherCode);
   
   return {
     temperature: Math.round(data.main.temp),
@@ -70,34 +99,8 @@ export const simulateWeatherData = (): WeatherData => {
   const randomHumidity = Math.floor(Math.random() * 50) + 30; // 30-80%
   const randomWind = Math.floor(Math.random() * 15) + 2; // 2-17 mph
   
-  // Select icon based on condition
-  let icon;
-  switch (randomCondition) {
-    case 'Clear':
-      icon = <Sun className="text-yellow-500 h-10 w-10" />;
-      break;
-    case 'Partly Cloudy':
-    case 'Cloudy':
-      icon = <Cloud className="text-gray-500 h-10 w-10" />;
-      break;
-    case 'Rain':
-      icon = <CloudRain className="text-blue-500 h-10 w-10" />;
-      break;
-    case 'Thunderstorm':
-      icon = <CloudLightning className="text-purple-500 h-10 w-10" />;
-      break;
-    case 'Snow':
-      icon = <CloudSnow className="text-blue-200 h-10 w-10" />;
-      break;
-    case 'Drizzle':
-      icon = <CloudDrizzle className="text-blue-400 h-10 w-10" />;
-      break;
-    case 'Windy':
-      icon = <Wind className="text-gray-400 h-10 w-10" />;
-      break;
-    default:
-      icon = <Sun className="text-yellow-500 h-10 w-10" />;
-  }
+  // Get icon based on condition using the new helper function
+  const icon = getIconForCondition(randomCondition);
   
   return {
     temperature: randomTemp,
