@@ -275,6 +275,47 @@ export const useImages = () => {
     }
   };
 
+  const handleInlineUpdateImage = async (index: number, updatedImage: AirbnbImage) => {
+    const imageToUpdate = images[index];
+    
+    if (!imageToUpdate.id) {
+      toast({
+        title: 'Error',
+        description: 'Cannot update image without ID',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const result = await updateImage(imageToUpdate.id, {
+        url: updatedImage.url,
+        alt: updatedImage.alt,
+      });
+      
+      if (result) {
+        const updatedImages = [...images];
+        updatedImages[index] = result;
+        setImages(updatedImages);
+        
+        toast({
+          title: 'Success',
+          description: 'Image updated successfully in database',
+        });
+      }
+    } catch (error) {
+      console.error('Error updating image:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update image in database',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const refreshImages = () => {
     loadImages();
   };
@@ -295,6 +336,7 @@ export const useImages = () => {
     handleEditImage,
     handleUpdateImage,
     handleAddUploadedImage,
+    handleInlineUpdateImage,
     refreshImages
   };
 };

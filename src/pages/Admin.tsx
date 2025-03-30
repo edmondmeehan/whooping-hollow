@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   ImageIcon, 
@@ -24,6 +24,20 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
   
+  useEffect(() => {
+    // Check for existing admin session on component mount
+    const adminSession = localStorage.getItem('adminSession');
+    if (adminSession) {
+      const sessionData = JSON.parse(adminSession);
+      const expiryTime = new Date(sessionData.expiry);
+      
+      // If session hasn't expired, login automatically
+      if (expiryTime > new Date()) {
+        setIsAuthenticated(true);
+      }
+    }
+  }, []);
+  
   const handleLogin = (password: string) => {
     // Simple authentication for demo purposes
     // In a real app, this should be replaced with proper authentication
@@ -42,13 +56,22 @@ const Admin = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('adminSession');
+    setIsAuthenticated(false);
+    toast({
+      title: "Logged out",
+      description: "You have been logged out of the admin area",
+    });
+  };
+
   if (!isAuthenticated) {
     return <AdminLogin onLogin={handleLogin} />;
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminNavbar />
+      <AdminNavbar onLogout={handleLogout} />
       <div className="container-custom py-8">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
         

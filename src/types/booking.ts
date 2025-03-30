@@ -1,6 +1,5 @@
 
-export type PropertyLocation = "montauk" | "nashville";
-export type BookingStatus = "new" | "contacted" | "confirmed" | "cancelled";
+export type BookingStatus = 'new' | 'confirmed' | 'cancelled';
 
 export interface Booking {
   id: number;
@@ -10,5 +9,6 @@ export interface Booking {
   dates: string;
   guests: number;
   status: BookingStatus;
-  message: string;
+  message?: string;
+  created_at?: string;
 }

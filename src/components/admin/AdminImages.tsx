@@ -25,7 +25,8 @@ const AdminImages = () => {
     handleRemoveImage,
     handleEditImage,
     handleUpdateImage,
-    handleAddUploadedImage
+    handleAddUploadedImage,
+    handleInlineUpdateImage
   } = useImages();
 
   return (
@@ -90,6 +91,7 @@ const AdminImages = () => {
           loading={loading}
           onEdit={handleEditImage}
           onRemove={handleRemoveImage}
+          onInlineUpdate={handleInlineUpdateImage}
         />
       </div>
     </div>

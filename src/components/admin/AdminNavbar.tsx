@@ -1,28 +1,42 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Settings } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
-const AdminNavbar = () => {
+interface AdminNavbarProps {
+  onLogout?: () => void;
+}
+
+const AdminNavbar = ({ onLogout }: AdminNavbarProps) => {
   return (
-    <nav className="bg-hamptons-dark text-white py-4">
-      <div className="container-custom flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Link to="/" className="flex items-center space-x-2">
-            <ArrowLeft className="h-5 w-5" />
-            <span>Back to Site</span>
-          </Link>
-          <h1 className="text-xl font-medium ml-4">Whooping Hollow Haven Admin</h1>
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="container-custom py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <a href="/" className="text-lg font-semibold text-hamptons-accent">
+            Whooping Hollow
+          </a>
+          <span className="text-sm text-gray-500 px-2 py-1 bg-gray-100 rounded-md">
+            Admin
+          </span>
         </div>
+        
         <div className="flex items-center space-x-4">
-          <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
-            <Settings className="h-4 w-4 mr-2" />
-            <span>Settings</span>
-          </Button>
+          <a 
+            href="/" 
+            className="text-sm text-gray-600 hover:text-hamptons-accent transition-colors"
+          >
+            View Site
+          </a>
+          
+          {onLogout && (
+            <Button variant="outline" size="sm" onClick={onLogout} className="flex items-center gap-1">
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </Button>
+          )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

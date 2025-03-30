@@ -13,7 +13,8 @@ const initialBookings: Booking[] = [
     dates: 'June 15-20, 2023',
     guests: 4,
     status: 'new',
-    message: 'Looking forward to our stay!'
+    message: 'Looking forward to our stay!',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString() // 2 days ago
   },
   {
     id: 2,
@@ -23,7 +24,8 @@ const initialBookings: Booking[] = [
     dates: 'July 3-10, 2023',
     guests: 2,
     status: 'confirmed',
-    message: 'This is a return visit. We loved our stay last year!'
+    message: 'This is a return visit. We loved our stay last year!',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString() // 5 days ago
   },
   {
     id: 3,
@@ -33,7 +35,8 @@ const initialBookings: Booking[] = [
     dates: 'August 22-25, 2023',
     guests: 6,
     status: 'cancelled',
-    message: 'Need a place for our family reunion.'
+    message: 'Need a place for our family reunion. We would like to know if you have any special accommodations for large groups. Also, is the property child-friendly?',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString() // 10 days ago
   }
 ];
 

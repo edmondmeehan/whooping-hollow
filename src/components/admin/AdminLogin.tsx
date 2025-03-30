@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,9 +11,38 @@ interface AdminLoginProps {
 
 const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [password, setPassword] = useState('');
+  
+  useEffect(() => {
+    // Check for existing admin session
+    const adminSession = localStorage.getItem('adminSession');
+    if (adminSession) {
+      const sessionData = JSON.parse(adminSession);
+      const expiryTime = new Date(sessionData.expiry);
+      
+      // If session hasn't expired, login automatically
+      if (expiryTime > new Date()) {
+        onLogin(sessionData.password);
+      } else {
+        // Clear expired session
+        localStorage.removeItem('adminSession');
+      }
+    }
+  }, [onLogin]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Set admin session with 60 minute expiry
+    if (password === 'admin123') {
+      const expiry = new Date();
+      expiry.setMinutes(expiry.getMinutes() + 60);
+      
+      localStorage.setItem('adminSession', JSON.stringify({
+        password,
+        expiry: expiry.toISOString()
+      }));
+    }
+    
     onLogin(password);
   };
 
