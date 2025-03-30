@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { AirbnbImage } from '@/types/image';
 import { useImageService } from './image-service';
@@ -31,7 +30,6 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       const addedImage = await createImage(newImage);
       
       if (addedImage) {
-        // Use the callback form of setImages to ensure we're working with the latest state
         setImages(prevImages => [addedImage, ...prevImages]);
         setNewImageUrl('');
         setNewImageAlt('');
@@ -51,7 +49,17 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
   const handleAddUploadedImage = async (file: File, alt: string) => {
     try {
       setLoading(true);
+      
       const url = await uploadImageFile(file);
+      
+      if (!url) {
+        toast({
+          title: 'Upload Error',
+          description: 'Failed to obtain URL from upload service',
+          variant: 'destructive',
+        });
+        return;
+      }
       
       const newImage: AirbnbImage = {
         url,
@@ -62,7 +70,6 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       const addedImage = await createImage(newImage);
       
       if (addedImage) {
-        // Use the callback form of setImages to ensure we're working with the latest state
         setImages(prevImages => [addedImage, ...prevImages]);
         
         toast({
@@ -72,6 +79,12 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       }
     } catch (error: any) {
       console.error('Error in handleAddUploadedImage:', error);
+      
+      toast({
+        title: 'Upload Failed',
+        description: error.message || 'Failed to upload and save image',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -117,7 +130,6 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       }
       
       if (newImages.length > 0) {
-        // Use the callback form of setImages to ensure we're working with the latest state
         setImages(prevImages => [...newImages, ...prevImages]);
         setMultipleUrls('');
         

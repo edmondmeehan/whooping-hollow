@@ -31,10 +31,8 @@ export const useImageUploadService = () => {
         variant: 'destructive',
       });
       
-      // Generate a fake URL for demo purposes
-      const fakeUrl = `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000)}?demo=true`;
-      console.log('Using fallback demo URL:', fakeUrl);
-      return fakeUrl;
+      // Instead of returning a fake URL, throw the error to be handled by the caller
+      throw uploadError;
     }
   };
 

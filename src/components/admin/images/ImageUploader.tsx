@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -59,17 +58,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
       
       const imageAlt = file.name.split('.')[0] || 'Uploaded image';
       
-      // Process the upload through our hook
+      // Process the upload
       console.log('Starting image upload process for file:', file.name);
       onImageUploaded(file, imageAlt);
       
       clearInterval(intervalId);
       setUploadProgress(100);
-      
-      toast({
-        title: 'Upload initiated',
-        description: 'Your image is being processed...',
-      });
       
       // Reset after a delay to provide visual feedback
       setTimeout(() => {
@@ -78,7 +72,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
       }, 1500);
       
     } catch (error: any) {
-      console.error('Error uploading image:', error);
+      console.error('Error initiating upload:', error);
       setUploadError(error.message || 'There was a problem uploading your image');
       toast({
         title: 'Upload failed',
