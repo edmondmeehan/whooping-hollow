@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Cloud, EyeIcon, EyeOffIcon } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface CloudinaryUrlFormProps {
   cloudinaryUrl: string;
@@ -16,9 +17,19 @@ const CloudinaryUrlForm: React.FC<CloudinaryUrlFormProps> = ({
   onUpdateCloudinaryUrl 
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const { toast } = useToast();
   
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
+  };
+  
+  const handleSave = () => {
+    if (cloudinaryUrl) {
+      toast({
+        title: "Cloudinary URL updated",
+        description: "Your Cloudinary configuration has been saved"
+      });
+    }
   };
   
   return (
@@ -63,11 +74,12 @@ const CloudinaryUrlForm: React.FC<CloudinaryUrlFormProps> = ({
           </p>
         </div>
       </CardContent>
-      <CardFooter className="bg-blue-50 text-xs text-blue-700 pt-0">
+      <CardFooter className="bg-blue-50 text-xs text-blue-700 pt-0 flex justify-between">
         <p>
           Your Cloudinary URL is used for image uploads and management. For better security,
           consider using the Supabase integration to store this URL securely.
         </p>
+        <Button size="sm" onClick={handleSave} className="ml-2">Save</Button>
       </CardFooter>
     </Card>
   );
