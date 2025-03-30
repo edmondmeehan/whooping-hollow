@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLocalArea } from '@/hooks/use-local-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -6,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormProvider, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
 import { Waves, Anchor, MapPin, Music, Info } from 'lucide-react';
 
@@ -16,7 +15,6 @@ const AdminLocalArea = () => {
   const [activeTab, setActiveTab] = useState('east-hampton');
   const { toast } = useToast();
   
-  // East Hampton form
   const eastHamptonForm = useForm({
     defaultValues: {
       title: localAreaData.eastHampton.title,
@@ -26,7 +24,6 @@ const AdminLocalArea = () => {
     }
   });
   
-  // Sag Harbor form
   const sagHarborForm = useForm({
     defaultValues: {
       title: localAreaData.sagHarbor.title,
@@ -36,7 +33,6 @@ const AdminLocalArea = () => {
     }
   });
   
-  // Nearby Favorites form
   const nearbyFavoritesForm = useForm({
     defaultValues: {
       title: localAreaData.nearbyFavorites.title,
@@ -45,7 +41,6 @@ const AdminLocalArea = () => {
     }
   });
   
-  // Summer Events form
   const summerEventsForm = useForm({
     defaultValues: {
       title: localAreaData.summerEvents.title,
@@ -55,7 +50,6 @@ const AdminLocalArea = () => {
     }
   });
   
-  // Insider Tips form
   const insiderTipsForm = useForm({
     defaultValues: {
       title: localAreaData.insiderTips.title,
