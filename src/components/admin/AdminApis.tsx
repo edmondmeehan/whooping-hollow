@@ -69,7 +69,7 @@ const AdminApis = () => {
       toast({
         title: "API Keys Saved",
         description: "Weather functionality requires an OpenWeatherMap API key.",
-        variant: "warning"
+        variant: "destructive" // Changed from "warning" to "destructive"
       });
     }
   };
