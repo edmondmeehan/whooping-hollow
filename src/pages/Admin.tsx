@@ -5,7 +5,8 @@ import {
   ImageIcon, 
   CalendarIcon, 
   BookIcon,
-  HomeIcon
+  HomeIcon,
+  Link2Icon
 } from 'lucide-react';
 
 import AdminNavbar from '@/components/admin/AdminNavbar';
@@ -13,6 +14,7 @@ import AdminImages from '@/components/admin/AdminImages';
 import AdminBookings from '@/components/admin/AdminBookings';
 import AdminGuide from '@/components/admin/AdminGuide';
 import AdminProperties from '@/components/admin/AdminProperties';
+import AdminApis from '@/components/admin/AdminApis';
 import AdminLogin from '@/components/admin/AdminLogin';
 import { useToast } from '@/hooks/use-toast';
 
@@ -49,7 +51,7 @@ const Admin = () => {
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
         
         <Tabs defaultValue="images" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-8">
+          <TabsList className="grid grid-cols-5 mb-8">
             <TabsTrigger value="images" className="flex items-center gap-2">
               <ImageIcon className="h-4 w-4" />
               <span>Images</span>
@@ -65,6 +67,10 @@ const Admin = () => {
             <TabsTrigger value="properties" className="flex items-center gap-2">
               <HomeIcon className="h-4 w-4" />
               <span>Properties</span>
+            </TabsTrigger>
+            <TabsTrigger value="apis" className="flex items-center gap-2">
+              <Link2Icon className="h-4 w-4" />
+              <span>API Keys</span>
             </TabsTrigger>
           </TabsList>
           
@@ -82,6 +88,10 @@ const Admin = () => {
           
           <TabsContent value="properties" className="bg-white p-6 rounded-lg shadow-sm">
             <AdminProperties />
+          </TabsContent>
+          
+          <TabsContent value="apis" className="bg-white p-6 rounded-lg shadow-sm">
+            <AdminApis />
           </TabsContent>
         </Tabs>
       </div>
