@@ -107,7 +107,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
         )}
         
         <div className="mb-4">
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors">
+          <div 
+            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={triggerFileInput}
+          >
             <input
               type="file"
               id="image-upload"
@@ -116,31 +119,26 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
               onChange={handleFileChange}
               disabled={isUploading}
             />
-            <label
-              htmlFor="image-upload"
-              className="cursor-pointer flex flex-col items-center justify-center gap-2"
-            >
-              {isUploading ? (
-                <>
-                  <Loader2 className="h-10 w-10 text-gray-400 animate-spin" />
-                  <p className="text-sm text-gray-500">Uploading... {uploadProgress}%</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div 
-                      className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out" 
-                      style={{ width: `${uploadProgress}%` }}
-                    ></div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <ImagePlus className="h-10 w-10 text-gray-400" />
-                  <p className="text-sm text-gray-500">
-                    <span className="font-medium">Click to upload</span> or drag and drop
-                  </p>
-                  <p className="text-xs text-gray-400">PNG, JPG, GIF up to 5MB</p>
-                </>
-              )}
-            </label>
+            {isUploading ? (
+              <>
+                <Loader2 className="h-10 w-10 text-gray-400 animate-spin mx-auto" />
+                <p className="text-sm text-gray-500 mt-2">Uploading... {uploadProgress}%</p>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div 
+                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out" 
+                    style={{ width: `${uploadProgress}%` }}
+                  ></div>
+                </div>
+              </>
+            ) : (
+              <>
+                <ImagePlus className="h-10 w-10 text-gray-400 mx-auto" />
+                <p className="text-sm text-gray-500 mt-2">
+                  <span className="font-medium">Click to upload</span> or drag and drop
+                </p>
+                <p className="text-xs text-gray-400">PNG, JPG, GIF up to 5MB</p>
+              </>
+            )}
           </div>
           <p className="text-sm text-muted-foreground mt-2">
             Images will be stored in Supabase storage and linked in the database.

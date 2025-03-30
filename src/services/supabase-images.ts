@@ -114,8 +114,7 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
 
-    // Upload the file to Supabase storage - no anonymous auth needed
-    // since we've created a policy that allows public uploads
+    // Upload the file to Supabase storage with the public policy we created
     const { error: uploadError, data: uploadData } = await supabase.storage
       .from('images')
       .upload(filePath, file, {
