@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { AirbnbImage } from '@/types/image';
 import { useImageService } from './image-service';
@@ -50,9 +51,9 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
     try {
       setLoading(true);
       
-      const url = await uploadImageFile(file);
+      const imageUrl = await uploadImageFile(file, alt);
       
-      if (!url) {
+      if (!imageUrl) {
         toast({
           title: 'Upload Error',
           description: 'Failed to obtain URL from upload service',
@@ -62,7 +63,7 @@ export const useImageAddOperations = (images: AirbnbImage[], setImages: React.Di
       }
       
       const newImage: AirbnbImage = {
-        url,
+        url: imageUrl,
         alt: alt || file.name,
       };
       

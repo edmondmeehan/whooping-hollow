@@ -5,18 +5,18 @@ import { useToast } from '@/hooks/use-toast';
 export const useImageUploadService = () => {
   const { toast } = useToast();
   
-  const uploadImageFile = async (file: File) => {
+  const uploadImageFile = async (file: File, altText: string) => {
     try {
       console.log('Starting upload process for file:', file.name, 'size:', file.size, 'type:', file.type);
       
-      const url = await uploadImage(file);
+      const uploadedImage = await uploadImage(file, altText);
       
-      if (!url) {
+      if (!uploadedImage || !uploadedImage.url) {
         throw new Error('Failed to upload image to storage');
       }
       
-      console.log('File uploaded successfully, URL:', url);
-      return url;
+      console.log('File uploaded successfully, URL:', uploadedImage.url);
+      return uploadedImage.url;
     } catch (uploadError: any) {
       console.error('Upload error:', uploadError);
       
