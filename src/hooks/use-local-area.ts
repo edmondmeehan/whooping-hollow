@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from './use-toast';
-import { LocalAreaData } from '../types/local-area';
+import type { LocalAreaData } from '../types/local-area';
 import { getLocalAreaData, saveLocalAreaData } from '../services/local-area-storage';
 
-export { LocalAreaData } from '../types/local-area';
+export type { LocalAreaData } from '../types/local-area';
 
 export const useLocalArea = () => {
   const [localAreaData, setLocalAreaData] = useState<LocalAreaData>(() => getLocalAreaData());
