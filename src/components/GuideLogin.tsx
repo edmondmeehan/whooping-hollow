@@ -7,12 +7,13 @@ import { BookIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface GuideLoginProps {
-  onLogin: (username: string, password: string) => void;
+  onLogin: (username: string, password: string) => boolean;
 }
 
 const GuideLogin = ({ onLogin }: GuideLoginProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,7 +28,16 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
       return;
     }
     
-    onLogin(username, password);
+    const success = onLogin(username, password);
+    
+    if (!success) {
+      setError('Invalid username or password');
+      toast({
+        title: "Login Failed",
+        description: "Invalid username or password. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -59,8 +69,11 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {error && (
+                <p className="text-sm text-red-500 text-center">{error}</p>
+              )}
               <p className="text-xs text-muted-foreground text-center">
-                For demo purposes, use: guest / guide123
+                For demo purposes, try the credentials configured in the Admin area
               </p>
             </div>
           </CardContent>

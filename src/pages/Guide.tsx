@@ -3,12 +3,11 @@ import React, { useState, useEffect } from 'react';
 import GuideBanner from '@/components/GuideBanner';
 import GuideTabs from '@/components/GuideTabs';
 import GuideLogin from '@/components/GuideLogin';
-import { GuideCredentials } from '@/types/guide';
-
-const STORAGE_KEY_CREDENTIALS = 'guideCredentials';
+import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 const Guide = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { guideCredentials } = useGuideCredentials();
 
   useEffect(() => {
     // Check if user was previously authenticated in this session
@@ -19,13 +18,7 @@ const Guide = () => {
   }, []);
 
   const handleLogin = (username: string, password: string) => {
-    // Get credentials from localStorage
-    const storedCredentials = localStorage.getItem(STORAGE_KEY_CREDENTIALS);
-    const credentials: GuideCredentials = storedCredentials 
-      ? JSON.parse(storedCredentials) 
-      : { username: 'whoppinghollow', password: '262626' };
-    
-    if (username === credentials.username && password === credentials.password) {
+    if (username === guideCredentials.username && password === guideCredentials.password) {
       setIsAuthenticated(true);
       // Store authentication state for this session
       sessionStorage.setItem('guideAuthenticated', 'true');
