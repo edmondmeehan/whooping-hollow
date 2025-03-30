@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { SaveIcon, PlusIcon, TrashIcon, LockIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { GuideSection, GuideSections, GuideCredentials } from '@/types/guide';
 
-// Sample guide sections data
+// Sample guide sections data for initial state
 const initialGuideSections = {
   welcome: [
     {
@@ -80,17 +80,41 @@ const initialGuideSections = {
 
 // Initial guide credentials
 const initialGuideCredentials: GuideCredentials = {
-  username: 'guest',
-  password: 'guide123'
+  username: 'whoppinghollow',
+  password: '262626'
 };
 
+const STORAGE_KEY_SECTIONS = 'guideContentSections';
+const STORAGE_KEY_CREDENTIALS = 'guideCredentials';
+
 const AdminGuide = () => {
-  const [guideSections, setGuideSections] = useState<GuideSections>(initialGuideSections);
+  const [guideSections, setGuideSections] = useState<GuideSections>(() => {
+    // Load from localStorage if available
+    const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
+    return storedSections ? JSON.parse(storedSections) : initialGuideSections;
+  });
+  
   const [activeTab, setActiveTab] = useState('welcome');
   const [editingSection, setEditingSection] = useState<GuideSection | null>(null);
-  const [guideCredentials, setGuideCredentials] = useState<GuideCredentials>(initialGuideCredentials);
+  
+  const [guideCredentials, setGuideCredentials] = useState<GuideCredentials>(() => {
+    // Load from localStorage if available
+    const storedCredentials = localStorage.getItem(STORAGE_KEY_CREDENTIALS);
+    return storedCredentials ? JSON.parse(storedCredentials) : initialGuideCredentials;
+  });
+  
   const [showCredentials, setShowCredentials] = useState(false);
   const { toast } = useToast();
+
+  // Save to localStorage whenever guideSections changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(guideSections));
+  }, [guideSections]);
+
+  // Save to localStorage whenever guideCredentials changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_CREDENTIALS, JSON.stringify(guideCredentials));
+  }, [guideCredentials]);
 
   const handleEditSection = (section: GuideSection) => {
     setEditingSection(section);
@@ -143,8 +167,7 @@ const AdminGuide = () => {
   };
 
   const handleUpdateCredentials = () => {
-    // In a real app, these would be stored securely
-    localStorage.setItem('guideCredentials', JSON.stringify(guideCredentials));
+    localStorage.setItem(STORAGE_KEY_CREDENTIALS, JSON.stringify(guideCredentials));
     
     toast({
       title: 'Credentials Updated',
