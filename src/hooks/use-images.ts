@@ -58,6 +58,20 @@ export const useImages = () => {
     });
   };
 
+  const handleAddUploadedImage = (url: string, alt: string) => {
+    const newImage: AirbnbImage = {
+      url,
+      alt,
+    };
+
+    setImages([...images, newImage]);
+
+    toast({
+      title: 'Success',
+      description: 'Uploaded image added to gallery',
+    });
+  };
+
   const handleAddMultipleImages = () => {
     if (!multipleUrls.trim()) {
       toast({
@@ -148,6 +162,7 @@ export const useImages = () => {
     handleAddMultipleImages,
     handleRemoveImage,
     handleEditImage,
-    handleUpdateImage
+    handleUpdateImage,
+    handleAddUploadedImage
   };
 };
