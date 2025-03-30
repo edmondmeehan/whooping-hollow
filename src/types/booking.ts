@@ -1,4 +1,5 @@
 
+export type PropertyLocation = "montauk" | "nashville";
 export type BookingStatus = "new" | "contacted" | "confirmed" | "cancelled";
 
 export interface Booking {
