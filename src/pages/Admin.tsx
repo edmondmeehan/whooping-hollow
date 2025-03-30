@@ -9,7 +9,7 @@ const AdminContent = () => {
   const { isAuthenticated, adminData, handleLogout } = useAdminAuth();
 
   if (!isAuthenticated) {
-    return <AdminLogin onLogin={handleLogout} />;
+    return <AdminLogin />; // Remove the onLogin prop as it's not needed here
   }
 
   return (
