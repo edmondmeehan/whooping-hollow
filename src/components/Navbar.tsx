@@ -24,15 +24,10 @@ const Navbar = () => {
             <Link to="/" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
               Home
             </Link>
-            <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90">
-              <a 
-                href="https://www.airbnb.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center"
-              >
+            <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90" asChild>
+              <Link to="/properties" className="flex items-center">
                 Book Now
-              </a>
+              </Link>
             </Button>
           </div>
 
@@ -57,15 +52,14 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Button className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90">
-              <a 
-                href="https://www.airbnb.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
+            <Button className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90" asChild>
+              <Link 
+                to="/properties" 
                 className="flex items-center justify-center w-full"
+                onClick={toggleMenu}
               >
                 Book Now
-              </a>
+              </Link>
             </Button>
           </div>
         )}
