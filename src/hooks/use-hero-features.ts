@@ -29,17 +29,21 @@ export interface UseHeroFeaturesReturn {
  */
 export const useHeroFeatures = (): UseHeroFeaturesReturn => {
   // Initialize state with features from storage
-  const [heroFeatures, setHeroFeatures] = useState<HeroFeature[]>(
-    heroFeaturesStorage.getFeatures()
-  );
+  const [heroFeatures, setHeroFeatures] = useState<HeroFeature[]>(() => {
+    const features = heroFeaturesStorage.getFeatures();
+    console.log("Loaded hero features from storage:", features);
+    return features;
+  });
   
   // Save features to storage when they change
   useEffect(() => {
+    console.log("Saving hero features to storage:", heroFeatures);
     heroFeaturesStorage.saveFeatures(heroFeatures);
   }, [heroFeatures]);
   
   // Update hero features
   const updateHeroFeatures = (features: HeroFeature[]): void => {
+    console.log("Updating hero features:", features);
     setHeroFeatures(features);
   };
   

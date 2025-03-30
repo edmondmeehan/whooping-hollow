@@ -1,15 +1,16 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { Button } from './ui/button';
-import { getHeroImage } from '@/utils/airbnbScraper';
 import { Skeleton } from './ui/skeleton';
 import { useHeroFeatures } from '@/hooks/use-hero-features';
+import { AlertCircle } from 'lucide-react';
 
 const Hero = () => {
   const { heroFeatures } = useHeroFeatures();
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
   
   // Check if we have features and set loading state
   useEffect(() => {
@@ -34,13 +35,24 @@ const Hero = () => {
     return () => clearInterval(intervalId);
   }, [cycleFeature, heroFeatures.length]);
   
+  // Reset image error state when feature changes
+  useEffect(() => {
+    setImageError(false);
+  }, [currentFeatureIndex]);
+  
   // Get current feature
   const currentFeature = heroFeatures[currentFeatureIndex] || {
     id: "",
-    title: "",
-    subtitle: "",
-    imageUrl: "",
+    title: "Welcome to Our Property",
+    subtitle: "Experience luxury in the heart of the Hamptons",
+    imageUrl: "/hero-image.jpg", // Default fallback
     videoUrl: ""
+  };
+  
+  // Handle image loading error
+  const handleImageError = () => {
+    console.error("Failed to load hero image:", currentFeature.imageUrl);
+    setImageError(true);
   };
   
   // Default linear gradient while image loads
@@ -50,19 +62,22 @@ const Hero = () => {
     backgroundPosition: 'center',
   };
   
-  // Hero style with loaded image (as fallback)
-  const heroBackgroundStyle = currentFeature.imageUrl ? {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${currentFeature.imageUrl}')`,
+  // Fallback image if the current one fails
+  const fallbackImage = "/hero-image.jpg"; // Using the local hero image as fallback
+  
+  // Hero style with loaded image
+  const heroBackgroundStyle = {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-  } : defaultStyle;
+  };
 
   return (
     <div className="hero-section flex items-center justify-center text-center relative overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full z-0">
         <div className="absolute inset-0 bg-black/40 z-10"></div>
-        {currentFeature.videoUrl ? (
+        {currentFeature.videoUrl && !imageError ? (
           <video
             key={currentFeature.id} // Key to force recreation when feature changes
             autoPlay
@@ -71,9 +86,13 @@ const Hero = () => {
             playsInline
             className="w-full h-full object-cover"
             poster={currentFeature.imageUrl || undefined}
+            onError={() => {
+              console.error("Video failed to load:", currentFeature.videoUrl);
+              setImageError(true);
+            }}
           >
             <source src={currentFeature.videoUrl} type="video/mp4" />
-            {/* Fallback to static image if video fails */}
+            {/* Fallback if video fails */}
             <div 
               className="absolute inset-0 w-full h-full" 
               style={heroBackgroundStyle}
@@ -82,7 +101,9 @@ const Hero = () => {
         ) : (
           <div 
             className="absolute inset-0 w-full h-full" 
-            style={heroBackgroundStyle}
+            style={imageError ? defaultStyle : heroBackgroundStyle}
+            onLoad={() => setImageError(false)}
+            onError={handleImageError}
           ></div>
         )}
       </div>
@@ -101,6 +122,10 @@ const Hero = () => {
           </>
         ) : error ? (
           <div className="text-white bg-red-500/20 p-4 rounded-md">
+            <div className="flex gap-2 items-center justify-center mb-2">
+              <AlertCircle className="h-5 w-5" />
+              <p className="font-medium">Error loading hero content</p>
+            </div>
             <p>{error}</p>
             <Button 
               onClick={() => window.location.reload()}

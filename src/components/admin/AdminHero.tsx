@@ -10,27 +10,33 @@ import HeroFeatureCarousel from './hero/HeroFeatureCarousel';
 const AdminHero = () => {
   const { heroFeatures, updateHeroFeatures } = useHeroFeatures();
   const [editingFeature, setEditingFeature] = useState<HeroFeature | null>(null);
+  const [isAddingNew, setIsAddingNew] = useState(false);
   const { toast } = useToast();
   
   const handleEditFeature = (feature: HeroFeature) => {
+    console.log("Edit feature clicked:", feature);
+    setIsAddingNew(false);
     setEditingFeature(feature);
   };
   
   const handleAddNewFeature = () => {
+    setIsAddingNew(true);
     setEditingFeature(null);
   };
   
   const handleSaveFeature = (values: HeroFeatureFormValues) => {
+    console.log("Saving feature with values:", values);
+    
     // Ensure all required fields have values
     const featureToSave: HeroFeature = {
-      id: editingFeature?.id || `feature-${Date.now()}`,
+      id: isAddingNew ? `feature-${Date.now()}` : (editingFeature?.id || `feature-${Date.now()}`),
       title: values.title,
       subtitle: values.subtitle,
       imageUrl: values.imageUrl,
-      videoUrl: values.videoUrl
+      videoUrl: values.videoUrl || undefined
     };
 
-    if (editingFeature && editingFeature.id) {
+    if (!isAddingNew && editingFeature) {
       // Update existing feature
       const updatedFeatures = heroFeatures.map(feature => 
         feature.id === editingFeature.id ? featureToSave : feature
@@ -53,6 +59,7 @@ const AdminHero = () => {
     }
     
     setEditingFeature(null);
+    setIsAddingNew(false);
   };
   
   const handleDeleteFeature = (featureId: string) => {
@@ -79,11 +86,13 @@ const AdminHero = () => {
     
     if (editingFeature?.id === featureId) {
       setEditingFeature(null);
+      setIsAddingNew(false);
     }
   };
   
   const handleCancelEdit = () => {
     setEditingFeature(null);
+    setIsAddingNew(false);
   };
   
   return (
@@ -100,7 +109,7 @@ const AdminHero = () => {
         </div>
         
         {/* Feature editor form */}
-        {(editingFeature || !editingFeature && editingFeature !== null) && (
+        {(editingFeature !== null || isAddingNew) && (
           <HeroFeatureForm 
             editingFeature={editingFeature}
             onSave={handleSaveFeature}

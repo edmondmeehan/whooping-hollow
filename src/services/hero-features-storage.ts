@@ -12,10 +12,12 @@ export const heroFeaturesStorage = {
    */
   getFeatures: (): HeroFeature[] => {
     try {
+      console.log("Retrieving hero features from storage");
       const savedFeatures = localStorage.getItem(STORAGE_KEY);
       if (savedFeatures) {
         const parsedFeatures = JSON.parse(savedFeatures);
         if (Array.isArray(parsedFeatures) && parsedFeatures.length > 0) {
+          console.log("Successfully retrieved hero features:", parsedFeatures);
           return parsedFeatures;
         }
       }
@@ -24,13 +26,16 @@ export const heroFeaturesStorage = {
     }
     
     // Return default feature if nothing valid in storage
-    return [{
+    const defaultFeature = {
       id: "default-feature",
       title: "Whooping Hollow Haven",
       subtitle: "A luxurious retreat in the heart of East Hampton",
       imageUrl: "/hero-image.jpg",
       videoUrl: "https://d3ioifgscy1qpn.cloudfront.net/videos/general/footer_video.mov.65e79d1da7050.mp4"
-    }];
+    };
+    
+    console.log("Using default hero feature:", defaultFeature);
+    return [defaultFeature];
   },
   
   /**
@@ -38,6 +43,7 @@ export const heroFeaturesStorage = {
    */
   saveFeatures: (features: HeroFeature[]): void => {
     try {
+      console.log("Saving hero features to storage:", features);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(features));
     } catch (err) {
       console.error("Error saving hero features to storage:", err);

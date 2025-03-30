@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { AirbnbImage } from '@/types/image';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AlertCircle } from 'lucide-react';
 
 interface GalleryImageProps {
   image: AirbnbImage;
@@ -34,10 +35,17 @@ const GalleryImage: React.FC<GalleryImageProps> = ({ image, index }) => {
   };
   
   return (
-    <AspectRatio ratio={4/3}>
+    <AspectRatio ratio={4/3} className="relative">
       {isLoading && !hasError && (
         <Skeleton className="absolute inset-0 w-full h-full rounded-none" />
       )}
+      
+      {hasError && (
+        <div className="absolute top-2 right-2 z-10 bg-red-100 text-red-600 p-1 rounded-full">
+          <AlertCircle className="h-4 w-4" />
+        </div>
+      )}
+      
       <img
         src={hasError ? getFallbackImage() : image.url}
         alt={image.alt || 'Property image'}

@@ -16,7 +16,7 @@ export const heroFeatureSchema = z.object({
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
   subtitle: z.string().min(2, { message: "Subtitle is required." }),
   imageUrl: z.string().url({ message: "Please enter a valid image URL." }),
-  videoUrl: z.string().url({ message: "Please enter a valid video URL." }).optional(),
+  videoUrl: z.string().url({ message: "Please enter a valid video URL." }).optional().or(z.string().length(0)),
 });
 
 // Type for form values
@@ -36,26 +36,41 @@ const HeroFeatureForm: React.FC<HeroFeatureFormProps> = ({
   // Setup form
   const form = useForm<HeroFeatureFormValues>({
     resolver: zodResolver(heroFeatureSchema),
-    defaultValues: editingFeature || {
-      title: "",
-      subtitle: "",
-      imageUrl: "",
-      videoUrl: ""
+    defaultValues: {
+      id: editingFeature?.id || undefined,
+      title: editingFeature?.title || "",
+      subtitle: editingFeature?.subtitle || "",
+      imageUrl: editingFeature?.imageUrl || "",
+      videoUrl: editingFeature?.videoUrl || ""
     }
   });
   
   // Update form when editing feature changes
   useEffect(() => {
     if (editingFeature) {
-      Object.keys(editingFeature).forEach((key) => {
-        if (key !== 'id') {
-          // Type assertion to fix TypeScript error with dynamic keys
-          const featureKey = key as keyof Omit<HeroFeature, 'id'>;
-          form.setValue(featureKey, editingFeature[featureKey] || "");
-        }
+      console.log("Editing feature:", editingFeature);
+      form.reset({
+        id: editingFeature.id,
+        title: editingFeature.title,
+        subtitle: editingFeature.subtitle,
+        imageUrl: editingFeature.imageUrl,
+        videoUrl: editingFeature.videoUrl || ""
+      });
+    } else {
+      form.reset({
+        id: undefined,
+        title: "",
+        subtitle: "",
+        imageUrl: "",
+        videoUrl: ""
       });
     }
   }, [editingFeature, form]);
+
+  const handleSubmit = (values: HeroFeatureFormValues) => {
+    console.log("Form submitted with values:", values);
+    onSave(values);
+  };
 
   return (
     <Card className="mb-6">
@@ -66,7 +81,7 @@ const HeroFeatureForm: React.FC<HeroFeatureFormProps> = ({
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSave)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="title"
