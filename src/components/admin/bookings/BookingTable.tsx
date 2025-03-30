@@ -1,97 +1,80 @@
 
-import React, { useState } from 'react';
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableHead, 
-  TableRow, 
-  TableCell 
-} from '@/components/ui/table';
-import { Booking, BookingStatus } from '@/types/booking';
+import React from 'react';
+import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from '@/components/ui/table';
 import StatusBadge from './StatusBadge';
 import StatusSelect from './StatusSelect';
-import BookingDetailsModal from './BookingDetailsModal';
+import { Booking, BookingStatus } from '@/types/booking';
+import { format } from 'date-fns';
 
-interface BookingTableProps {
+export interface BookingTableProps {
   bookings: Booking[];
   onStatusChange: (bookingId: number, newStatus: BookingStatus) => void;
+  onBookingClick: (booking: Booking) => void;
 }
 
-const BookingTable: React.FC<BookingTableProps> = ({ bookings, onStatusChange }) => {
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
-  const handleRowClick = (booking: Booking) => {
-    setSelectedBooking(booking);
-    setIsDetailsOpen(true);
+const BookingTable: React.FC<BookingTableProps> = ({ 
+  bookings, 
+  onStatusChange,
+  onBookingClick
+}) => {
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM dd, yyyy');
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
-  
-  const handleCloseDetails = () => {
-    setIsDetailsOpen(false);
-  };
-
-  if (bookings.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-500">
-        No booking requests yet.
-      </div>
-    );
-  }
 
   return (
-    <>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Dates</TableHead>
+            <TableHead>Guests</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {bookings.length === 0 ? (
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Guest</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Dates</TableHead>
-              <TableHead>Guests</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                No booking requests found
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {bookings.map(booking => (
+          ) : (
+            bookings.map((booking) => (
               <TableRow 
                 key={booking.id}
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => handleRowClick(booking)}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => onBookingClick(booking)}
               >
-                <TableCell>{booking.id}</TableCell>
-                <TableCell>{booking.name}</TableCell>
+                <TableCell className="font-medium">{booking.name}</TableCell>
                 <TableCell>
-                  <div>{booking.email}</div>
-                  <div className="text-sm text-gray-500">{booking.phone}</div>
+                  {formatDate(booking.checkIn)} - {formatDate(booking.checkOut)}
                 </TableCell>
-                <TableCell>{booking.dates}</TableCell>
-                <TableCell>{booking.guests}</TableCell>
+                <TableCell>{booking.adults + (booking.children || 0)}</TableCell>
                 <TableCell>
                   <StatusBadge status={booking.status} />
                 </TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  <StatusSelect 
-                    currentStatus={booking.status} 
-                    bookingId={booking.id} 
-                    onStatusChange={onStatusChange} 
+                <TableCell>
+                  <StatusSelect
+                    currentStatus={booking.status}
+                    onStatusChange={(newStatus) => {
+                      onStatusChange(booking.id, newStatus);
+                      // Stop propagation to prevent opening the modal
+                      event?.stopPropagation();
+                    }}
                   />
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <BookingDetailsModal
-        booking={selectedBooking}
-        isOpen={isDetailsOpen}
-        onClose={handleCloseDetails}
-        onStatusChange={onStatusChange}
-      />
-    </>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
