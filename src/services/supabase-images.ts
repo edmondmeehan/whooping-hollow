@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
 
@@ -146,6 +147,28 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     const filePath = `properties/${fileName}`;
 
     console.log('Uploading image to Supabase storage bucket: images, path:', filePath);
+
+    // Check if the images bucket exists
+    try {
+      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+      
+      if (bucketsError) {
+        console.error('Error checking storage buckets:', bucketsError);
+        throw new Error('Could not access Supabase storage. Please check your Supabase setup and permissions.');
+      }
+      
+      const imagesBucketExists = buckets?.some(bucket => bucket.name === 'images');
+      
+      if (!imagesBucketExists) {
+        console.error('The "images" storage bucket does not exist');
+        throw new Error('The "images" storage bucket does not exist in Supabase. Please create it in the Supabase dashboard.');
+      }
+      
+      console.log('Images bucket exists, proceeding with upload');
+    } catch (bucketError: any) {
+      console.error('Error checking for images bucket:', bucketError);
+      throw bucketError;
+    }
 
     // Upload the file to Supabase storage
     const { error: uploadError, data: uploadData } = await supabase.storage
