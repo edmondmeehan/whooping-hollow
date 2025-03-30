@@ -33,7 +33,7 @@ const AdminApis = () => {
       setCloudinaryUrl(savedUrl);
     }
     
-    // Ensure we have an OpenWeatherMap API key entry
+    // Ensure we have an OpenWeatherMap API key entry if one doesn't exist
     ensureApiKeyExists('OpenWeatherMap API', '');
   }, [ensureApiKeyExists]);
 
@@ -69,7 +69,7 @@ const AdminApis = () => {
       toast({
         title: "API Keys Saved",
         description: "Weather functionality requires an OpenWeatherMap API key.",
-        variant: "destructive" // Changed from "warning" to "destructive"
+        variant: "destructive"
       });
     }
   };

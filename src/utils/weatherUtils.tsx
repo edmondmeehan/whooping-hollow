@@ -87,15 +87,6 @@ export const getOpenWeatherApiKey = (): string => {
       } else {
         console.log('No specific weather API key found');
       }
-      
-      // If no specific weather key, check all keys for one that might be for weather
-      for (const api of apiKeys) {
-        if (api.key && api.key.trim() !== '' && 
-            (api.name.toLowerCase().includes('api') || api.name.toLowerCase().includes('key'))) {
-          console.log('Using potential API key from storage:', api.name);
-          return api.key;
-        }
-      }
     } else {
       console.log('No API keys found in localStorage');
     }
@@ -103,8 +94,8 @@ export const getOpenWeatherApiKey = (): string => {
     console.error('Error parsing API keys from localStorage:', err);
   }
   
-  // Default key as fallback (though it's likely expired/invalid)
-  console.log('Using fallback API key');
+  // Return empty string as fallback (will trigger simulation)
+  console.log('No valid API key found, returning empty string');
   return '';
 };
 
