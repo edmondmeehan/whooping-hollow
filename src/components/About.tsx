@@ -15,7 +15,7 @@ const About = () => {
             Welcome to Whooping Hollow
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Experience the perfect blend of luxury and comfort in our East Hampton retreat.
+            Your exclusive East Hampton retreat awaits – a sanctuary of luxury and tranquility.
           </p>
         </div>
 
@@ -25,12 +25,12 @@ const About = () => {
               {featured.name}
             </h3>
             <p className="text-gray-600 mb-6">
-              {featured.description}
+              Discover the ultimate Hamptons escape in our meticulously designed modern retreat. 
+              Nestled in the heart of Montauk, this home offers an unparalleled blend of sophistication and comfort.
             </p>
             <p className="text-gray-600 mb-6">
-              Whether you're looking to explore the beautiful beaches, visit local vineyards, 
-              or simply relax in a peaceful environment, our home provides the ideal base for 
-              your Hamptons adventure.
+              From pristine beaches and world-class wineries to serene landscapes, our property serves 
+              as your perfect base for exploring the unmatched beauty and charm of the East End.
             </p>
 
             <div className="grid grid-cols-2 gap-4 mt-8">
