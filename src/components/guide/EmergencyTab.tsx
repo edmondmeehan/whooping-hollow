@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Phone, AlertTriangle, Thermometer, Hospital } from 'lucide-react';
 import GuideSection from '../GuideSection';
