@@ -9,7 +9,8 @@ import {
   Link2Icon,
   LayoutIcon,
   Shield,
-  Users
+  Users,
+  Map
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import AdminImages from '@/components/admin/AdminImages';
@@ -19,6 +20,7 @@ import AdminProperties from '@/components/admin/AdminProperties';
 import AdminApis from '@/components/admin/AdminApis';
 import AdminHero from '@/components/admin/AdminHero';
 import AdminUsers from '@/components/admin/AdminUsers';
+import AdminLocalArea from '@/components/admin/AdminLocalArea';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 
 const AdminDashboard: React.FC = () => {
@@ -41,7 +43,7 @@ const AdminDashboard: React.FC = () => {
       </Alert>
       
       <Tabs defaultValue="images" className="w-full">
-        <TabsList className="grid grid-cols-7 mb-8">
+        <TabsList className="grid grid-cols-8 mb-8">
           <TabsTrigger value="images" className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />
             <span>Images</span>
@@ -61,6 +63,10 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="properties" className="flex items-center gap-2">
             <HomeIcon className="h-4 w-4" />
             <span>Properties</span>
+          </TabsTrigger>
+          <TabsTrigger value="local-area" className="flex items-center gap-2">
+            <Map className="h-4 w-4" />
+            <span>Local Area</span>
           </TabsTrigger>
           <TabsTrigger value="apis" className="flex items-center gap-2">
             <Link2Icon className="h-4 w-4" />
@@ -90,6 +96,10 @@ const AdminDashboard: React.FC = () => {
         
         <TabsContent value="properties" className="bg-white p-6 rounded-lg shadow-sm">
           <AdminProperties />
+        </TabsContent>
+        
+        <TabsContent value="local-area" className="bg-white p-6 rounded-lg shadow-sm">
+          <AdminLocalArea />
         </TabsContent>
         
         <TabsContent value="apis" className="bg-white p-6 rounded-lg shadow-sm">

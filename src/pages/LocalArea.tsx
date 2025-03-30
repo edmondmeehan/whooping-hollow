@@ -8,8 +8,11 @@ import SagHarborSection from '../components/local-area/SagHarborSection';
 import NearbyFavorites from '../components/local-area/NearbyFavorites';
 import SummerEventsSection from '../components/local-area/SummerEventsSection';
 import InsiderTips from '../components/local-area/InsiderTips';
+import { useLocalArea } from '@/hooks/use-local-area';
 
 const LocalArea = () => {
+  const { localAreaData } = useLocalArea();
+  
   return (
     <div className="bg-white min-h-screen flex flex-col">
       <Navbar />
@@ -20,19 +23,39 @@ const LocalArea = () => {
           <HeroSection />
           
           {/* East Hampton Section */}
-          <EastHamptonSection />
+          <EastHamptonSection 
+            title={localAreaData.eastHampton.title}
+            description={localAreaData.eastHampton.description}
+            highlights={localAreaData.eastHampton.highlights}
+            imageUrl={localAreaData.eastHampton.imageUrl}
+          />
           
           {/* Sag Harbor Section */}
-          <SagHarborSection />
+          <SagHarborSection 
+            title={localAreaData.sagHarbor.title}
+            description={localAreaData.sagHarbor.description}
+            highlights={localAreaData.sagHarbor.highlights}
+            imageUrl={localAreaData.sagHarbor.imageUrl}
+          />
           
           {/* Nearby Favorites */}
-          <NearbyFavorites />
+          <NearbyFavorites 
+            title={localAreaData.nearbyFavorites.title}
+            items={localAreaData.nearbyFavorites.items}
+          />
           
           {/* Summer Events */}
-          <SummerEventsSection />
+          <SummerEventsSection 
+            title={localAreaData.summerEvents.title}
+            description={localAreaData.summerEvents.description}
+            events={localAreaData.summerEvents.events}
+          />
           
           {/* Insider Tips */}
-          <InsiderTips />
+          <InsiderTips 
+            title={localAreaData.insiderTips.title}
+            tips={localAreaData.insiderTips.tips}
+          />
         </div>
       </div>
       
