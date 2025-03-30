@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import SingleImageForm from './images/SingleImageForm';
 import MultipleImagesForm from './images/MultipleImagesForm';
@@ -8,7 +7,7 @@ import ImageUploader from './images/ImageUploader';
 import CloudinaryUploader from './images/CloudinaryUploader';
 import { useImages } from '@/hooks/use-images';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ImageIcon, Link, Upload, Cloud, RefreshCcw, List, ArrowsUpDown } from 'lucide-react';
+import { ImageIcon, Link, Upload, Cloud, RefreshCcw, List, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AirbnbImage } from '@/types/image';
@@ -110,7 +109,7 @@ const AdminImages = () => {
             >
               {viewMode === 'list' ? (
                 <>
-                  <ArrowsUpDown className="h-4 w-4" /> Reorder Mode
+                  <ArrowUpDown className="h-4 w-4" /> Reorder Mode
                 </>
               ) : (
                 <>
