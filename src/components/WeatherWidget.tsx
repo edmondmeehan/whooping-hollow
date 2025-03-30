@@ -5,6 +5,7 @@ import {
   CloudDrizzle, Wind, AlertTriangle, Loader
 } from 'lucide-react';
 import { Card } from './ui/card';
+import { useToast } from '@/hooks/use-toast';
 
 interface WeatherWidgetProps {
   location: string;
@@ -22,78 +23,128 @@ const WeatherWidget = ({ location }: WeatherWidgetProps) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
-    // Simulate fetching weather data
-    const fetchWeather = () => {
+    const fetchWeatherData = async () => {
       setLoading(true);
       
-      // This is a simulation - in a real app, you would call a weather API
-      setTimeout(() => {
-        try {
-          // Random weather data for demonstration
-          const conditions = [
-            'Clear', 'Partly Cloudy', 'Cloudy', 'Rain', 
-            'Thunderstorm', 'Snow', 'Drizzle', 'Windy'
-          ];
-          const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
-          const randomTemp = Math.floor(Math.random() * 35) + 50; // 50-85°F
-          const randomHumidity = Math.floor(Math.random() * 50) + 30; // 30-80%
-          const randomWind = Math.floor(Math.random() * 15) + 2; // 2-17 mph
-          
-          // Select icon based on condition
-          let icon;
-          switch (randomCondition) {
-            case 'Clear':
-              icon = <Sun className="text-yellow-500" />;
-              break;
-            case 'Partly Cloudy':
-            case 'Cloudy':
-              icon = <Cloud className="text-gray-500" />;
-              break;
-            case 'Rain':
-              icon = <CloudRain className="text-blue-500" />;
-              break;
-            case 'Thunderstorm':
-              icon = <CloudLightning className="text-purple-500" />;
-              break;
-            case 'Snow':
-              icon = <CloudSnow className="text-blue-200" />;
-              break;
-            case 'Drizzle':
-              icon = <CloudDrizzle className="text-blue-400" />;
-              break;
-            case 'Windy':
-              icon = <Wind className="text-gray-400" />;
-              break;
-            default:
-              icon = <Sun className="text-yellow-500" />;
-          }
-          
-          setWeather({
-            temperature: randomTemp,
-            condition: randomCondition,
-            humidity: randomHumidity,
-            windSpeed: randomWind,
-            icon: icon
-          });
-          
-          setLoading(false);
-          setError(null);
-        } catch (err) {
-          setError("Failed to load weather data");
-          setLoading(false);
+      try {
+        // OpenWeatherMap API - Free tier
+        const apiKey = 'ed4698710a88dc4704f6ef16341f15d1'; // Free API key for demo purposes
+        const city = location.split(',')[0].trim(); // Extract city from location
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error(`Weather API error: ${response.statusText}`);
         }
-      }, 1500); // simulate network delay
+        
+        const data = await response.json();
+        
+        // Select icon based on OpenWeatherMap condition code
+        let icon;
+        const weatherCode = data.weather[0].id;
+        const weatherMain = data.weather[0].main;
+        
+        if (weatherCode >= 200 && weatherCode < 300) {
+          icon = <CloudLightning className="text-purple-500 h-10 w-10" />;
+        } else if (weatherCode >= 300 && weatherCode < 400) {
+          icon = <CloudDrizzle className="text-blue-400 h-10 w-10" />;
+        } else if (weatherCode >= 500 && weatherCode < 600) {
+          icon = <CloudRain className="text-blue-500 h-10 w-10" />;
+        } else if (weatherCode >= 600 && weatherCode < 700) {
+          icon = <CloudSnow className="text-blue-200 h-10 w-10" />;
+        } else if (weatherCode >= 700 && weatherCode < 800) {
+          icon = <Wind className="text-gray-400 h-10 w-10" />;
+        } else if (weatherCode === 800) {
+          icon = <Sun className="text-yellow-500 h-10 w-10" />;
+        } else if (weatherCode > 800) {
+          icon = <Cloud className="text-gray-500 h-10 w-10" />;
+        }
+        
+        setWeather({
+          temperature: Math.round(data.main.temp),
+          condition: data.weather[0].description,
+          humidity: data.main.humidity,
+          windSpeed: Math.round(data.wind.speed),
+          icon: icon
+        });
+        
+        setLoading(false);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching weather data:', err);
+        setError("Failed to load weather data");
+        setLoading(false);
+        toast({
+          title: "Weather Data Error",
+          description: "Unable to fetch current weather. Using simulated data instead.",
+          variant: "destructive"
+        });
+        
+        // Fallback to simulated data
+        simulateWeatherData();
+      }
     };
     
-    fetchWeather();
+    const simulateWeatherData = () => {
+      // This is a simulation - as a fallback when API fails
+      const conditions = [
+        'Clear', 'Partly Cloudy', 'Cloudy', 'Rain', 
+        'Thunderstorm', 'Snow', 'Drizzle', 'Windy'
+      ];
+      const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+      const randomTemp = Math.floor(Math.random() * 35) + 50; // 50-85°F
+      const randomHumidity = Math.floor(Math.random() * 50) + 30; // 30-80%
+      const randomWind = Math.floor(Math.random() * 15) + 2; // 2-17 mph
+      
+      // Select icon based on condition
+      let icon;
+      switch (randomCondition) {
+        case 'Clear':
+          icon = <Sun className="text-yellow-500 h-10 w-10" />;
+          break;
+        case 'Partly Cloudy':
+        case 'Cloudy':
+          icon = <Cloud className="text-gray-500 h-10 w-10" />;
+          break;
+        case 'Rain':
+          icon = <CloudRain className="text-blue-500 h-10 w-10" />;
+          break;
+        case 'Thunderstorm':
+          icon = <CloudLightning className="text-purple-500 h-10 w-10" />;
+          break;
+        case 'Snow':
+          icon = <CloudSnow className="text-blue-200 h-10 w-10" />;
+          break;
+        case 'Drizzle':
+          icon = <CloudDrizzle className="text-blue-400 h-10 w-10" />;
+          break;
+        case 'Windy':
+          icon = <Wind className="text-gray-400 h-10 w-10" />;
+          break;
+        default:
+          icon = <Sun className="text-yellow-500 h-10 w-10" />;
+      }
+      
+      setWeather({
+        temperature: randomTemp,
+        condition: randomCondition,
+        humidity: randomHumidity,
+        windSpeed: randomWind,
+        icon: icon
+      });
+    };
+    
+    fetchWeatherData();
     
     // Refresh weather every 30 minutes
-    const intervalId = setInterval(fetchWeather, 30 * 60 * 1000);
+    const intervalId = setInterval(fetchWeatherData, 30 * 60 * 1000);
     
     return () => clearInterval(intervalId);
-  }, [location]);
+  }, [location, toast]);
   
   if (loading) {
     return (
@@ -106,7 +157,7 @@ const WeatherWidget = ({ location }: WeatherWidgetProps) => {
     );
   }
   
-  if (error) {
+  if (error && !weather) {
     return (
       <Card className="p-6 bg-amber-50 border-amber-200">
         <div className="flex items-center justify-center space-x-2 text-amber-800">
@@ -151,7 +202,7 @@ const WeatherWidget = ({ location }: WeatherWidgetProps) => {
         </div>
         
         <div className="mt-4 text-xs text-gray-500 text-center pt-2 border-t">
-          <p>Weather data is simulated for demonstration purposes</p>
+          <p>Weather data provided by OpenWeatherMap</p>
           <p>Last updated: {new Date().toLocaleTimeString()}</p>
         </div>
       </div>
