@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,13 +27,16 @@ const heroFeatureSchema = z.object({
   videoUrl: z.string().url({ message: "Please enter a valid video URL." }).optional(),
 });
 
+// Type for form values
+type HeroFeatureFormValues = z.infer<typeof heroFeatureSchema>;
+
 const AdminHero = () => {
   const { heroFeatures, updateHeroFeatures } = useHeroFeatures();
   const [editingFeature, setEditingFeature] = useState<HeroFeature | null>(null);
   const { toast } = useToast();
   
   // Setup form
-  const form = useForm<z.infer<typeof heroFeatureSchema>>({
+  const form = useForm<HeroFeatureFormValues>({
     resolver: zodResolver(heroFeatureSchema),
     defaultValues: editingFeature || {
       title: "",
@@ -71,11 +73,20 @@ const AdminHero = () => {
     });
   };
   
-  const handleSaveFeature = (values: z.infer<typeof heroFeatureSchema>) => {
+  const handleSaveFeature = (values: HeroFeatureFormValues) => {
+    // Ensure all required fields have values
+    const featureToSave: HeroFeature = {
+      id: editingFeature?.id || `feature-${Date.now()}`,
+      title: values.title,
+      subtitle: values.subtitle,
+      imageUrl: values.imageUrl,
+      videoUrl: values.videoUrl
+    };
+
     if (editingFeature && editingFeature.id) {
       // Update existing feature
       const updatedFeatures = heroFeatures.map(feature => 
-        feature.id === editingFeature.id ? { ...values, id: feature.id } : feature
+        feature.id === editingFeature.id ? featureToSave : feature
       );
       
       updateHeroFeatures(updatedFeatures);
@@ -86,12 +97,7 @@ const AdminHero = () => {
       });
     } else {
       // Add new feature
-      const newFeature: HeroFeature = {
-        ...values,
-        id: `feature-${Date.now()}`
-      };
-      
-      updateHeroFeatures([...heroFeatures, newFeature]);
+      updateHeroFeatures([...heroFeatures, featureToSave]);
       
       toast({
         title: "Feature added",
