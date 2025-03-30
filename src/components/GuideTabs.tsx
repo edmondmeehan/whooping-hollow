@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { 
@@ -63,11 +62,11 @@ const GuideTabs = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="font-medium mb-2">Network Name:</p>
-                <p className="font-mono bg-white p-2 rounded border">WhoopingHollow_Guest</p>
+                <p className="font-mono bg-white p-2 rounded border">whoppinghollow</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="font-medium mb-2">Password:</p>
-                <p className="font-mono bg-white p-2 rounded border">HamptonStay2023</p>
+                <p className="font-mono bg-white p-2 rounded border">262626</p>
               </div>
             </div>
             <p className="mt-4 text-sm text-gray-600">
@@ -83,7 +82,7 @@ const GuideTabs = () => {
               <p className="font-medium">To access the property:</p>
               <ol className="list-decimal pl-6 space-y-2">
                 <li>Locate the lockbox to the right of the front door</li>
-                <li>Enter the code: 4578</li>
+                <li>Enter the code provided by the owner</li>
                 <li>Take the key and unlock the front door</li>
                 <li>Return the key to the lockbox when you leave</li>
               </ol>
@@ -322,9 +321,28 @@ const GuideTabs = () => {
                 <h3 className="font-medium mb-3">Important Phone Numbers</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium">Owner</h4>
+                    <p className="text-sm text-gray-600 mb-1">Eddie</p>
+                    <p className="font-medium">(916) 616-5376</p>
+                    <p className="text-sm">eddie@please.co</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium">Handyman</h4>
+                    <p className="text-sm text-gray-600 mb-1">John Sebastian Ramirez (Prestine Management)</p>
+                    <p className="font-medium">(631) 605-0294</p>
+                    <p className="text-sm">prestinemanagement631@gmail.com</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium">Cleaning Service</h4>
+                    <p className="text-sm text-gray-600 mb-1">Isabel Acevedo (Sisters Cleaning)</p>
+                    <p className="font-medium">(631) 833-7932</p>
+                    <p className="text-sm">isabelacevedop@gmail.com</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium">Property Manager</h4>
-                    <p className="text-sm text-gray-600 mb-1">Available 24/7 for emergencies</p>
-                    <p className="font-medium">(631) 555-1234</p>
+                    <p className="text-sm text-gray-600 mb-1">Stay Marquis</p>
+                    <p className="font-medium">(631) 301-2960</p>
+                    <p className="text-sm">maintenance@staymarquis.com</p>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium">East Hampton Hospital</h4>
@@ -335,11 +353,6 @@ const GuideTabs = () => {
                     <h4 className="font-medium">Police (Non-Emergency)</h4>
                     <p className="text-sm text-gray-600 mb-1">East Hampton Police Department</p>
                     <p className="font-medium">(631) 324-0777</p>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-medium">Fire Department (Non-Emergency)</h4>
-                    <p className="text-sm text-gray-600 mb-1">East Hampton Fire Department</p>
-                    <p className="font-medium">(631) 324-2100</p>
                   </div>
                 </div>
               </div>
