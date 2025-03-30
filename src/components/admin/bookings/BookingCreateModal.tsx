@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -78,14 +77,21 @@ const BookingCreateModal: React.FC<BookingCreateModalProps> = ({
   });
 
   function onSubmit(data: BookingFormValues) {
-    onCreateBooking({
-      ...data,
+    const submissionData: Omit<Booking, 'id' | 'created_at'> = {
+      name: data.name,
+      email: data.email || 'admin@property.com',
+      phone: data.phone || 'N/A',
       checkIn: format(data.checkIn, 'yyyy-MM-dd'),
       checkOut: format(data.checkOut, 'yyyy-MM-dd'),
-      isBlockedDate: isBlocking,
+      adults: data.adults,
+      children: data.children,
       status: isBlocking ? 'blocked' : data.status,
-    });
+      message: data.message,
+      notes: data.notes,
+      isBlockedDate: isBlocking
+    };
     
+    onCreateBooking(submissionData);
     form.reset();
   }
 
