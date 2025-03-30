@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { AirbnbImage } from '@/types/image';
 import { getImages } from '@/services/supabase-images';
 
-// Demo images to show when Supabase is not configured
+// Demo images to show when Supabase is not configured or has no data
 const demoImages: AirbnbImage[] = [
   {
     id: 1,
@@ -43,6 +43,9 @@ export const useGalleryImages = () => {
         console.log("Gallery images loaded from Supabase:", fetchedImages);
         
         if (fetchedImages.length === 0) {
+          console.log("No images found in database, using demo images");
+          setImages(demoImages);
+          setUsingDemoImages(true);
           setError("No images available in the database. Please add some in the admin panel.");
         } else {
           setImages(fetchedImages);
@@ -59,6 +62,8 @@ export const useGalleryImages = () => {
           setError("Demo mode: Supabase is not configured. Using sample images.");
         } else {
           setError("Failed to load gallery images from the database");
+          setImages(demoImages);
+          setUsingDemoImages(true);
         }
       } finally {
         setLoading(false);

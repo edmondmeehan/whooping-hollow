@@ -1,19 +1,6 @@
 
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { AirbnbImage } from '@/types/image';
-
-// Initialize Supabase client
-// Check for environment variables or use default test values if in development
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Log warning but don't throw error immediately - we'll handle this in the service methods
-if (!supabaseUrl || !supabaseKey) {
-  console.warn('Missing Supabase credentials. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
-}
-
-// Create client only if credentials are available
-const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 export const getImages = async (): Promise<AirbnbImage[]> => {
   try {
@@ -35,7 +22,7 @@ export const getImages = async (): Promise<AirbnbImage[]> => {
     return data as AirbnbImage[];
   } catch (error) {
     console.error('Error in getImages:', error);
-    return [];
+    throw error;
   }
 };
 
@@ -60,7 +47,7 @@ export const addImage = async (image: AirbnbImage): Promise<AirbnbImage | null> 
     return data as AirbnbImage;
   } catch (error) {
     console.error('Error in addImage:', error);
-    return null;
+    throw error;
   }
 };
 
@@ -86,7 +73,7 @@ export const updateImage = async (id: number, image: AirbnbImage): Promise<Airbn
     return data as AirbnbImage;
   } catch (error) {
     console.error('Error in updateImage:', error);
-    return null;
+    throw error;
   }
 };
 
@@ -110,7 +97,7 @@ export const deleteImage = async (id: number): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Error in deleteImage:', error);
-    return false;
+    throw error;
   }
 };
 
@@ -141,6 +128,6 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     return data.publicUrl;
   } catch (error) {
     console.error('Error in uploadImage:', error);
-    return null;
+    throw error;
   }
 };
