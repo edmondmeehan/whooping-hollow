@@ -1,42 +1,48 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import { LogOut, ArrowLeft, User } from 'lucide-react';
 
 interface AdminNavbarProps {
-  onLogout?: () => void;
+  onLogout: () => void;
+  adminEmail?: string;
 }
 
-const AdminNavbar = ({ onLogout }: AdminNavbarProps) => {
+const AdminNavbar = ({ onLogout, adminEmail }: AdminNavbarProps) => {
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="container-custom py-3 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <a href="/" className="text-lg font-semibold text-hamptons-accent">
-            Whooping Hollow
-          </a>
-          <span className="text-sm text-gray-500 px-2 py-1 bg-gray-100 rounded-md">
-            Admin
-          </span>
+    <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="container-custom flex items-center justify-between py-4">
+        <div className="flex items-center space-x-6">
+          <Link to="/" className="flex items-center text-hamptons-dark hover:text-hamptons-accent transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            <span>Back to Site</span>
+          </Link>
+          
+          <div className="flex items-center text-hamptons-dark font-bold">
+            Admin Dashboard
+          </div>
         </div>
         
         <div className="flex items-center space-x-4">
-          <a 
-            href="/" 
-            className="text-sm text-gray-600 hover:text-hamptons-accent transition-colors"
-          >
-            View Site
-          </a>
-          
-          {onLogout && (
-            <Button variant="outline" size="sm" onClick={onLogout} className="flex items-center gap-1">
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
-            </Button>
+          {adminEmail && (
+            <div className="flex items-center mr-2 text-sm">
+              <User className="h-4 w-4 mr-1 text-gray-500" />
+              <span className="text-gray-600">{adminEmail}</span>
+            </div>
           )}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={onLogout}
+            className="flex items-center gap-1"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </Button>
         </div>
       </div>
-    </header>
+    </div>
   );
 };
 

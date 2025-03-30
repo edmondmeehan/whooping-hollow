@@ -3,14 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { LockIcon, ShieldCheck } from 'lucide-react';
+import { LockIcon, ShieldCheck, UserIcon, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { authenticateAdmin } from '@/services/admin-users-storage';
 
 interface AdminLoginProps {
-  onLogin: (password: string) => void;
+  onLogin: (adminData: { email: string; role: string }) => void;
 }
 
 const AdminLogin = ({ onLogin }: AdminLoginProps) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
@@ -70,7 +72,10 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
       
       // If session hasn't expired, login automatically
       if (expiryTime > new Date()) {
-        onLogin(sessionData.password);
+        onLogin({ 
+          email: sessionData.email,
+          role: sessionData.role
+        });
       } else {
         // Clear expired session
         localStorage.removeItem('adminSession');
@@ -83,22 +88,28 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
     
     if (isLocked) return;
     
-    // Check password
-    if (password === 'admin123') {
+    // Authenticate user with email/password
+    const adminUser = authenticateAdmin(email, password);
+    
+    if (adminUser) {
       // Reset failed attempts on successful login
       setFailedAttempts(0);
       localStorage.setItem('adminFailedAttempts', '0');
       
-      // Set admin session with 30 minute expiry (reduced from 60 minutes)
+      // Set admin session with 30 minute expiry
       const expiry = new Date();
       expiry.setMinutes(expiry.getMinutes() + 30);
       
       localStorage.setItem('adminSession', JSON.stringify({
-        password,
+        email: adminUser.email,
+        role: adminUser.role,
         expiry: expiry.toISOString()
       }));
       
-      onLogin(password);
+      onLogin({ 
+        email: adminUser.email,
+        role: adminUser.role
+      });
     } else {
       // Increment failed attempts
       const newFailedAttempts = failedAttempts + 1;
@@ -141,7 +152,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
           </div>
           <CardTitle className="text-center text-2xl">Admin Login</CardTitle>
           <CardDescription className="text-center">
-            Enter your password to access the admin area
+            Enter your email and password to access the admin area
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -158,22 +169,45 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
               
               {!isLocked && failedAttempts > 0 && (
                 <Alert variant="warning" className="mb-4">
+                  <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
-                    Incorrect password. Attempts remaining: {3 - failedAttempts}.
+                    Invalid credentials. Attempts remaining: {3 - failedAttempts}.
                   </AlertDescription>
                 </Alert>
               )}
               
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="text-center"
-                disabled={isLocked}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <UserIcon className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10"
+                  disabled={isLocked}
+                  required
+                />
+              </div>
+              
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <LockIcon className="h-4 w-4 text-gray-400" />
+                </div>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10"
+                  disabled={isLocked}
+                  required
+                />
+              </div>
+              
               <p className="text-xs text-muted-foreground text-center">
-                For demo purposes, use: admin123
+                For demo purposes, use: eddie@please.co / brickhouse5150
               </p>
             </div>
           </CardContent>
@@ -181,7 +215,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
             <Button 
               type="submit" 
               className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90"
-              disabled={isLocked}
+              disabled={isLocked || !email || !password}
             >
               {isLocked ? `Locked (${formatTime(timeRemaining)})` : 'Login'}
             </Button>

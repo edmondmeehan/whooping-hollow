@@ -8,7 +8,8 @@ import {
   HomeIcon,
   Link2Icon,
   LayoutIcon,
-  Shield
+  Shield,
+  Users
 } from 'lucide-react';
 
 import AdminNavbar from '@/components/admin/AdminNavbar';
@@ -19,6 +20,7 @@ import AdminProperties from '@/components/admin/AdminProperties';
 import AdminApis from '@/components/admin/AdminApis';
 import AdminHero from '@/components/admin/AdminHero';
 import AdminLogin from '@/components/admin/AdminLogin';
+import AdminUsers from '@/components/admin/AdminUsers';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useNavigate } from 'react-router-dom';
@@ -28,6 +30,7 @@ const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const [adminData, setAdminData] = useState<{ email: string; role: string } | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -74,6 +77,10 @@ const Admin = () => {
       // If session hasn't expired, login automatically
       if (expiryTime > new Date()) {
         setIsAuthenticated(true);
+        setAdminData({
+          email: sessionData.email,
+          role: sessionData.role
+        });
         setLastActivity(Date.now());
       } else {
         // Clear expired session
@@ -82,28 +89,20 @@ const Admin = () => {
     }
   }, []);
   
-  const handleLogin = (password: string) => {
-    // Simple authentication for demo purposes
-    // In a real app, this should be replaced with proper authentication
-    if (password === 'admin123') {
-      setIsAuthenticated(true);
-      setLastActivity(Date.now());
-      toast({
-        title: "Login successful",
-        description: "Welcome to the admin area",
-      });
-    } else {
-      toast({
-        title: "Login failed",
-        description: "Incorrect password",
-        variant: "destructive",
-      });
-    }
+  const handleLogin = (adminUserData: { email: string; role: string }) => {
+    setIsAuthenticated(true);
+    setAdminData(adminUserData);
+    setLastActivity(Date.now());
+    toast({
+      title: "Login successful",
+      description: `Welcome to the admin area, ${adminUserData.email}`,
+    });
   };
 
   const handleLogout = (isInactivity = false) => {
     localStorage.removeItem('adminSession');
     setIsAuthenticated(false);
+    setAdminData(null);
     
     if (isInactivity) {
       toast({
@@ -128,7 +127,7 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminNavbar onLogout={() => handleLogout(false)} />
+      <AdminNavbar onLogout={() => handleLogout(false)} adminEmail={adminData?.email} />
       <div className="container-custom py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
@@ -145,7 +144,7 @@ const Admin = () => {
         </Alert>
         
         <Tabs defaultValue="images" className="w-full">
-          <TabsList className="grid grid-cols-6 mb-8">
+          <TabsList className="grid grid-cols-7 mb-8">
             <TabsTrigger value="images" className="flex items-center gap-2">
               <ImageIcon className="h-4 w-4" />
               <span>Images</span>
@@ -169,6 +168,10 @@ const Admin = () => {
             <TabsTrigger value="apis" className="flex items-center gap-2">
               <Link2Icon className="h-4 w-4" />
               <span>API Keys</span>
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              <span>Users</span>
             </TabsTrigger>
           </TabsList>
           
@@ -194,6 +197,10 @@ const Admin = () => {
           
           <TabsContent value="apis" className="bg-white p-6 rounded-lg shadow-sm">
             <AdminApis />
+          </TabsContent>
+          
+          <TabsContent value="users" className="bg-white p-6 rounded-lg shadow-sm">
+            <AdminUsers currentUserEmail={adminData?.email || ''} />
           </TabsContent>
         </Tabs>
       </div>
