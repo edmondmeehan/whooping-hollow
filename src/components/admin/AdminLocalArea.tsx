@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLocalArea } from '@/hooks/use-local-area';
 import { TabsContent } from '@/components/ui/tabs';
@@ -8,6 +7,7 @@ import SagHarborForm from './local-area/SagHarborForm';
 import NearbyFavoritesForm from './local-area/NearbyFavoritesForm';
 import SummerEventsForm from './local-area/SummerEventsForm';
 import InsiderTipsForm from './local-area/InsiderTipsForm';
+import { FormProvider } from 'react-hook-form';
 
 const AdminLocalArea: React.FC = () => {
   const { 
