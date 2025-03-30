@@ -26,6 +26,7 @@ const Gallery = () => {
     const loadImages = async () => {
       setLoading(true);
       const fetchedImages = await fetchAirbnbImages(listingId);
+      console.log("Gallery images loaded:", fetchedImages); // Debug log
       setImages(fetchedImages);
       setLoading(false);
     };
@@ -115,6 +116,7 @@ const Gallery = () => {
                           alt={image.alt}
                           className="w-full h-full object-cover"
                           loading="lazy"
+                          onError={(e) => console.error(`Error loading image ${index}:`, image.url, e)}
                         />
                       </AspectRatio>
                       <div className="p-4 bg-white">
@@ -141,6 +143,7 @@ const Gallery = () => {
                     alt={image.alt}
                     className="w-full h-full object-cover"
                     loading="lazy"
+                    onError={(e) => console.error(`Error loading image ${index}:`, image.url, e)}
                   />
                 </AspectRatio>
                 <div className="p-4 bg-white">

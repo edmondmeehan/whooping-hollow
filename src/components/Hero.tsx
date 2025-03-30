@@ -15,6 +15,7 @@ const Hero = () => {
       const imageUrl = await getHeroImage(listingId);
       setHeroImageUrl(imageUrl);
       setLoading(false);
+      console.log("Hero image loaded:", imageUrl); // Debug log
     };
 
     loadHeroImage();
@@ -33,6 +34,9 @@ const Hero = () => {
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   } : defaultStyle;
+
+  // Debug the current background style
+  console.log("Hero background style:", heroBackgroundStyle);
 
   return (
     <div className="hero-section flex items-center justify-center text-center" style={heroBackgroundStyle}>
