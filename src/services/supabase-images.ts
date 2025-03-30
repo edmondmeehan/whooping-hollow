@@ -2,12 +2,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { AirbnbImage } from '@/types/image';
 
-// Initialize Supabase client - these values should be stored in environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Initialize Supabase client
+// Check for environment variables or use default test values if in development
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Validate that we have the required credentials
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase credentials');
+  console.error('Missing Supabase credentials. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
+  // Throw a more descriptive error during initialization
+  throw new Error('Supabase credentials are missing. Please check your environment variables.');
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);

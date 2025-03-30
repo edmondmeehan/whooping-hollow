@@ -13,17 +13,24 @@ export const useGalleryImages = () => {
       try {
         setLoading(true);
         setError(null);
+        
+        // Try to get images from Supabase
         const fetchedImages = await getImages();
         console.log("Gallery images loaded from Supabase:", fetchedImages);
         
         if (fetchedImages.length === 0) {
-          setError("No images available in the database");
+          setError("No images available in the database. Please add some in the admin panel.");
         } else {
           setImages(fetchedImages);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error loading gallery images:", err);
-        setError("Failed to load gallery images from the database");
+        // Provide a more detailed error message if Supabase credentials are missing
+        if (err.message && err.message.includes('Supabase credentials are missing')) {
+          setError("Supabase configuration error: Please set up your Supabase environment variables.");
+        } else {
+          setError("Failed to load gallery images from the database");
+        }
       } finally {
         setLoading(false);
       }
