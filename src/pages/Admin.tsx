@@ -24,13 +24,19 @@ import AdminUsers from '@/components/admin/AdminUsers';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useNavigate } from 'react-router-dom';
+import { authenticateAdmin } from '@/services/admin-users-storage';
 
 const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
-  const [adminData, setAdminData] = useState<{ email: string; role: string } | null>(null);
+  const [adminData, setAdminData] = useState<{ 
+    email: string; 
+    role: string;
+    name?: string;
+    avatarUrl?: string;
+  } | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -76,12 +82,17 @@ const Admin = () => {
       
       // If session hasn't expired, login automatically
       if (expiryTime > new Date()) {
-        setIsAuthenticated(true);
-        setAdminData({
-          email: sessionData.email,
-          role: sessionData.role
-        });
-        setLastActivity(Date.now());
+        const user = authenticateAdmin(sessionData.email, sessionData.password);
+        if (user) {
+          setIsAuthenticated(true);
+          setAdminData({
+            email: user.email,
+            role: user.role,
+            name: user.name,
+            avatarUrl: user.avatarUrl
+          });
+          setLastActivity(Date.now());
+        }
       } else {
         // Clear expired session
         localStorage.removeItem('adminSession');
@@ -89,13 +100,18 @@ const Admin = () => {
     }
   }, []);
   
-  const handleLogin = (adminUserData: { email: string; role: string }) => {
+  const handleLogin = (adminUserData: { 
+    email: string; 
+    role: string;
+    name?: string;
+    avatarUrl?: string;
+  }) => {
     setIsAuthenticated(true);
     setAdminData(adminUserData);
     setLastActivity(Date.now());
     toast({
       title: "Login successful",
-      description: `Welcome to the admin area, ${adminUserData.email}`,
+      description: `Welcome to the admin area, ${adminUserData.name || adminUserData.email}`,
     });
   };
 
@@ -127,7 +143,12 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminNavbar onLogout={() => handleLogout(false)} adminEmail={adminData?.email} />
+      <AdminNavbar 
+        onLogout={() => handleLogout(false)} 
+        adminEmail={adminData?.email}
+        adminName={adminData?.name}
+        adminAvatar={adminData?.avatarUrl}
+      />
       <div className="container-custom py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>

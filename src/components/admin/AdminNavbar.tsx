@@ -3,13 +3,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, ArrowLeft, User } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface AdminNavbarProps {
   onLogout: () => void;
   adminEmail?: string;
+  adminAvatar?: string;
+  adminName?: string;
 }
 
-const AdminNavbar = ({ onLogout, adminEmail }: AdminNavbarProps) => {
+const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName }: AdminNavbarProps) => {
   return (
     <div className="bg-white border-b border-gray-200 shadow-sm">
       <div className="container-custom flex items-center justify-between py-4">
@@ -27,8 +30,16 @@ const AdminNavbar = ({ onLogout, adminEmail }: AdminNavbarProps) => {
         <div className="flex items-center space-x-4">
           {adminEmail && (
             <div className="flex items-center mr-2 text-sm">
-              <User className="h-4 w-4 mr-1 text-gray-500" />
-              <span className="text-gray-600">{adminEmail}</span>
+              <Avatar className="h-8 w-8 mr-2">
+                {adminAvatar ? (
+                  <AvatarImage src={adminAvatar} alt={adminName || adminEmail} />
+                ) : (
+                  <AvatarFallback className="bg-gray-200 text-gray-700">
+                    {(adminName || adminEmail).charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              <span className="text-gray-600">{adminName || adminEmail}</span>
             </div>
           )}
           <Button 

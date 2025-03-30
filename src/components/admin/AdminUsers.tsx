@@ -35,7 +35,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { PlusIcon, TrashIcon, PencilIcon, AlertCircle } from 'lucide-react';
+import { 
+  PlusIcon, 
+  TrashIcon, 
+  PencilIcon, 
+  AlertCircle,
+  Camera, 
+  UserRound
+} from 'lucide-react';
 import {
   AdminUser,
   getAdminUsers,
@@ -44,10 +51,19 @@ import {
   deleteAdminUser,
 } from '@/services/admin-users-storage';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface AdminUsersProps {
   currentUserEmail: string;
 }
+
+const DEFAULT_AVATAR_URLS = [
+  'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=100&h=100',
+  'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=100&h=100',
+  'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=100&h=100',
+  'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=100&h=100',
+  'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=100&h=100',
+];
 
 const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -55,12 +71,15 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+  const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
   
   // Form states
   const [formEmail, setFormEmail] = useState('');
   const [formPassword, setFormPassword] = useState('');
   const [formName, setFormName] = useState('');
   const [formRole, setFormRole] = useState<'admin' | 'editor'>('editor');
+  const [formAvatarUrl, setFormAvatarUrl] = useState('');
+  const [customAvatarUrl, setCustomAvatarUrl] = useState('');
   
   useEffect(() => {
     // Load admin users
@@ -77,6 +96,11 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
     const success = addAdminUser(formEmail, formPassword, formName, formRole);
     
     if (success) {
+      // If an avatar was selected, update the user with it
+      if (formAvatarUrl) {
+        updateAdminUser(formEmail, { avatarUrl: formAvatarUrl });
+      }
+      
       toast({
         title: 'Admin user added',
         description: `${formEmail} has been added as ${formRole}`,
@@ -106,6 +130,11 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
     // Only update password if provided
     if (formPassword) {
       (updates as any).password = formPassword;
+    }
+    
+    // Only update avatar if changed
+    if (formAvatarUrl && formAvatarUrl !== selectedUser.avatarUrl) {
+      updates.avatarUrl = formAvatarUrl;
     }
     
     const success = updateAdminUser(selectedUser.email, updates);
@@ -148,11 +177,51 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
     }
   };
   
+  const handleUpdateAvatar = () => {
+    if (!selectedUser) return;
+    
+    let avatarUrl = customAvatarUrl;
+    
+    // If custom URL is empty, use the selected default
+    if (!customAvatarUrl && formAvatarUrl) {
+      avatarUrl = formAvatarUrl;
+    }
+    
+    if (!avatarUrl) {
+      toast({
+        title: 'No avatar selected',
+        description: 'Please select or enter an avatar URL',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    const success = updateAdminUser(selectedUser.email, { avatarUrl });
+    
+    if (success) {
+      toast({
+        title: 'Avatar updated',
+        description: `Profile picture updated successfully`,
+      });
+      refreshUsers();
+      setIsAvatarDialogOpen(false);
+      setCustomAvatarUrl('');
+    } else {
+      toast({
+        title: 'Failed to update avatar',
+        description: 'User not found.',
+        variant: 'destructive',
+      });
+    }
+  };
+  
   const resetForm = () => {
     setFormEmail('');
     setFormPassword('');
     setFormName('');
     setFormRole('editor');
+    setFormAvatarUrl('');
+    setCustomAvatarUrl('');
   };
   
   const openEditDialog = (user: AdminUser) => {
@@ -160,6 +229,7 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
     setFormEmail(user.email);
     setFormName(user.name || '');
     setFormRole(user.role);
+    setFormAvatarUrl(user.avatarUrl || '');
     setFormPassword(''); // Don't set password - will only update if provided
     setIsEditDialogOpen(true);
   };
@@ -167,6 +237,12 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
   const openDeleteDialog = (user: AdminUser) => {
     setSelectedUser(user);
     setIsDeleteDialogOpen(true);
+  };
+  
+  const openAvatarDialog = (user: AdminUser) => {
+    setSelectedUser(user);
+    setFormAvatarUrl(user.avatarUrl || '');
+    setIsAvatarDialogOpen(true);
   };
   
   const formatDate = (dateStr?: string) => {
@@ -237,6 +313,22 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="grid gap-2">
+                  <Label>Profile Picture (Optional)</Label>
+                  <div className="grid grid-cols-5 gap-2">
+                    {DEFAULT_AVATAR_URLS.map((url, index) => (
+                      <div 
+                        key={index}
+                        onClick={() => setFormAvatarUrl(url)}
+                        className={`cursor-pointer p-1 rounded-md ${formAvatarUrl === url ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}
+                      >
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={url} alt={`Avatar option ${index + 1}`} />
+                        </Avatar>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
@@ -265,8 +357,7 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Name</TableHead>
+                  <TableHead>User</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Last Login</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -275,8 +366,23 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
               <TableBody>
                 {users.map((user) => (
                   <TableRow key={user.email}>
-                    <TableCell className="font-medium">{user.email}</TableCell>
-                    <TableCell>{user.name || '-'}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          {user.avatarUrl ? (
+                            <AvatarImage src={user.avatarUrl} alt={user.name || user.email} />
+                          ) : (
+                            <AvatarFallback className="bg-gray-200 text-gray-700">
+                              {(user.name || user.email).charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <div>
+                          <div>{user.email}</div>
+                          {user.name && <div className="text-xs text-gray-500">{user.name}</div>}
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <span className={`inline-block px-2 py-1 rounded text-xs ${
                         user.role === 'admin' 
@@ -289,6 +395,13 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
                     <TableCell>{formatDate(user.lastLogin)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => openAvatarDialog(user)}
+                        >
+                          <Camera className="h-4 w-4" />
+                        </Button>
                         <Button 
                           variant="outline" 
                           size="sm"
@@ -400,6 +513,77 @@ const AdminUsers = ({ currentUserEmail }: AdminUsersProps) => {
             </Button>
             <Button variant="destructive" onClick={handleDeleteUser}>
               Delete User
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Avatar Selection Dialog */}
+      <Dialog open={isAvatarDialogOpen} onOpenChange={setIsAvatarDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Profile Picture</DialogTitle>
+            <DialogDescription>
+              Choose a profile picture for {selectedUser?.email}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="flex justify-center mb-2">
+              <Avatar className="h-20 w-20">
+                {formAvatarUrl || selectedUser?.avatarUrl ? (
+                  <AvatarImage 
+                    src={formAvatarUrl || selectedUser?.avatarUrl} 
+                    alt={selectedUser?.name || selectedUser?.email || 'Profile'} 
+                  />
+                ) : (
+                  <AvatarFallback className="text-2xl">
+                    <UserRound className="h-10 w-10" />
+                  </AvatarFallback>
+                )}
+              </Avatar>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Select from default avatars</Label>
+              <div className="grid grid-cols-5 gap-2">
+                {DEFAULT_AVATAR_URLS.map((url, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => {
+                      setFormAvatarUrl(url);
+                      setCustomAvatarUrl('');
+                    }}
+                    className={`cursor-pointer p-1 rounded-md ${formAvatarUrl === url ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}
+                  >
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={url} alt={`Avatar option ${index + 1}`} />
+                    </Avatar>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="custom-avatar-url">Or enter custom image URL</Label>
+              <Input
+                id="custom-avatar-url"
+                placeholder="https://example.com/your-image.jpg"
+                value={customAvatarUrl}
+                onChange={(e) => {
+                  setCustomAvatarUrl(e.target.value);
+                  setFormAvatarUrl('');
+                }}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setIsAvatarDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateAvatar}>
+              Update Avatar
             </Button>
           </DialogFooter>
         </DialogContent>

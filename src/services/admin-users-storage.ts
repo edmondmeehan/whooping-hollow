@@ -1,4 +1,3 @@
-
 // This file manages admin users in local storage
 
 export interface AdminUser {
@@ -7,6 +6,7 @@ export interface AdminUser {
   name?: string;
   role: 'admin' | 'editor';
   lastLogin?: string;
+  avatarUrl?: string; // Added profile picture URL
 }
 
 const STORAGE_KEY = 'whh_admin_users';
@@ -31,6 +31,7 @@ const initializeDefaultAdmin = (): void => {
       passwordHash: hashPassword('brickhouse5150'),
       name: 'Eddie',
       role: 'admin',
+      avatarUrl: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=100&h=100'
     };
     saveAdminUsers([defaultAdmin]);
   }
@@ -127,6 +128,11 @@ export const deleteAdminUser = (email: string): boolean => {
   
   saveAdminUsers(filteredUsers);
   return true;
+};
+
+// Utility function to update avatar URL
+export const updateUserAvatar = (email: string, avatarUrl: string): boolean => {
+  return updateAdminUser(email, { avatarUrl });
 };
 
 // Initialize the admin users when this module is imported
