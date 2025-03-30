@@ -23,8 +23,8 @@ const defaultPropertiesData: PropertiesData = {
   featured: {
     id: "wh-haven",
     name: "Whooping Hollow Haven",
-    location: "Montauk, NY",
-    description: "Experience the ultimate Hamptons getaway at our luxurious retreat, nestled in the picturesque surroundings of Montauk.",
+    location: "East Hampton, NY",
+    description: "Experience the ultimate Hamptons getaway at our luxurious retreat, nestled in the picturesque surroundings of East Hampton.",
     image: "/hero-image.jpg",
     airbnbLink: "https://www.airbnb.com/rooms/1314531825053234635",
     directLink: "https://staymarquis.com/properties/the-ranch-modern"

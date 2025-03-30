@@ -26,17 +26,17 @@ const About = () => {
             </h3>
             <p className="text-gray-600 mb-6">
               Discover the ultimate Hamptons escape in our meticulously designed modern retreat. 
-              Nestled in the heart of Montauk, this home offers an unparalleled blend of sophistication and comfort.
+              Nestled in the heart of East Hampton, this home offers an unparalleled blend of sophistication and comfort.
             </p>
             <p className="text-gray-600 mb-6">
-              From pristine beaches and world-class wineries to serene landscapes, our property serves 
+              Just 5 minutes from both East Hampton Downtown and Sag Harbor Downtown, our property serves 
               as your perfect base for exploring the unmatched beauty and charm of the East End.
             </p>
 
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="flex items-center">
                 <MapPin className="text-coastal-600 mr-2" size={20} />
-                <span className="text-gray-700">{featured.location}</span>
+                <span className="text-gray-700">East Hampton, NY</span>
               </div>
               <div className="flex items-center">
                 <Users className="text-coastal-600 mr-2" size={20} />
