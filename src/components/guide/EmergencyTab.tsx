@@ -1,11 +1,18 @@
 
 import React from 'react';
-import { Phone, AlertTriangle, Thermometer, Hospital } from 'lucide-react';
+import { Phone, AlertTriangle, Thermometer, Hospital, CloudLightning } from 'lucide-react';
 import GuideSection from '../GuideSection';
+import WeatherWidget from '../WeatherWidget';
 
 const EmergencyTab = () => {
   return (
     <>
+      <GuideSection title="Current Weather" icon={<CloudLightning />}>
+        <div className="p-2">
+          <WeatherWidget location="East Hampton, NY" />
+        </div>
+      </GuideSection>
+      
       <GuideSection title="Emergency Contacts" icon={<Phone />}>
         <div className="space-y-6">
           <div className="bg-red-50 p-4 rounded-lg border border-red-100">
