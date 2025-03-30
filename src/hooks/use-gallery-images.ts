@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from 'react';
-import { fetchAirbnbImages } from '@/utils/airbnbScraper';
 import { AirbnbImage } from '@/types/image';
+import { getImages } from '@/services/supabase-images';
 
-export const useGalleryImages = (listingId: string) => {
+export const useGalleryImages = () => {
   const [images, setImages] = useState<AirbnbImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,24 +13,24 @@ export const useGalleryImages = (listingId: string) => {
       try {
         setLoading(true);
         setError(null);
-        const fetchedImages = await fetchAirbnbImages(listingId);
-        console.log("Gallery images loaded:", fetchedImages);
+        const fetchedImages = await getImages();
+        console.log("Gallery images loaded from Supabase:", fetchedImages);
         
         if (fetchedImages.length === 0) {
-          setError("No images available");
+          setError("No images available in the database");
         } else {
           setImages(fetchedImages);
         }
       } catch (err) {
         console.error("Error loading gallery images:", err);
-        setError("Failed to load gallery images");
+        setError("Failed to load gallery images from the database");
       } finally {
         setLoading(false);
       }
     };
 
     loadImages();
-  }, [listingId]);
+  }, []);
 
   return { images, loading, error };
 };

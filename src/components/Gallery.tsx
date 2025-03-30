@@ -7,8 +7,7 @@ import GalleryLoading from './gallery/GalleryLoading';
 import GalleryError from './gallery/GalleryError';
 
 const Gallery = () => {
-  const listingId = '1314531825053234635'; // This should be configurable
-  const { images, loading, error } = useGalleryImages(listingId);
+  const { images, loading, error } = useGalleryImages();
 
   return (
     <section className="section-padding bg-gray-50" id="gallery">
@@ -20,7 +19,7 @@ const Gallery = () => {
           
           {loading && (
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Loading images from our Whooping Hollow property...
+              Loading images from our property database...
             </p>
           )}
           
@@ -62,7 +61,7 @@ const Gallery = () => {
 
             <div className="mt-12 text-center">
               <p className="text-gray-600">
-                More photos available on our <a href="https://www.airbnb.com/rooms/1314531825053234635" className="text-coastal-600 hover:underline" target="_blank" rel="noopener noreferrer">Airbnb listing</a>.
+                Manage these images in the <a href="/admin" className="text-coastal-600 hover:underline">Admin Panel</a>.
               </p>
             </div>
           </>

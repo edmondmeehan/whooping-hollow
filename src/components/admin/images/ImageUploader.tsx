@@ -6,7 +6,7 @@ import { Upload, ImagePlus, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploaderProps {
-  onImageUploaded: (url: string, alt: string) => void;
+  onImageUploaded: (file: File, alt: string) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
@@ -43,11 +43,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
       setIsUploading(true);
       setUploadProgress(0);
       
-      // Create a FormData object
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      // Simulate upload progress
+      // Simulate upload progress for UI feedback
       const intervalId = setInterval(() => {
         setUploadProgress(prev => {
           const newProgress = Math.min(prev + 10, 90);
@@ -55,24 +51,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
         });
       }, 300);
       
-      // This is where you would normally upload to a server
-      // For now, we'll create a local object URL as a demo
-      const imageUrl = URL.createObjectURL(file);
       const imageAlt = file.name.split('.')[0] || 'Uploaded image';
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Process the upload through our hook
+      onImageUploaded(file, imageAlt);
       
       clearInterval(intervalId);
       setUploadProgress(100);
-      
-      // Send the URL back to the parent component
-      onImageUploaded(imageUrl, imageAlt);
-      
-      toast({
-        title: 'Upload successful',
-        description: 'Your image has been uploaded',
-      });
       
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -82,8 +67,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
         variant: 'destructive',
       });
     } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(0);
+      }, 1000);
       // Reset the file input
       e.target.value = '';
     }
@@ -92,7 +79,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Upload Images</CardTitle>
+        <CardTitle className="text-lg">Upload Images to Supabase Storage</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="mb-4">
@@ -132,8 +119,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUploaded }) => {
             </label>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Note: Images are temporarily stored in your browser and will be lost when you close the page.
-            For permanent storage, configure Cloudinary or another image hosting service.
+            Images will be stored in Supabase storage and linked in the database.
           </p>
         </div>
         <div className="flex justify-end">

@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { fetchAirbnbImages } from '@/utils/airbnbScraper';
 import { AirbnbImage } from '@/types/image';
+import { getImages, addImage, updateImage, deleteImage, uploadImage } from '@/services/supabase-images';
 
 export const useImages = () => {
   const [images, setImages] = useState<AirbnbImage[]>([]);
@@ -16,13 +17,13 @@ export const useImages = () => {
     const loadImages = async () => {
       try {
         setLoading(true);
-        const fetchedImages = await fetchAirbnbImages('1314531825053234635');
+        const fetchedImages = await getImages();
         setImages(fetchedImages);
       } catch (error) {
         console.error('Error loading images:', error);
         toast({
           title: 'Error',
-          description: 'Failed to load images',
+          description: 'Failed to load images from database',
           variant: 'destructive',
         });
       } finally {
@@ -33,7 +34,7 @@ export const useImages = () => {
     loadImages();
   }, [toast]);
 
-  const handleAddImage = () => {
+  const handleAddImage = async () => {
     if (!newImageUrl || !newImageAlt) {
       toast({
         title: 'Validation Error',
@@ -48,31 +49,67 @@ export const useImages = () => {
       alt: newImageAlt,
     };
 
-    setImages([...images, newImage]);
-    setNewImageUrl('');
-    setNewImageAlt('');
-
-    toast({
-      title: 'Success',
-      description: 'Image added successfully',
-    });
+    try {
+      setLoading(true);
+      const addedImage = await addImage(newImage);
+      
+      if (addedImage) {
+        setImages([addedImage, ...images]);
+        setNewImageUrl('');
+        setNewImageAlt('');
+        
+        toast({
+          title: 'Success',
+          description: 'Image added successfully to database',
+        });
+      }
+    } catch (error) {
+      console.error('Error adding image:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to add image to database',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleAddUploadedImage = (url: string, alt: string) => {
-    const newImage: AirbnbImage = {
-      url,
-      alt,
-    };
-
-    setImages([...images, newImage]);
-
-    toast({
-      title: 'Success',
-      description: 'Uploaded image added to gallery',
-    });
+  const handleAddUploadedImage = async (file: File, alt: string) => {
+    try {
+      setLoading(true);
+      const url = await uploadImage(file);
+      
+      if (url) {
+        const newImage: AirbnbImage = {
+          url,
+          alt,
+        };
+        
+        const addedImage = await addImage(newImage);
+        
+        if (addedImage) {
+          setImages([addedImage, ...images]);
+          
+          toast({
+            title: 'Success',
+            description: 'Image uploaded and saved to database',
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to upload image',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleAddMultipleImages = () => {
+  const handleAddMultipleImages = async () => {
     if (!multipleUrls.trim()) {
       toast({
         title: 'Validation Error',
@@ -96,30 +133,79 @@ export const useImages = () => {
       return;
     }
 
-    // Create new image objects
-    const newImages = urlList.map((url, index) => ({
-      url,
-      alt: `Property Image ${images.length + index + 1}`
-    }));
-
-    setImages([...images, ...newImages]);
-    setMultipleUrls('');
-
-    toast({
-      title: 'Success',
-      description: `Added ${newImages.length} images successfully`,
-    });
+    try {
+      setLoading(true);
+      const newImages = [];
+      
+      // Create new image objects and add to database
+      for (const url of urlList) {
+        const newImage: AirbnbImage = {
+          url,
+          alt: `Property Image ${new Date().toISOString()}`
+        };
+        
+        const addedImage = await addImage(newImage);
+        if (addedImage) {
+          newImages.push(addedImage);
+        }
+      }
+      
+      if (newImages.length > 0) {
+        setImages([...newImages, ...images]);
+        setMultipleUrls('');
+        
+        toast({
+          title: 'Success',
+          description: `Added ${newImages.length} images successfully to database`,
+        });
+      }
+    } catch (error) {
+      console.error('Error adding multiple images:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to add images to database',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRemoveImage = (index: number) => {
-    const updatedImages = [...images];
-    updatedImages.splice(index, 1);
-    setImages(updatedImages);
+  const handleRemoveImage = async (index: number) => {
+    const imageToDelete = images[index];
+    if (!imageToDelete.id) {
+      toast({
+        title: 'Error',
+        description: 'Cannot delete image without ID',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-    toast({
-      title: 'Success',
-      description: 'Image removed successfully',
-    });
+    try {
+      setLoading(true);
+      const success = await deleteImage(imageToDelete.id);
+      
+      if (success) {
+        const updatedImages = [...images];
+        updatedImages.splice(index, 1);
+        setImages(updatedImages);
+        
+        toast({
+          title: 'Success',
+          description: 'Image removed successfully from database',
+        });
+      }
+    } catch (error) {
+      console.error('Error removing image:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to remove image from database',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEditImage = (index: number) => {
@@ -128,24 +214,49 @@ export const useImages = () => {
     setNewImageAlt(images[index].alt);
   };
 
-  const handleUpdateImage = () => {
+  const handleUpdateImage = async () => {
     if (editingIndex === null) return;
     
-    const updatedImages = [...images];
-    updatedImages[editingIndex] = {
-      url: newImageUrl,
-      alt: newImageAlt,
-    };
+    const imageToUpdate = images[editingIndex];
+    if (!imageToUpdate.id) {
+      toast({
+        title: 'Error',
+        description: 'Cannot update image without ID',
+        variant: 'destructive',
+      });
+      return;
+    }
     
-    setImages(updatedImages);
-    setNewImageUrl('');
-    setNewImageAlt('');
-    setEditingIndex(null);
-    
-    toast({
-      title: 'Success',
-      description: 'Image updated successfully',
-    });
+    try {
+      setLoading(true);
+      const updatedImage = await updateImage(imageToUpdate.id, {
+        url: newImageUrl,
+        alt: newImageAlt,
+      });
+      
+      if (updatedImage) {
+        const updatedImages = [...images];
+        updatedImages[editingIndex] = updatedImage;
+        setImages(updatedImages);
+        setNewImageUrl('');
+        setNewImageAlt('');
+        setEditingIndex(null);
+        
+        toast({
+          title: 'Success',
+          description: 'Image updated successfully in database',
+        });
+      }
+    } catch (error) {
+      console.error('Error updating image:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update image in database',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {

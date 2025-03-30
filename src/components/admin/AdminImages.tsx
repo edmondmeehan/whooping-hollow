@@ -41,7 +41,7 @@ const AdminImages = () => {
             </TabsTrigger>
             <TabsTrigger value="upload" className="flex items-center gap-2">
               <Upload className="h-4 w-4" />
-              <span>Local Upload</span>
+              <span>Upload to Supabase</span>
             </TabsTrigger>
             <TabsTrigger value="cloudinary" className="flex items-center gap-2">
               <Cloud className="h-4 w-4" />
@@ -84,7 +84,7 @@ const AdminImages = () => {
       </div>
 
       <div>
-        <h3 className="text-xl font-semibold mb-4">Image Gallery</h3>
+        <h3 className="text-xl font-semibold mb-4">Image Gallery Database</h3>
         <ImagesGallery
           images={images}
           loading={loading}

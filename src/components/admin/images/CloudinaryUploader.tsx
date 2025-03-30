@@ -7,24 +7,25 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCloudinaryUpload } from '@/hooks/use-cloudinary-upload';
 
 interface CloudinaryUploaderProps {
-  onImageUploaded: (url: string, alt: string) => void;
+  onImageUploaded: (file: File, alt: string) => void;
 }
 
 const CloudinaryUploader: React.FC<CloudinaryUploaderProps> = ({ onImageUploaded }) => {
   const { 
     isUploading, 
     uploadProgress, 
-    cloudinaryUrl, 
-    handleUpload 
-  } = useCloudinaryUpload({
-    onSuccess: onImageUploaded
-  });
+    cloudinaryUrl
+  } = useCloudinaryUpload();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
-    await handleUpload(files[0]);
+    const file = files[0];
+    const imageAlt = file.name.split('.')[0] || 'Uploaded image';
+    
+    // Pass the file to the parent component's handler
+    onImageUploaded(file, imageAlt);
     
     // Reset the file input
     e.target.value = '';
@@ -47,7 +48,7 @@ const CloudinaryUploader: React.FC<CloudinaryUploaderProps> = ({ onImageUploaded
             onFileChange={handleFileChange}
           />
           <p className="text-sm text-muted-foreground mt-2">
-            Images uploaded to Cloudinary will be stored permanently in your Cloudinary account.
+            Images uploaded to Cloudinary will be stored in Supabase database.
           </p>
         </div>
       </CardContent>
