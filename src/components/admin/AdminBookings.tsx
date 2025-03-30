@@ -1,10 +1,21 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import BookingTable from './bookings/BookingTable';
 import { useBookings } from '@/hooks/use-bookings';
+import BookingDetailsModal from './bookings/BookingDetailsModal';
+import { Booking } from '@/types/booking';
 
 const AdminBookings = () => {
   const { bookings, handleStatusChange } = useBookings();
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  
+  const handleBookingClick = (booking: Booking) => {
+    setSelectedBooking(booking);
+  };
+  
+  const handleCloseModal = () => {
+    setSelectedBooking(null);
+  };
   
   return (
     <div>
@@ -12,8 +23,18 @@ const AdminBookings = () => {
       
       <BookingTable 
         bookings={bookings} 
-        onStatusChange={handleStatusChange} 
+        onStatusChange={handleStatusChange}
+        onBookingClick={handleBookingClick}
       />
+      
+      {selectedBooking && (
+        <BookingDetailsModal 
+          booking={selectedBooking} 
+          isOpen={!!selectedBooking} 
+          onClose={handleCloseModal}
+          onStatusChange={handleStatusChange}
+        />
+      )}
     </div>
   );
 };
