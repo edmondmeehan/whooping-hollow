@@ -1,8 +1,7 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Beach, Anchor, MapPin, Music, PaintBucket, Film, Horse } from 'lucide-react';
+import { Waves, Anchor, MapPin, Music, Palette, Film, Building } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 const LocalArea = () => {
@@ -25,7 +24,7 @@ const LocalArea = () => {
           {/* East Hampton Section */}
           <section className="mb-20">
             <div className="flex items-center gap-3 mb-8">
-              <Beach className="text-coastal-600" size={32} />
+              <Waves className="text-coastal-600" size={32} />
               <h2 className="text-2xl md:text-3xl font-serif font-bold text-hamptons-dark">
                 East Hampton: Coastal Elegance
               </h2>
@@ -201,7 +200,7 @@ const LocalArea = () => {
               
               <div className="bg-gray-50 p-6 rounded-lg">
                 <div className="flex items-center gap-3 mb-4">
-                  <PaintBucket className="text-coastal-600" size={24} />
+                  <Palette className="text-coastal-600" size={24} />
                   <h3 className="font-serif font-semibold text-xl text-hamptons-dark">
                     East Hampton Summer Art Show
                   </h3>
@@ -245,7 +244,7 @@ const LocalArea = () => {
               
               <div className="bg-gray-50 p-6 rounded-lg">
                 <div className="flex items-center gap-3 mb-4">
-                  <Horse className="text-coastal-600" size={24} />
+                  <Building className="text-coastal-600" size={24} />
                   <h3 className="font-serif font-semibold text-xl text-hamptons-dark">
                     Hampton Classic Horse Show
                   </h3>
