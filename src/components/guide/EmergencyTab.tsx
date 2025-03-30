@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, AlertTriangle, Thermometer, FirstAid } from 'lucide-react';
+import { Phone, AlertTriangle, Thermometer, Hospital } from 'lucide-react';
 import GuideSection from '../GuideSection';
 
 const EmergencyTab = () => {
@@ -118,7 +118,7 @@ const EmergencyTab = () => {
         </div>
       </GuideSection>
       
-      <GuideSection title="Medical Emergencies" icon={<FirstAid />}>
+      <GuideSection title="Medical Emergencies" icon={<Hospital />}>
         <div className="space-y-4">
           <div className="bg-green-50 p-4 rounded-lg border border-green-100 mb-4">
             <h3 className="font-medium text-green-800 mb-2">Nearest Medical Facilities</h3>
