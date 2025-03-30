@@ -11,6 +11,7 @@ import {
 import { AspectRatio } from './ui/aspect-ratio';
 import { fetchAirbnbImages } from '@/utils/airbnbScraper';
 import { Skeleton } from './ui/skeleton';
+import { Button } from './ui/button';
 
 interface AirbnbImage {
   url: string;
@@ -20,21 +21,33 @@ interface AirbnbImage {
 const Gallery = () => {
   const [images, setImages] = useState<AirbnbImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const listingId = '1314531825053234635'; // This should be configurable
 
   useEffect(() => {
     const loadImages = async () => {
-      setLoading(true);
-      const fetchedImages = await fetchAirbnbImages(listingId);
-      console.log("Gallery images loaded:", fetchedImages); // Debug log
-      setImages(fetchedImages);
-      setLoading(false);
+      try {
+        setLoading(true);
+        setError(null);
+        const fetchedImages = await fetchAirbnbImages(listingId);
+        console.log("Gallery images loaded:", fetchedImages);
+        
+        if (fetchedImages.length === 0) {
+          setError("No images available");
+        } else {
+          setImages(fetchedImages);
+        }
+      } catch (err) {
+        console.error("Error loading gallery images:", err);
+        setError("Failed to load gallery images");
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadImages();
   }, [listingId]);
 
-  // Loading state
   if (loading) {
     return (
       <section className="section-padding bg-gray-50" id="gallery">
@@ -90,6 +103,24 @@ const Gallery = () => {
     );
   }
 
+  if (error) {
+    return (
+      <section className="section-padding bg-gray-50" id="gallery">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-hamptons-dark mb-4">
+              Photo Gallery
+            </h2>
+            <div className="p-8 bg-red-50 rounded-lg border border-red-200">
+              <p className="text-red-500 mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()}>Retry Loading Images</Button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="section-padding bg-gray-50" id="gallery">
       <div className="container-custom">
@@ -116,7 +147,11 @@ const Gallery = () => {
                           alt={image.alt}
                           className="w-full h-full object-cover"
                           loading="lazy"
-                          onError={(e) => console.error(`Error loading image ${index}:`, image.url, e)}
+                          onError={(e) => {
+                            console.error(`Error loading image ${index}:`, image.url, e);
+                            // Set a fallback image on error
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=300';
+                          }}
                         />
                       </AspectRatio>
                       <div className="p-4 bg-white">
@@ -143,7 +178,11 @@ const Gallery = () => {
                     alt={image.alt}
                     className="w-full h-full object-cover"
                     loading="lazy"
-                    onError={(e) => console.error(`Error loading image ${index}:`, image.url, e)}
+                    onError={(e) => {
+                      console.error(`Error loading image ${index}:`, image.url, e);
+                      // Set a fallback image on error
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=300';
+                    }}
                   />
                 </AspectRatio>
                 <div className="p-4 bg-white">

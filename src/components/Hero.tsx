@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { getHeroImage } from '@/utils/airbnbScraper';
@@ -7,15 +6,23 @@ import { Skeleton } from './ui/skeleton';
 const Hero = () => {
   const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const listingId = '1314531825053234635'; // This should be configurable
 
   useEffect(() => {
     const loadHeroImage = async () => {
-      setLoading(true);
-      const imageUrl = await getHeroImage(listingId);
-      setHeroImageUrl(imageUrl);
-      setLoading(false);
-      console.log("Hero image loaded:", imageUrl); // Debug log
+      try {
+        setLoading(true);
+        setError(null);
+        const imageUrl = await getHeroImage(listingId);
+        setHeroImageUrl(imageUrl);
+        console.log("Hero image loaded:", imageUrl);
+      } catch (err) {
+        console.error("Error loading hero image:", err);
+        setError("Failed to load hero image");
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadHeroImage();
@@ -35,7 +42,6 @@ const Hero = () => {
     backgroundPosition: 'center',
   } : defaultStyle;
 
-  // Debug the current background style
   console.log("Hero background style:", heroBackgroundStyle);
 
   return (
@@ -52,6 +58,16 @@ const Hero = () => {
               <Skeleton className="h-14 w-32 mx-auto sm:mx-0" />
             </div>
           </>
+        ) : error ? (
+          <div className="text-white bg-red-500/20 p-4 rounded-md">
+            <p>{error}</p>
+            <Button 
+              onClick={() => window.location.reload()}
+              className="mt-4 bg-white text-red-500"
+            >
+              Retry
+            </Button>
+          </div>
         ) : (
           <>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6">
