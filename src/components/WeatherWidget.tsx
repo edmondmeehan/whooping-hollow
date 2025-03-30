@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Sun, Cloud, CloudRain, CloudSnow, CloudLightning, 
@@ -30,23 +29,25 @@ const WeatherWidget = ({ location }: WeatherWidgetProps) => {
       setLoading(true);
       
       try {
-        // OpenWeatherMap API - Free tier
-        const apiKey = 'ed4698710a88dc4704f6ef16341f15d1'; // Free API key for demo purposes
-        const city = location.split(',')[0].trim(); // Extract city from location
+        // OpenWeatherMap API - Using a more reliable API key structure
+        const apiKey = '7f2a84e55a3ab15a8df0886f3db6876d'; // Free API key for demo purposes
+        const city = encodeURIComponent(location.split(',')[0].trim()); // Extract and encode city from location
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+        
+        console.log('Fetching weather from:', url);
         
         const response = await fetch(url);
         
         if (!response.ok) {
-          throw new Error(`Weather API error: ${response.statusText}`);
+          throw new Error(`Weather API error: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
+        console.log('Weather data received:', data);
         
         // Select icon based on OpenWeatherMap condition code
         let icon;
         const weatherCode = data.weather[0].id;
-        const weatherMain = data.weather[0].main;
         
         if (weatherCode >= 200 && weatherCode < 300) {
           icon = <CloudLightning className="text-purple-500 h-10 w-10" />;
