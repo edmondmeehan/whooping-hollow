@@ -5,8 +5,8 @@ import { useToast } from './use-toast';
 
 // Initial guide credentials
 const initialGuideCredentials: GuideCredentials = {
-  username: 'whoppinghollow',
-  password: '262626'
+  username: 'whoopinghollow',
+  password: '26262626'
 };
 
 const STORAGE_KEY_CREDENTIALS = 'guideCredentials';

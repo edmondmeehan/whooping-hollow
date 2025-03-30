@@ -45,7 +45,7 @@ const WelcomeTab = () => {
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Password:</p>
-            <p className="font-mono bg-white p-2 rounded border">262626</p>
+            <p className="font-mono bg-white p-2 rounded border">26262626</p>
           </div>
         </div>
         <p className="mt-4 text-sm text-gray-600">

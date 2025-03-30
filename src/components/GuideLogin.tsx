@@ -106,12 +106,6 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
               {error && (
                 <p className="text-sm text-red-500 text-center">{error}</p>
               )}
-              
-              <div className="bg-amber-50 p-3 rounded-md text-amber-800 text-sm">
-                <p className="font-medium">Demo Credentials:</p>
-                <p>Username: <span className="font-mono">{guideCredentials.username}</span></p>
-                <p>Password: <span className="font-mono">{guideCredentials.password}</span></p>
-              </div>
             </div>
           </CardContent>
           <CardFooter>
