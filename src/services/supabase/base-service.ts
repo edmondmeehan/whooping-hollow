@@ -1,5 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import { Database } from '@/integrations/supabase/types';
 
 /**
  * Checks if Supabase is properly configured
@@ -16,7 +17,7 @@ export const validateSupabaseConnection = () => {
  * Tests the connection to Supabase
  * @throws Error if connection test fails
  */
-export const testSupabaseConnection = async (tableName: string) => {
+export const testSupabaseConnection = async (tableName: "property_images") => {
   try {
     // Simple select query to check connection
     const { error: connectionError } = await supabase
