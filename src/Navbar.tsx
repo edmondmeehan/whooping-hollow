@@ -46,6 +46,16 @@ const Navbar = () => {
             Home
           </Link>
           
+          <Link 
+            to="/properties" 
+            className={cn(
+              "font-medium transition duration-200",
+              isAdminPage ? "text-white hover:text-white/80" : "text-hamptons-dark hover:text-hamptons-accent"
+            )}
+          >
+            Properties
+          </Link>
+          
           <Link to="/admin" className={cn(
             "font-medium transition duration-200",
             isAdminPage ? "text-white hover:text-white/80" : "text-hamptons-dark hover:text-hamptons-accent"
@@ -87,6 +97,14 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
+            </Link>
+            
+            <Link
+              to="/properties"
+              className="block font-medium text-hamptons-dark hover:text-hamptons-accent py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Properties
             </Link>
             
             <Link
