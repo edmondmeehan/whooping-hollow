@@ -8,6 +8,9 @@ import CheckoutTab from './guide/CheckoutTab';
 import EmergencyTab from './guide/EmergencyTab';
 
 const GuideTabs = () => {
+  // Generate a timestamp for forcing content refresh
+  const refreshKey = Date.now().toString();
+
   return (
     <Tabs defaultValue="welcome" className="w-full">
       <TabsList className="grid grid-cols-2 md:grid-cols-5 h-auto">
@@ -20,23 +23,23 @@ const GuideTabs = () => {
       
       <div className="mt-8">
         <TabsContent value="welcome">
-          <WelcomeTab />
+          <WelcomeTab key={`welcome-${refreshKey}`} />
         </TabsContent>
         
         <TabsContent value="house">
-          <HouseInfoTab />
+          <HouseInfoTab key={`house-${refreshKey}`} />
         </TabsContent>
         
         <TabsContent value="local">
-          <LocalAreaTab />
+          <LocalAreaTab key={`local-${refreshKey}`} />
         </TabsContent>
         
         <TabsContent value="checkout">
-          <CheckoutTab />
+          <CheckoutTab key={`checkout-${refreshKey}`} />
         </TabsContent>
         
         <TabsContent value="emergency">
-          <EmergencyTab />
+          <EmergencyTab key={`emergency-${refreshKey}`} />
         </TabsContent>
       </div>
     </Tabs>

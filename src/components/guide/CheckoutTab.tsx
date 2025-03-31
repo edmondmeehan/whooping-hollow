@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, CheckCheck, ClipboardCheck } from 'lucide-react';
 import GuideSection from '../GuideSection';
 import { GuideSection as GuideSectionType } from '@/types/guide';
 
@@ -20,10 +20,17 @@ const CheckoutTab = () => {
     }
   }, []);
 
+  // Render icons based on section title
+  const getSectionIcon = (title: string) => {
+    if (title.toLowerCase().includes('instructions')) return <ClipboardCheck />;
+    if (title.toLowerCase().includes('complete')) return <CheckCheck />;
+    return <Clock />;
+  };
+
   return (
     <div className="space-y-8">
       {sections.map((section) => (
-        <GuideSection key={section.id} title={section.title} icon={<Clock />}>
+        <GuideSection key={section.id} title={section.title} icon={getSectionIcon(section.title)}>
           <div className="space-y-4">
             <p className="whitespace-pre-line">{section.content}</p>
           </div>

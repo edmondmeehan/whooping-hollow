@@ -10,6 +10,7 @@ const Guide = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { guideCredentials } = useGuideCredentials();
   const { toast } = useToast();
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   useEffect(() => {
     // Check if user was previously authenticated in this session
@@ -18,6 +19,14 @@ const Guide = () => {
       setIsAuthenticated(true);
     }
   }, []);
+
+  // Force a reload of guide data when the page loads
+  useEffect(() => {
+    if (isAuthenticated) {
+      // This will trigger a re-render of all tabs
+      setForceUpdate(prev => prev + 1);
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = (username: string, password: string) => {
     // Adding console log to debug
@@ -72,7 +81,7 @@ const Guide = () => {
                 Logout
               </button>
             </div>
-            <GuideTabs />
+            <GuideTabs key={`guide-tabs-${forceUpdate}`} />
           </>
         ) : (
           <GuideLogin onLogin={handleLogin} />
