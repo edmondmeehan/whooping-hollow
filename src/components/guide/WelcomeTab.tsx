@@ -1,28 +1,15 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Home, Info, Wifi } from 'lucide-react';
 import GuideSection from '../GuideSection';
-import { GuideSection as GuideSectionType } from '@/types/guide';
-
-const STORAGE_KEY_SECTIONS = 'guideContentSections';
+import { useLocalStorageSections } from '@/hooks/use-local-storage-sections';
 
 const WelcomeTab = () => {
-  const [sections, setSections] = useState<GuideSectionType[]>([]);
+  const sections = useLocalStorageSections('welcome');
   
   // Hard-coded WiFi credentials
   const wifiNetwork = "whoopinghollow";
   const wifiPassword = "26262626";
-
-  useEffect(() => {
-    // Get sections from localStorage
-    const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
-    if (storedSections) {
-      const parsedSections = JSON.parse(storedSections);
-      if (parsedSections.welcome) {
-        setSections(parsedSections.welcome);
-      }
-    }
-  }, []);
 
   // Render icons based on section title
   const getSectionIcon = (title: string) => {

@@ -25,6 +25,14 @@ const Guide = () => {
     if (isAuthenticated) {
       // This will trigger a re-render of all tabs
       setForceUpdate(prev => prev + 1);
+      
+      // Force reload data from localStorage
+      const event = new StorageEvent('storage', {
+        key: 'guideContentSections',
+        newValue: localStorage.getItem('guideContentSections'),
+        storageArea: localStorage
+      });
+      window.dispatchEvent(event);
     }
   }, [isAuthenticated]);
 
