@@ -25,6 +25,9 @@ export const bookingFormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   specialRequests: z.string().optional(),
+}).refine(data => data.checkOut > data.checkIn, {
+  message: "Check-out date must be after check-in date",
+  path: ["checkOut"],
 });
 
 export type BookingFormValues = z.infer<typeof bookingFormSchema> & {

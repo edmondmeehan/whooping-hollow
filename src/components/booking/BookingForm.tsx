@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { BookingFormValues, BookingFormData } from '@/types/bookingForm';
+import { BookingFormValues, BookingFormData, bookingFormSchema } from '@/types/bookingForm';
 import { sendBookingConfirmation, sendAdminNotification } from '@/utils/emailUtils';
+import { addDays } from 'date-fns';
 
 // Import form field components
 import PersonalInfoFields from './PersonalInfoFields';
@@ -18,13 +20,21 @@ import SpecialRequestsField from './SpecialRequestsField';
 
 const BookingForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Set default dates (today for check-in, tomorrow for check-out)
+  const today = new Date();
+  const tomorrow = addDays(today, 1);
+  
   const form = useForm<BookingFormValues>({
+    resolver: zodResolver(bookingFormSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
       phone: '',
       property: 'whooping_hollow',
+      checkIn: today,
+      checkOut: tomorrow,
       adults: 2,
       children: 0,
       specialRequests: ''
@@ -36,14 +46,6 @@ const BookingForm: React.FC = () => {
     
     try {
       console.log('Form submitted:', data);
-      
-      // Validate email format
-      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-      if (!emailRegex.test(data.email)) {
-        toast.error('Please enter a valid email address');
-        setIsSubmitting(false);
-        return;
-      }
       
       // Convert BookingFormValues to BookingFormData format for email utils
       const emailData: BookingFormData = {
@@ -71,14 +73,36 @@ const BookingForm: React.FC = () => {
           description: 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
         });
         
-        form.reset();
+        form.reset({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          property: 'whooping_hollow',
+          checkIn: new Date(),
+          checkOut: addDays(new Date(), 1),
+          adults: 2,
+          children: 0,
+          specialRequests: ''
+        });
       } else if (adminEmailSent) {
         // Admin email worked but guest email failed
         toast.success('Booking request submitted', {
           description: 'Your request was received, but there was an issue sending the confirmation email. We\'ll contact you soon.'
         });
         
-        form.reset();
+        form.reset({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          property: 'whooping_hollow',
+          checkIn: new Date(),
+          checkOut: addDays(new Date(), 1),
+          adults: 2,
+          children: 0,
+          specialRequests: ''
+        });
       } else {
         // Both emails failed
         toast.error('There was a problem processing your booking request', {
