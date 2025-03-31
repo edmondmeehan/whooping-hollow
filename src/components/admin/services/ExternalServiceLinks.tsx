@@ -6,6 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 const ExternalServiceLinks = () => {
   const externalServices = [
     {
+      name: 'StayMarquis',
+      url: 'https://staymarquis.com/owners',
+      description: 'Owner portal for property management'
+    },
+    {
       name: 'SimpliSafe',
       url: 'https://simplisafe.com',
       description: 'Home security system'
