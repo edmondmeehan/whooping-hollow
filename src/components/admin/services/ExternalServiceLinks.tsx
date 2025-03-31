@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useExternalLinks } from '@/hooks/admin/use-external-links';
@@ -5,8 +6,12 @@ import { ExternalServiceLink } from '@/services/admin/external-links-service';
 import ExternalLinksHeader from './external-links/ExternalLinksHeader';
 import ExternalLinksGrid from './external-links/ExternalLinksGrid';
 
-const ExternalServiceLinks: React.FC = () => {
-  const { links, isLoading, error, updateLink, reload } = useExternalLinks();
+interface ExternalServiceLinksProps {
+  property?: string;
+}
+
+const ExternalServiceLinks: React.FC<ExternalServiceLinksProps> = ({ property }) => {
+  const { links, isLoading, error, updateLink, reload } = useExternalLinks(property);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newForm, setNewForm] = useState<ExternalServiceLink>({ name: '', url: '', description: '' });
