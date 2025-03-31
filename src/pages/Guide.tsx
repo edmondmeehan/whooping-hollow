@@ -36,7 +36,7 @@ const Guide = () => {
 
   const handleLogin = (username: string, password: string) => {
     // Hardcoded credentials check
-    if (username === 'whoppinghollow' && password === '26262626') {
+    if (username === 'whoopinghollow' && password === '26262626') {
       setIsAuthenticated(true);
       // Store authentication state for this session
       sessionStorage.setItem('guideAuthenticated', 'true');

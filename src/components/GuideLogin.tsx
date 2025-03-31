@@ -110,7 +110,7 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
                 <div className="grid grid-cols-1 gap-2">
                   <div>
                     <p className="text-xs font-medium text-gray-500">Network Name:</p>
-                    <p className="text-sm font-mono">whoppinghollow</p>
+                    <p className="text-sm font-mono">whoopinghollow</p>
                   </div>
                   <div>
                     <p className="text-xs font-medium text-gray-500">Password:</p>
