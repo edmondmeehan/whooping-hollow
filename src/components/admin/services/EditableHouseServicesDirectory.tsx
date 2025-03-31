@@ -9,9 +9,16 @@ import HouseServicesTable from './houseServices/HouseServicesTable';
 import PropertySelector from './PropertySelector';
 import { useProperties } from '@/hooks/admin/use-properties';
 
-const EditableHouseServicesDirectory: React.FC = () => {
+interface EditableHouseServicesDirectoryProps {
+  property?: string;
+}
+
+const EditableHouseServicesDirectory: React.FC<EditableHouseServicesDirectoryProps> = ({ property }) => {
+  // Only use the property selector internally if not receiving a property from props
   const { properties, selectedProperty, selectProperty } = useProperties();
-  const { services, isLoading, error, addService, updateService, deleteService, reload } = useHouseServices(selectedProperty);
+  const effectiveProperty = property || selectedProperty;
+  
+  const { services, isLoading, error, addService, updateService, deleteService, reload } = useHouseServices(effectiveProperty);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [form, setForm] = useState<HouseService>({
@@ -78,9 +85,6 @@ const EditableHouseServicesDirectory: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div>Loading house services directory...</div>;
-  if (error) return <div>Error loading house services directory: {error}</div>;
-
   return (
     <Card>
       <CardHeader>
@@ -90,11 +94,13 @@ const EditableHouseServicesDirectory: React.FC = () => {
             onRefresh={reload}
             isAddingOrEditing={isAdding || editingId !== null}
           />
-          <PropertySelector 
-            properties={properties}
-            selectedProperty={selectedProperty}
-            onPropertyChange={selectProperty}
-          />
+          {!property && (
+            <PropertySelector 
+              properties={properties}
+              selectedProperty={selectedProperty}
+              onPropertyChange={selectProperty}
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>

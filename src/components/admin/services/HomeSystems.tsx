@@ -8,8 +8,14 @@ import { Button } from '@/components/ui/button';
 import { useProperties } from '@/hooks/admin/use-properties';
 import PropertySelector from './PropertySelector';
 
-const HomeSystems = () => {
+interface HomeSystemsProps {
+  property?: string;
+}
+
+const HomeSystems: React.FC<HomeSystemsProps> = ({ property }) => {
+  // Only use the property selector internally if not receiving a property from props
   const { properties, selectedProperty, selectProperty } = useProperties();
+  const effectiveProperty = property || selectedProperty;
   
   return (
     <Card>
@@ -30,15 +36,17 @@ const HomeSystems = () => {
               Refresh Data
             </Button>
           </div>
-          <PropertySelector 
-            properties={properties}
-            selectedProperty={selectedProperty}
-            onPropertyChange={selectProperty}
-          />
+          {!property && (
+            <PropertySelector 
+              properties={properties}
+              selectedProperty={selectedProperty}
+              onPropertyChange={selectProperty}
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>
-        <EditableHomeSystemsTable property={selectedProperty} />
+        <EditableHomeSystemsTable property={effectiveProperty} />
         <SecurityNotice />
       </CardContent>
     </Card>

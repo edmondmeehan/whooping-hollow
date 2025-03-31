@@ -8,9 +8,16 @@ import ExternalLinksGrid from './external-links/ExternalLinksGrid';
 import PropertySelector from './PropertySelector';
 import { useProperties } from '@/hooks/admin/use-properties';
 
-const EditableExternalServiceLinks: React.FC = () => {
+interface EditableExternalServiceLinksProps {
+  property?: string;
+}
+
+const EditableExternalServiceLinks: React.FC<EditableExternalServiceLinksProps> = ({ property }) => {
+  // Only use the property selector internally if not receiving a property from props
   const { properties, selectedProperty, selectProperty } = useProperties();
-  const { links, isLoading, error, addLink, updateLink, deleteLink, reload } = useExternalLinks(selectedProperty);
+  const effectiveProperty = property || selectedProperty;
+  
+  const { links, isLoading, error, addLink, updateLink, deleteLink, reload } = useExternalLinks(effectiveProperty);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newForm, setNewForm] = useState<ExternalServiceLink>({ name: '', url: '', description: '' });
@@ -61,9 +68,6 @@ const EditableExternalServiceLinks: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div>Loading external service links...</div>;
-  if (error) return <div>Error loading external service links: {error}</div>;
-
   return (
     <Card>
       <CardHeader>
@@ -73,11 +77,13 @@ const EditableExternalServiceLinks: React.FC = () => {
             onRefresh={reload}
             isAddingOrEditing={isAdding || editingId !== null}
           />
-          <PropertySelector 
-            properties={properties}
-            selectedProperty={selectedProperty}
-            onPropertyChange={selectProperty}
-          />
+          {!property && (
+            <PropertySelector 
+              properties={properties}
+              selectedProperty={selectedProperty}
+              onPropertyChange={selectProperty}
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>
