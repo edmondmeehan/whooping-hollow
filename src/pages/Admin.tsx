@@ -21,6 +21,7 @@ const AdminContent = () => {
         adminEmail={adminData?.email}
         adminName={adminData?.name}
         adminAvatar={adminData?.avatarUrl}
+        isMobile={isMobile}
       />
       <div className={isMobile ? "px-2" : ""}>
         <AdminDashboard />
