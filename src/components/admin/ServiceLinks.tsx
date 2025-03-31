@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ExternalServiceLinks from './services/ExternalServiceLinks';
-import HomeSystems from './HomeSystems';
+import HomeSystems from './services/HomeSystems';
 import HouseServicesDirectory from './services/HouseServicesDirectory';
 
 const ServiceLinks = () => {
