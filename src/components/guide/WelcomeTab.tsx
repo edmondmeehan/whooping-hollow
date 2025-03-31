@@ -7,9 +7,24 @@ import { useLocalStorageSections } from '@/hooks/use-local-storage-sections';
 const WelcomeTab = () => {
   const sections = useLocalStorageSections('welcome');
   
-  // Hard-coded WiFi credentials
-  const wifiNetwork = "whoopinghollow";
-  const wifiPassword = "26262626";
+  // Extract WiFi details from the relevant section
+  const wifiSection = sections.find(section => 
+    section.title.toLowerCase().includes('wifi') || 
+    section.title.toLowerCase().includes('network')
+  );
+  
+  // Parse WiFi details from content or use defaults
+  let wifiNetwork = "whoopinghollow";
+  let wifiPassword = "26262626";
+  
+  if (wifiSection) {
+    const content = wifiSection.content;
+    const networkMatch = content.match(/network(?:\s+name)?(?:\s*:\s*|\s+)([^\n\r]+)/i);
+    const passwordMatch = content.match(/password(?:\s*:\s*|\s+)([^\n\r]+)/i);
+    
+    if (networkMatch && networkMatch[1]) wifiNetwork = networkMatch[1].trim();
+    if (passwordMatch && passwordMatch[1]) wifiPassword = passwordMatch[1].trim();
+  }
 
   // Render icons based on section title
   const getSectionIcon = (title: string) => {

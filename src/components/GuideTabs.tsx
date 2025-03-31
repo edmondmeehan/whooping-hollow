@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import WelcomeTab from './guide/WelcomeTab';
 import HouseInfoTab from './guide/HouseInfoTab';
@@ -9,7 +9,28 @@ import EmergencyTab from './guide/EmergencyTab';
 
 const GuideTabs = () => {
   // Generate a timestamp for forcing content refresh
-  const refreshKey = Date.now().toString();
+  const [refreshKey, setRefreshKey] = useState(Date.now().toString());
+
+  // Listen for storage events to refresh the tabs
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'guideContentSections') {
+        setRefreshKey(Date.now().toString());
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Refresh periodically to catch any changes
+    const interval = setInterval(() => {
+      setRefreshKey(Date.now().toString());
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <Tabs defaultValue="welcome" className="w-full">
