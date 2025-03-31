@@ -14,15 +14,19 @@ import { toast } from 'sonner';
 
 const AdminBookings = () => {
   const [selectedTab, setSelectedTab] = useState<'calendar' | 'direct-bookings'>('calendar');
-  // Calendar tab state
+  
+  // Calendar tab state using the enhanced hook
   const { 
     bookings, 
     statusFilter, 
     handleStatusChange, 
     updateStatusFilter, 
     addBooking, 
-    deleteBooking 
+    deleteBooking,
+    isLoading: isLoadingBookings,
+    refreshBookings
   } = useBookings();
+  
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createMode, setCreateMode] = useState<'booking' | 'block'>('booking');
@@ -33,39 +37,8 @@ const AdminBookings = () => {
     isLoading: isLoadingRequests,
     refreshBookingRequests,
   } = useBookingRequests();
+  
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // Import direct bookings into calendar
-  useEffect(() => {
-    if (bookingRequests.length > 0) {
-      // Convert confirmed booking requests to calendar bookings if they don't exist yet
-      const confirmedRequests = bookingRequests.filter(req => 
-        req.status === 'confirmed' && 
-        !bookings.some(b => 
-          b.email === req.email && 
-          b.checkIn === req.check_in && 
-          b.checkOut === req.check_out
-        )
-      );
-      
-      // Add each confirmed request to the bookings
-      confirmedRequests.forEach(request => {
-        addBooking({
-          name: `${request.first_name} ${request.last_name}`,
-          email: request.email,
-          phone: request.phone,
-          checkIn: request.check_in,
-          checkOut: request.check_out,
-          adults: request.adults,
-          children: request.children || 0,
-          status: 'confirmed' as BookingStatus,
-          message: request.special_requests || '',
-          notes: `Booking imported from direct booking request (ID: ${request.id})`,
-          isBlockedDate: false
-        });
-      });
-    }
-  }, [bookingRequests, bookings, addBooking]);
   
   const handleBookingClick = (booking: Booking) => {
     setSelectedBooking(booking);
@@ -103,6 +76,13 @@ const AdminBookings = () => {
     toast.success('Booking requests refreshed');
   };
   
+  const handleRefreshCalendar = async () => {
+    setIsRefreshing(true);
+    await refreshBookings();
+    setIsRefreshing(false);
+    toast.success('Calendar refreshed');
+  };
+  
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -126,6 +106,24 @@ const AdminBookings = () => {
                   <SelectItem value="blocked">Blocked Dates</SelectItem>
                 </SelectContent>
               </Select>
+              
+              <Button 
+                variant="outline" 
+                onClick={handleRefreshCalendar} 
+                disabled={isRefreshing}
+              >
+                {isRefreshing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Refreshing...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Refresh Calendar
+                  </>
+                )}
+              </Button>
               
               <div className="flex gap-2">
                 <Button onClick={() => handleOpenCreateModal('booking')} className="flex items-center gap-1">
@@ -170,17 +168,23 @@ const AdminBookings = () => {
         </TabsList>
         
         <TabsContent value="calendar">
-          <BookingTable 
-            bookings={bookings} 
-            onStatusChange={handleStatusChange}
-            onBookingClick={handleBookingClick}
-            onDeleteBooking={handleDeleteBooking}
-          />
+          {isLoadingBookings ? (
+            <div className="text-center py-10">
+              <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+              <p className="mt-2 text-muted-foreground">Loading bookings...</p>
+            </div>
+          ) : (
+            <BookingTable 
+              bookings={bookings} 
+              onStatusChange={handleStatusChange}
+              onBookingClick={handleBookingClick}
+              onDeleteBooking={handleDeleteBooking}
+            />
+          )}
         </TabsContent>
         
         <TabsContent value="direct-bookings">
           <div className="rounded-md border">
-            {/* We'll reuse the existing AdminBookingRequests component via its hook */}
             {isLoadingRequests ? (
               <div className="text-center py-10">
                 <Loader2 className="h-6 w-6 animate-spin mx-auto" />

@@ -15,4 +15,9 @@ export interface Booking {
   created_at?: string;
   isBlockedDate?: boolean; // For admin-created blocked dates
   notes?: string; // For cleaning notes or other admin annotations
+  metadata?: {
+    requestId?: string;
+    source?: 'booking_request' | 'manual' | 'blocked';
+    [key: string]: any;
+  }
 }

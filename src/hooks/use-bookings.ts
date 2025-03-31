@@ -1,138 +1,186 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Booking, BookingStatus } from '@/types/booking';
-import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
 
-// Sample booking data
-const initialBookings: Booking[] = [
-  {
-    id: 1,
-    name: 'John Smith',
-    email: 'john.smith@example.com',
-    phone: '(555) 123-4567',
-    checkIn: '2023-06-15',
-    checkOut: '2023-06-20',
-    adults: 2,
-    children: 2,
-    status: 'new',
-    message: 'Looking forward to our stay!',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString() // 2 days ago
-  },
-  {
-    id: 2,
-    name: 'Sarah Johnson',
-    email: 'sarah.j@example.com',
-    phone: '(555) 987-6543',
-    checkIn: '2023-07-03',
-    checkOut: '2023-07-10',
-    adults: 2,
-    status: 'confirmed',
-    message: 'This is a return visit. We loved our stay last year!',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString() // 5 days ago
-  },
-  {
-    id: 3,
-    name: 'Michael Wong',
-    email: 'mwong@example.com',
-    phone: '(555) 555-5555',
-    checkIn: '2023-08-22',
-    checkOut: '2023-08-25',
-    adults: 4,
-    children: 2,
-    status: 'cancelled',
-    message: 'Need a place for our family reunion. We would like to know if you have any special accommodations for large groups. Also, is the property child-friendly?',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString() // 10 days ago
-  },
-  {
-    id: 4,
-    name: 'Blocked for Maintenance',
-    email: 'admin@property.com',
-    phone: 'N/A',
-    checkIn: '2023-09-01',
-    checkOut: '2023-09-05',
-    adults: 0,
-    status: 'blocked',
-    notes: 'Annual maintenance and deep cleaning',
-    isBlockedDate: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString() // 1 day ago
-  }
-];
-
-export const useBookings = () => {
-  const [bookings, setBookings] = useState<Booking[]>(initialBookings);
-  const [filteredBookings, setFilteredBookings] = useState<Booking[]>(initialBookings);
+export function useBookings() {
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [statusFilter, setStatusFilter] = useState<BookingStatus | 'all'>('all');
-  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  // Handle status change
-  const handleStatusChange = (bookingId: number, newStatus: BookingStatus) => {
-    const updatedBookings = bookings.map(booking => 
-      booking.id === bookingId ? {...booking, status: newStatus} : booking
-    );
+  // Fetch bookings from Supabase
+  const fetchBookings = useCallback(async () => {
+    setIsLoading(true);
+    setIsError(false);
     
-    setBookings(updatedBookings);
-    applyFilters(updatedBookings, statusFilter);
-    
-    toast({
-      title: 'Status Updated',
-      description: `Booking #${bookingId} status changed to ${newStatus}`,
-    });
-  };
-
-  // Filter bookings by status
-  const applyFilters = useCallback((bookingsToFilter: Booking[], status: BookingStatus | 'all') => {
-    if (status === 'all') {
-      setFilteredBookings(bookingsToFilter);
-    } else {
-      setFilteredBookings(bookingsToFilter.filter(booking => booking.status === status));
+    try {
+      // First, fetch confirmed booking requests from the booking_requests table
+      const { data: requestsData, error: requestsError } = await supabase
+        .from('booking_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (requestsError) {
+        throw new Error(requestsError.message);
+      }
+      
+      // Transform booking requests into Booking objects
+      const transformedBookings: Booking[] = requestsData.map((request, index) => ({
+        id: index + 1, // Use a temporary ID - will be replaced by real ID when permanent bookings system is implemented
+        name: `${request.first_name} ${request.last_name}`,
+        email: request.email,
+        phone: request.phone,
+        checkIn: request.check_in,
+        checkOut: request.check_out,
+        adults: request.adults,
+        children: request.children || 0,
+        status: (request.status as BookingStatus) || 'new',
+        message: request.special_requests || '',
+        created_at: request.created_at,
+        notes: `Booking imported from direct booking request (ID: ${request.id})`,
+        isBlockedDate: false,
+        metadata: {
+          requestId: request.id,
+          source: 'booking_request'
+        }
+      }));
+      
+      setBookings(transformedBookings);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      setIsError(true);
+      toast.error('Failed to load bookings');
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
+
+  // Filter bookings based on selected status
+  const filteredBookings = statusFilter === 'all'
+    ? bookings
+    : bookings.filter(booking => {
+        if (statusFilter === 'blocked') {
+          return booking.isBlockedDate || booking.status === 'blocked';
+        }
+        return booking.status === statusFilter;
+      });
+
+  // Update booking status in Supabase
+  const handleStatusChange = async (bookingId: number, newStatus: BookingStatus) => {
+    try {
+      const booking = bookings.find(b => b.id === bookingId);
+      if (!booking) return;
+
+      if (booking.metadata?.requestId) {
+        // Update in the booking_requests table
+        const { error } = await supabase
+          .from('booking_requests')
+          .update({ status: newStatus })
+          .eq('id', booking.metadata.requestId);
+        
+        if (error) throw error;
+      }
+
+      // Update local state
+      setBookings(prev => 
+        prev.map(booking => 
+          booking.id === bookingId 
+            ? { ...booking, status: newStatus } 
+            : booking
+        )
+      );
+      
+      toast.success(`Booking status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+      toast.error('Failed to update booking status');
+    }
+  };
+
   // Add a new booking
-  const addBooking = useCallback((newBooking: Omit<Booking, 'id' | 'created_at'>) => {
-    const bookingToAdd: Booking = {
-      ...newBooking,
-      id: bookings.length > 0 ? Math.max(...bookings.map(b => b.id)) + 1 : 1,
-      created_at: new Date().toISOString()
-    };
-    
-    const updatedBookings = [...bookings, bookingToAdd];
-    setBookings(updatedBookings);
-    applyFilters(updatedBookings, statusFilter);
-    
-    toast({
-      title: 'Booking Added',
-      description: `New booking for ${newBooking.name} has been added`,
-    });
-    
-    return bookingToAdd;
-  }, [bookings, applyFilters, statusFilter, toast]);
+  const addBooking = async (newBookingData: Omit<Booking, 'id' | 'created_at'>) => {
+    try {
+      // If it's a new regular booking (not a blocked date), add to booking_requests
+      if (!newBookingData.isBlockedDate) {
+        const { error } = await supabase
+          .from('booking_requests')
+          .insert({
+            first_name: newBookingData.name.split(' ')[0] || 'Guest',
+            last_name: newBookingData.name.split(' ').slice(1).join(' ') || 'User',
+            email: newBookingData.email,
+            phone: newBookingData.phone,
+            check_in: newBookingData.checkIn,
+            check_out: newBookingData.checkOut,
+            adults: newBookingData.adults,
+            children: newBookingData.children || 0,
+            special_requests: newBookingData.message,
+            status: newBookingData.status,
+            property: 'whooping_hollow' // Default property
+          });
+        
+        if (error) throw error;
+      }
+
+      // For now, also update local state for immediate UI update
+      // In a real implementation, you might just re-fetch from the server
+      const newBooking: Booking = {
+        ...newBookingData,
+        id: Math.max(0, ...bookings.map(b => b.id)) + 1,
+        created_at: new Date().toISOString()
+      };
+      
+      setBookings(prev => [...prev, newBooking]);
+      toast.success('Booking added successfully');
+      
+      // Refresh data from server to get the proper ID
+      fetchBookings();
+    } catch (error) {
+      console.error('Error adding booking:', error);
+      toast.error('Failed to add booking');
+    }
+  };
 
   // Delete a booking
-  const deleteBooking = useCallback((bookingId: number) => {
-    const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
-    setBookings(updatedBookings);
-    applyFilters(updatedBookings, statusFilter);
-    
-    toast({
-      title: 'Booking Deleted',
-      description: `Booking #${bookingId} has been deleted`,
-    });
-  }, [bookings, applyFilters, statusFilter, toast]);
+  const deleteBooking = async (bookingId: number) => {
+    try {
+      const booking = bookings.find(b => b.id === bookingId);
+      if (!booking) return;
 
-  // Update status filter
-  const updateStatusFilter = useCallback((status: BookingStatus | 'all') => {
-    setStatusFilter(status);
-    applyFilters(bookings, status);
-  }, [bookings, applyFilters]);
+      if (booking.metadata?.requestId) {
+        // Delete from booking_requests table
+        const { error } = await supabase
+          .from('booking_requests')
+          .delete()
+          .eq('id', booking.metadata.requestId);
+        
+        if (error) throw error;
+      }
+
+      // Update local state
+      setBookings(prev => prev.filter(booking => booking.id !== bookingId));
+      toast.success('Booking deleted successfully');
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+      toast.error('Failed to delete booking');
+    }
+  };
 
   return {
     bookings: filteredBookings,
-    allBookings: bookings,
+    isLoading,
+    isError,
     statusFilter,
     handleStatusChange,
-    updateStatusFilter,
+    updateStatusFilter: setStatusFilter,
     addBooking,
-    deleteBooking
+    deleteBooking,
+    refreshBookings: fetchBookings
   };
-};
+}
