@@ -62,7 +62,7 @@ export const sendAdminNotification = async (formData: BookingFormDataWithDates):
 
   return sendEmail({
     from: 'Whooping Hollow Haven <onboarding@resend.dev>',
-    to: 'admin@whoopinghollowhaven.com', // Replace with your admin email
+    to: ['admin@whoopinghollowhaven.com', 'eddie@please.co'], // Added Eddie's email here
     subject: 'New Direct Booking Request',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

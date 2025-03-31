@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { BookingFormValues, BookingFormData, bookingFormSchema } from '@/types/bookingForm';
-import { sendBookingConfirmation, sendAdminNotification } from '@/utils/emailUtils';
+import { sendBookingConfirmation, sendAdminNotification } from '@/utils/email';
 import { addDays } from 'date-fns';
+import { useBookings } from '@/hooks/use-bookings';
 
 // Import form field components
 import PersonalInfoFields from './PersonalInfoFields';
@@ -20,6 +21,7 @@ import SpecialRequestsField from './SpecialRequestsField';
 
 const BookingForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addBooking } = useBookings();
   
   // Set default dates (today for check-in, tomorrow for check-out)
   const today = new Date();
@@ -46,6 +48,24 @@ const BookingForm: React.FC = () => {
     
     try {
       console.log('Form submitted:', data);
+      
+      // Add booking to the admin dashboard
+      const booking = {
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        phone: data.phone,
+        checkIn: data.checkIn.toISOString().split('T')[0],
+        checkOut: data.checkOut.toISOString().split('T')[0],
+        adults: data.adults,
+        children: data.children || 0,
+        status: 'new',
+        message: data.specialRequests,
+        notes: `Booking made through direct booking form for ${data.property}`,
+        isBlockedDate: false
+      };
+      
+      // Add to the booking system
+      addBooking(booking);
       
       // Convert BookingFormValues to BookingFormData format for email utils
       const emailData: BookingFormData = {

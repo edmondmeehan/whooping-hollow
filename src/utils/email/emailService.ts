@@ -24,7 +24,10 @@ export const sendEmail = async (payload: EmailPayload): Promise<boolean> => {
   }
 
   try {
-    console.log('Sending email with API key:', apiKey.substring(0, 5) + '...');
+    console.log('Sending email with payload:', JSON.stringify({
+      ...payload,
+      to: Array.isArray(payload.to) ? payload.to : [payload.to]
+    }));
     
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
