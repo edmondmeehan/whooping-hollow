@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { HouseService } from '@/services/admin/house-services-service';
+import HouseServiceStatusBadge from '../houseServicesDirectory/HouseServiceStatusBadge';
 
 interface HouseServiceRowProps {
   service: HouseService;
@@ -111,13 +112,7 @@ const HouseServiceRow: React.FC<HouseServiceRowProps> = ({
           <TableCell className="font-medium">{service.service}</TableCell>
           <TableCell>{service.company}</TableCell>
           <TableCell>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              service.status === 'Active' ? 'bg-green-100 text-green-800' : 
-              service.status === 'Updated' ? 'bg-blue-100 text-blue-800' : 
-              'bg-gray-100 text-gray-800'
-            }`}>
-              {service.status}
-            </span>
+            <HouseServiceStatusBadge status={service.status} />
           </TableCell>
           <TableCell>{service.contact_name}</TableCell>
           <TableCell>{service.phone}</TableCell>
