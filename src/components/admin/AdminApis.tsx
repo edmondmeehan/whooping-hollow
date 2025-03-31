@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { Save, AlertTriangle } from 'lucide-react';
+import { Save, AlertTriangle, Check } from 'lucide-react';
 import { useApiKeys } from './apis/apiKeyUtils';
 import ApiKeyCard from './apis/ApiKeyCard';
 import AddApiKeyForm from './apis/AddApiKeyForm';
@@ -25,6 +25,7 @@ const AdminApis = () => {
   
   const [cloudinaryUrl, setCloudinaryUrl] = useState('');
   const [hasWeatherApiKey, setHasWeatherApiKey] = useState(false);
+  const [keyJustAdded, setKeyJustAdded] = useState(false);
 
   useEffect(() => {
     // Load the Cloudinary URL on component mount
@@ -35,6 +36,31 @@ const AdminApis = () => {
     
     // Ensure we have a VisualCrossing API key entry if one doesn't exist
     ensureApiKeyExists('VisualCrossing Weather API', '');
+
+    // Check if we need to auto-populate the weather API key
+    const searchParams = new URLSearchParams(window.location.search);
+    const weatherKey = searchParams.get('weather_key') || 'CH5RM483EYLMBQN6FRY753DJQ';
+    
+    if (weatherKey) {
+      const weatherKeyObject = apiKeys.find(key => 
+        key.name.toLowerCase().includes('weather') || 
+        key.name.toLowerCase().includes('visualcrossing')
+      );
+      
+      if (weatherKeyObject && (!weatherKeyObject.key || weatherKeyObject.key.trim() === '')) {
+        updateApiKey(weatherKeyObject.id, weatherKey);
+        setKeyJustAdded(true);
+        
+        // Auto save after adding the key
+        setTimeout(() => {
+          saveApiKeys();
+          toast({
+            title: "Weather API Key Added",
+            description: "The Visual Crossing Weather API key has been added and saved.",
+          });
+        }, 500);
+      }
+    }
   }, [ensureApiKeyExists]);
 
   useEffect(() => {
@@ -118,7 +144,19 @@ const AdminApis = () => {
 
       <Separator />
       
-      {!hasWeatherApiKey && (
+      {keyJustAdded && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start space-x-3">
+          <Check className="h-5 w-5 text-green-500 mt-0.5" />
+          <div>
+            <h3 className="font-medium text-green-800">Visual Crossing Weather API Key Added</h3>
+            <p className="text-sm text-green-700">
+              Your Weather API key has been successfully added and saved. The weather widget will now display real weather data.
+            </p>
+          </div>
+        </div>
+      )}
+      
+      {!hasWeatherApiKey && !keyJustAdded && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start space-x-3">
           <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
           <div>
