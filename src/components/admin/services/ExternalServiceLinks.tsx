@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useExternalLinks } from '@/hooks/admin/use-external-links';
@@ -12,7 +13,7 @@ interface ExternalServiceLinksProps {
 
 const ExternalServiceLinks: React.FC<ExternalServiceLinksProps> = ({ property }) => {
   const isMobile = useIsMobile();
-  const { links, isLoading, error, updateLink, reload } = useExternalLinks(property);
+  const { links, isLoading, error, addLink, updateLink, deleteLink, reload } = useExternalLinks(property);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newForm, setNewForm] = useState<ExternalServiceLink>({ name: '', url: '', description: '' });
@@ -53,10 +54,14 @@ const ExternalServiceLinks: React.FC<ExternalServiceLinksProps> = ({ property })
   };
   
   const saveNew = async () => {
-    cancelEdit();
+    await addLink(newForm);
+    setIsAdding(false);
   };
 
   const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this service link?')) {
+      await deleteLink(id);
+    }
   };
 
   if (isLoading) return <div className="p-4 text-center">Loading external service links...</div>;

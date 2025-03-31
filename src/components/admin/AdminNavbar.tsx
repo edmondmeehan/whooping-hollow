@@ -2,20 +2,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut, ArrowLeft, User } from 'lucide-react';
+import { LogOut, ArrowLeft } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AdminNavbarProps {
   onLogout: () => void;
   adminEmail?: string;
   adminAvatar?: string;
   adminName?: string;
+  isMobile?: boolean;
 }
 
-const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName }: AdminNavbarProps) => {
-  const isMobile = useIsMobile();
-  
+const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName, isMobile = false }: AdminNavbarProps) => {
   return (
     <div className="bg-white border-b border-gray-200 shadow-sm">
       <div className="container-custom flex items-center justify-between py-3">
