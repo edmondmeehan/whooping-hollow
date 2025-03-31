@@ -17,6 +17,7 @@ export const sendEmail = async (payload: EmailPayload): Promise<boolean> => {
   const apiKey = getResendApiKey();
   
   if (!apiKey) {
+    console.error("Missing Resend API key");
     toast.error("API Key Missing", {
       description: "Please add your Resend API key in the Admin panel"
     });

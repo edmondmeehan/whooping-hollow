@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -90,42 +91,52 @@ const BookingForm: React.FC = () => {
         specialRequests: data.specialRequests
       };
       
-      // Send confirmation email to guest
-      const guestEmailSent = await sendBookingConfirmation(emailData);
-      
-      // Send notification to admin (attempt even if guest email fails)
-      const adminEmailSent = await sendAdminNotification(emailData);
-      
-      if (guestEmailSent || adminEmailSent) {
-        toast.success(guestEmailSent ? 'Booking request submitted successfully!' : 'Booking request received', {
-          description: guestEmailSent 
-            ? 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
-            : 'Your request was received, but there was an issue sending the confirmation email. We\'ll contact you soon.'
-        });
+      // Try to send emails but don't block the success flow if they fail
+      try {
+        // Send confirmation email to guest
+        const guestEmailSent = await sendBookingConfirmation(emailData);
         
-        // Reset form after successful submission
-        form.reset({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          property: 'whooping_hollow',
-          checkIn: new Date(),
-          checkOut: addDays(new Date(), 1),
-          adults: 2,
-          children: 0,
-          specialRequests: ''
-        });
-      } else {
-        // Both emails failed
-        toast.error('There was a problem processing your booking request', {
-          description: 'Please check your email address or try again later.'
+        // Send notification to admin (attempt even if guest email fails)
+        const adminEmailSent = await sendAdminNotification(emailData);
+        
+        if (!guestEmailSent && !adminEmailSent) {
+          console.warn('Both guest and admin emails failed to send');
+          // Still showing success but with modified message
+          toast.success('Booking request submitted successfully!', {
+            description: 'Your request was received, but there was an issue sending confirmation emails. We\'ll contact you soon.'
+          });
+        } else {
+          toast.success('Booking request submitted successfully!', {
+            description: guestEmailSent 
+              ? 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
+              : 'Your request was received, but there was an issue sending the confirmation email. We\'ll contact you soon.'
+          });
+        }
+      } catch (emailError) {
+        console.error('Error sending emails:', emailError);
+        // Still show success since the booking was saved to database
+        toast.success('Booking request submitted successfully!', {
+          description: 'Your booking was received, but there was an issue sending confirmation emails. We\'ll contact you soon.'
         });
       }
+      
+      // Reset form after successful submission
+      form.reset({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        property: 'whooping_hollow',
+        checkIn: new Date(),
+        checkOut: addDays(new Date(), 1),
+        adults: 2,
+        children: 0,
+        specialRequests: ''
+      });
     } catch (error) {
       console.error('Error processing booking:', error);
       toast.error('There was a problem processing your booking request', {
-        description: 'Please try again later or contact us directly.'
+        description: error instanceof Error ? error.message : 'Please try again later or contact us directly.'
       });
     } finally {
       setIsSubmitting(false);
