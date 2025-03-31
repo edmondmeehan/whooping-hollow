@@ -3,6 +3,8 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { HouseService } from '@/services/admin/house-services-service';
 import HouseServiceRow from './HouseServiceRow';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface HouseServicesTableProps {
   services: HouseService[];
@@ -27,40 +29,49 @@ const HouseServicesTable: React.FC<HouseServicesTableProps> = ({
   onSave,
   onCancel
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Service</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Website</TableHead>
-            <TableHead>Notes</TableHead>
-            <TableHead className="w-20">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {services.map((service) => (
-            <HouseServiceRow
-              key={service.id}
-              service={service}
-              editingId={editingId}
-              form={form}
-              onInputChange={onInputChange}
-              onStatusChange={onStatusChange}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onSave={onSave}
-              onCancel={onCancel}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <ScrollArea className="h-[calc(100vh-280px)]">
+      <div className="w-full">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[150px]">Service</TableHead>
+              <TableHead className="w-[150px]">Company</TableHead>
+              <TableHead className="w-[110px]">Status</TableHead>
+              <TableHead className="w-[120px]">Contact</TableHead>
+              {!isMobile && (
+                <>
+                  <TableHead className="w-[120px]">Phone</TableHead>
+                  <TableHead className="w-[150px]">Email</TableHead>
+                  <TableHead className="w-[110px]">Website</TableHead>
+                </>
+              )}
+              <TableHead className={isMobile ? "w-[150px]" : "w-[200px]"}>Notes</TableHead>
+              <TableHead className="w-[80px] text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {services.map((service) => (
+              <HouseServiceRow
+                key={service.id}
+                service={service}
+                editingId={editingId}
+                form={form}
+                onInputChange={onInputChange}
+                onStatusChange={onStatusChange}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onSave={onSave}
+                onCancel={onCancel}
+                isMobile={isMobile}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </ScrollArea>
   );
 };
 
