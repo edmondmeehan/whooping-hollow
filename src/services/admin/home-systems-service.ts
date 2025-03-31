@@ -19,7 +19,7 @@ export const fetchHomeSystems = async (): Promise<HomeSystem[]> => {
     throw new Error(error.message);
   }
   
-  return data || [];
+  return data as HomeSystem[] || [];
 };
 
 export const addHomeSystem = async (system: HomeSystem): Promise<HomeSystem> => {
@@ -34,7 +34,7 @@ export const addHomeSystem = async (system: HomeSystem): Promise<HomeSystem> => 
     throw new Error(error.message);
   }
   
-  return data;
+  return data as HomeSystem;
 };
 
 export const updateHomeSystem = async (system: HomeSystem): Promise<HomeSystem> => {
@@ -57,7 +57,7 @@ export const updateHomeSystem = async (system: HomeSystem): Promise<HomeSystem> 
     throw new Error(error.message);
   }
   
-  return data;
+  return data as HomeSystem;
 };
 
 export const deleteHomeSystem = async (id: string): Promise<void> => {
