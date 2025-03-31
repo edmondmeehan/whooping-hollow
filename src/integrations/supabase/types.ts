@@ -123,6 +123,7 @@ export type Database = {
           service: string
           status: string
           updated_at: string
+          website: string | null
         }
         Insert: {
           company: string
@@ -135,6 +136,7 @@ export type Database = {
           service: string
           status: string
           updated_at?: string
+          website?: string | null
         }
         Update: {
           company?: string
@@ -147,6 +149,7 @@ export type Database = {
           service?: string
           status?: string
           updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }

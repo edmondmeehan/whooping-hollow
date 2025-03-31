@@ -30,7 +30,16 @@ export const fetchHouseServices = async (): Promise<HouseService[]> => {
 export const addHouseService = async (service: HouseService): Promise<HouseService> => {
   const { data, error } = await supabase
     .from('house_services_directory')
-    .insert(service)
+    .insert({
+      service: service.service,
+      company: service.company,
+      status: service.status,
+      contact_name: service.contact_name,
+      phone: service.phone,
+      email: service.email,
+      notes: service.notes,
+      website: service.website
+    })
     .select()
     .single();
   
