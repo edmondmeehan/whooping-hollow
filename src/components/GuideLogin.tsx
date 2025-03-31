@@ -107,16 +107,9 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
 
               <div className="bg-gray-100 p-4 rounded-lg mt-6">
                 <p className="text-sm text-gray-700 mb-2">Hint:</p>
-                <div className="grid grid-cols-1 gap-2">
-                  <div>
-                    <p className="text-xs font-medium text-gray-500">Network Name:</p>
-                    <p className="text-sm font-mono">whoopinghollow</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500">Password:</p>
-                    <p className="text-sm font-mono">26262626</p>
-                  </div>
-                </div>
+                <p className="text-xs text-gray-600">
+                  Login information is available in the guest information/WiFi information at the house and in the check-in email you received.
+                </p>
               </div>
             </div>
           </CardContent>
