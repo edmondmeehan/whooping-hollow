@@ -20,6 +20,12 @@ const Guide = () => {
   }, []);
 
   const handleLogin = (username: string, password: string) => {
+    // Adding console log to debug
+    console.log('Login attempt:', { 
+      input: { username, password },
+      stored: guideCredentials
+    });
+    
     if (username === guideCredentials.username && password === guideCredentials.password) {
       setIsAuthenticated(true);
       // Store authentication state for this session

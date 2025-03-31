@@ -9,7 +9,7 @@ const WelcomeTab = () => {
       <GuideSection title="Welcome to Whooping Hollow" icon={<Home />}>
         <div className="space-y-4">
           <p>
-            Welcome to 26 Whooping Hollow in East Hampton! We're delighted to have you stay with us. 
+            Welcome to Whooping Hollow in East Hampton! We're delighted to have you stay with us. 
             This guide contains everything you need to know to make your stay comfortable and enjoyable.
           </p>
           <p>
@@ -41,7 +41,7 @@ const WelcomeTab = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Network Name:</p>
-            <p className="font-mono bg-white p-2 rounded border">whoppinghollow</p>
+            <p className="font-mono bg-white p-2 rounded border">whoopinghollow</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Password:</p>
