@@ -1,4 +1,3 @@
-
 import { toast } from 'sonner';
 import { BookingFormData } from '@/types/bookingForm';
 
@@ -206,62 +205,53 @@ export const sendNewsletterEmail = async (recipients: string[], subject: string,
   }
 
   try {
-    console.log('Sending newsletter to', recipients.length, 'recipients');
+    console.log('Sending newsletter to', recipients.length, 'recipients with API key:', apiKey.substring(0, 5) + '...');
     
-    // For demo purposes, we'll send to one recipient at a time
-    // In production, you might want to use a service that supports bulk sending
-    let successCount = 0;
-    
-    for (const recipient of recipients) {
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          from: 'Whooping Hollow Haven <onboarding@resend.dev>',
-          to: recipient,
-          subject: subject,
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h1 style="color: #3b82f6; margin-bottom: 20px;">${subject}</h1>
-              
-              <div style="line-height: 1.6;">
-                ${content.replace(/\n/g, '<br>')}
-              </div>
-              
-              <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
-                <p>You're receiving this email because you subscribed to our newsletter.</p>
-                <p>To unsubscribe, please reply with "Unsubscribe" in the subject line.</p>
-                <p>Whooping Hollow Haven | 123 Hollow Road, Montauk, NY</p>
-              </div>
+    // For demo purposes, we'll do a single batch send instead of individual emails
+    // This is more efficient and less likely to hit rate limits
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        from: 'Whooping Hollow Haven <onboarding@resend.dev>',
+        to: 'onboarding@resend.dev', // Send to yourself first for testing
+        bcc: recipients, // BCC all recipients 
+        subject: subject,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #3b82f6; margin-bottom: 20px;">${subject}</h1>
+            
+            <div style="line-height: 1.6;">
+              ${content.replace(/\n/g, '<br>')}
             </div>
-          `
-        })
-      });
+            
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+              <p>You're receiving this email because you subscribed to our newsletter.</p>
+              <p>To unsubscribe, please reply with "Unsubscribe" in the subject line.</p>
+              <p>Whooping Hollow Haven | 123 Hollow Road, Montauk, NY</p>
+            </div>
+          </div>
+        `
+      })
+    });
 
-      if (response.ok) {
-        console.log(`Email sent successfully to ${recipient}`);
-        successCount++;
-      } else {
-        const error = await response.json();
-        console.error(`Failed to send to ${recipient}:`, error);
-      }
+    const responseData = await response.json();
+    
+    if (!response.ok) {
+      console.error('Resend API error details:', responseData);
+      throw new Error(responseData.message || responseData.error || 'Unknown error from Resend API');
     }
     
-    if (successCount === recipients.length) {
-      return true;
-    } else if (successCount > 0) {
-      toast.warning(`Sent to ${successCount} out of ${recipients.length} recipients`);
-      return true;
-    } else {
-      return false;
-    }
+    console.log('Newsletter sent successfully:', responseData);
+    return true;
   } catch (error) {
     console.error('Error sending newsletter:', error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to send newsletter";
     toast.error("Newsletter Sending Failed", {
-      description: error instanceof Error ? error.message : "Failed to send newsletter"
+      description: errorMessage
     });
     return false;
   }

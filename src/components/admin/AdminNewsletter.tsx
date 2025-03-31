@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { Trash2, Send, Users, Copy } from 'lucide-react';
+import { Trash2, Send, Users, Copy, AlertCircle, InfoIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { sendNewsletterEmail } from '@/utils/emailUtils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const AdminNewsletter = () => {
   const [subscribers, setSubscribers] = useState<string[]>([]);
@@ -58,6 +59,20 @@ const AdminNewsletter = () => {
       return;
     }
     
+    // Check if we have the Resend API key
+    const apiKeys = JSON.parse(localStorage.getItem('whh_api_keys') || '[]');
+    const resendKey = apiKeys.find((key: any) => 
+      key.name === 'Resend API' || 
+      key.name.toLowerCase().includes('resend')
+    );
+    
+    if (!resendKey?.key) {
+      toast.error('Resend API key is missing', {
+        description: 'Please add your Resend API key in the API Keys tab'
+      });
+      return;
+    }
+    
     setIsSending(true);
     
     try {
@@ -104,7 +119,22 @@ const AdminNewsletter = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Send Newsletter</CardTitle>
+            <CardTitle className="flex items-center">
+              Send Newsletter
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="ml-2 h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      The newsletter will be sent to all subscribers using the Resend API.
+                      Make sure you've added your Resend API key in the API Keys tab.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardTitle>
             <CardDescription>
               Compose and send a newsletter to all subscribers
             </CardDescription>
@@ -135,9 +165,10 @@ const AdminNewsletter = () => {
               
               <div className="pt-2">
                 <Alert className="mb-4">
+                  <AlertCircle className="h-4 w-4 mr-2" />
                   <AlertDescription>
                     <strong>Important:</strong> Make sure you've added a valid Resend API key in the API Keys tab.
-                    You must also verify your sending domain in the Resend dashboard.
+                    You must also verify your sending domain in the Resend dashboard or use the default <code>onboarding@resend.dev</code> address for testing.
                   </AlertDescription>
                 </Alert>
                 
