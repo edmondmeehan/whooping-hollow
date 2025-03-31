@@ -31,7 +31,7 @@ export const fetchHouseServices = async (property?: string): Promise<HouseServic
     throw new Error(error.message);
   }
   
-  return data as HouseService[] || [];
+  return data || [];
 };
 
 export const addHouseService = async (service: HouseService): Promise<HouseService> => {
@@ -56,7 +56,7 @@ export const addHouseService = async (service: HouseService): Promise<HouseServi
     throw new Error(error.message);
   }
   
-  return data as HouseService;
+  return data;
 };
 
 export const updateHouseService = async (service: HouseService): Promise<HouseService> => {
@@ -85,7 +85,7 @@ export const updateHouseService = async (service: HouseService): Promise<HouseSe
     throw new Error(error.message);
   }
   
-  return data as HouseService;
+  return data;
 };
 
 export const deleteHouseService = async (id: string): Promise<void> => {

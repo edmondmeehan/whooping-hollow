@@ -78,7 +78,7 @@ const Guide = () => {
               Logout
             </Button>
           </div>
-          <GuideTabs key={`guide-tabs-${forceUpdate}`} propertyId={defaultProperty} />
+          <GuideTabs key={`guide-tabs-${forceUpdate}`} />
         </div>
       ) : (
         <GuideLogin onLogin={handleLogin} />

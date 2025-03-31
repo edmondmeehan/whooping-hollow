@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import EditableExternalServiceLinks from './services/EditableExternalServiceLinks';
 import HomeSystems from './services/HomeSystems';
 import EditableHouseServicesDirectory from './services/EditableHouseServicesDirectory';
@@ -11,6 +11,14 @@ const ServiceLinks = () => {
 
   return (
     <div className="space-y-6">
+      <div className="mb-6">
+        <PropertySelector 
+          properties={properties}
+          selectedProperty={selectedProperty}
+          onPropertyChange={selectProperty}
+        />
+      </div>
+      
       <EditableExternalServiceLinks />
       <HomeSystems />
       <EditableHouseServicesDirectory />

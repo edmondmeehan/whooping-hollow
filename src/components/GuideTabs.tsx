@@ -7,7 +7,11 @@ import LocalAreaTab from './guide/LocalAreaTab';
 import CheckoutTab from './guide/CheckoutTab';
 import EmergencyTab from './guide/EmergencyTab';
 
-const GuideTabs = () => {
+interface GuideTabsProps {
+  propertyId?: string;
+}
+
+const GuideTabs: React.FC<GuideTabsProps> = ({ propertyId }) => {
   // Generate a timestamp for forcing content refresh
   const [refreshKey, setRefreshKey] = useState(Date.now().toString());
 

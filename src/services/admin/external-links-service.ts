@@ -26,7 +26,7 @@ export const fetchExternalServiceLinks = async (property?: string): Promise<Exte
     throw new Error(error.message);
   }
   
-  return data as ExternalServiceLink[] || [];
+  return data || [];
 };
 
 export const addExternalServiceLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink> => {
@@ -41,7 +41,7 @@ export const addExternalServiceLink = async (link: ExternalServiceLink): Promise
     throw new Error(error.message);
   }
   
-  return data as ExternalServiceLink;
+  return data;
 };
 
 export const updateExternalServiceLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink> => {
@@ -65,7 +65,7 @@ export const updateExternalServiceLink = async (link: ExternalServiceLink): Prom
     throw new Error(error.message);
   }
   
-  return data as ExternalServiceLink;
+  return data;
 };
 
 export const deleteExternalServiceLink = async (id: string): Promise<void> => {
