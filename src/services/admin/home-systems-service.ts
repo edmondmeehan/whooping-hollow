@@ -39,7 +39,7 @@ export const addHomeSystem = async (system: HomeSystem): Promise<HomeSystem | nu
         notes: system.notes || '',
         property: system.property
       })
-      .select()
+      .select('*')
       .single();
     
     if (error) throw error;
@@ -63,7 +63,7 @@ export const updateHomeSystem = async (system: HomeSystem): Promise<HomeSystem |
         property: system.property
       })
       .eq('id', system.id)
-      .select()
+      .select('*')
       .single();
     
     if (error) throw error;

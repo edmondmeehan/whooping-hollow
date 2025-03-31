@@ -49,7 +49,7 @@ export const addHouseService = async (service: HouseService): Promise<HouseServi
         website: service.website || '',
         property: service.property
       })
-      .select()
+      .select('*')
       .single();
     
     if (error) throw error;
@@ -78,7 +78,7 @@ export const updateHouseService = async (service: HouseService): Promise<HouseSe
         property: service.property
       })
       .eq('id', service.id)
-      .select()
+      .select('*')
       .single();
     
     if (error) throw error;

@@ -39,7 +39,7 @@ export const addExternalLink = async (link: ExternalServiceLink): Promise<Extern
         description: link.description || '',
         property: link.property
       })
-      .select()
+      .select('*')
       .single();
     
     if (error) throw error;
@@ -63,7 +63,7 @@ export const updateExternalLink = async (link: ExternalServiceLink): Promise<Ext
         property: link.property
       })
       .eq('id', link.id)
-      .select()
+      .select('*')
       .single();
     
     if (error) throw error;
