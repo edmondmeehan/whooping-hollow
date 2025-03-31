@@ -1,12 +1,11 @@
-
 import { useState, useEffect } from 'react';
 import { GuideCredentials } from '@/types/guide';
 import { useToast } from './use-toast';
 
 // Initial guide credentials
 const initialGuideCredentials: GuideCredentials = {
-  username: 'whoopinghollow',
-  password: '26262626'
+  username: 'guest',
+  password: 'whoopinghollow'
 };
 
 const STORAGE_KEY_CREDENTIALS = 'guideCredentials';

@@ -41,11 +41,11 @@ const WelcomeTab = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Network Name:</p>
-            <p className="font-mono bg-white p-2 rounded border">whoopinghollow</p>
+            <p className="font-mono bg-white p-2 rounded border">guest</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Password:</p>
-            <p className="font-mono bg-white p-2 rounded border">26262626</p>
+            <p className="font-mono bg-white p-2 rounded border">whoopinghollow</p>
           </div>
         </div>
         <p className="mt-4 text-sm text-gray-600">
