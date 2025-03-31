@@ -2,8 +2,16 @@
 import React from 'react';
 import { Home, Info, Wifi } from 'lucide-react';
 import GuideSection from '../GuideSection';
+import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 const WelcomeTab = () => {
+  const { guideCredentials } = useGuideCredentials();
+  
+  // Use guide password for WiFi if syncing is enabled
+  const wifiPassword = guideCredentials.syncWithWifi 
+    ? guideCredentials.password 
+    : 'whoopinghollow';
+
   return (
     <>
       <GuideSection title="Welcome to Whooping Hollow" icon={<Home />}>
@@ -45,7 +53,7 @@ const WelcomeTab = () => {
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Password:</p>
-            <p className="font-mono bg-white p-2 rounded border">whoopinghollow</p>
+            <p className="font-mono bg-white p-2 rounded border">{wifiPassword}</p>
           </div>
         </div>
         <p className="mt-4 text-sm text-gray-600">

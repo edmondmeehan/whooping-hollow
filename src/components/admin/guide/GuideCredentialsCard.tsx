@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { SaveIcon } from 'lucide-react';
 import { GuideCredentials } from '@/types/guide';
 import { useToast } from '@/hooks/use-toast';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface GuideCredentialsCardProps {
   guideCredentials: GuideCredentials;
@@ -43,6 +44,24 @@ const GuideCredentialsCard = ({
                 password: e.target.value
               })}
             />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="syncWithWifi" 
+              checked={guideCredentials.syncWithWifi}
+              onCheckedChange={(checked) => 
+                setGuideCredentials({
+                  ...guideCredentials,
+                  syncWithWifi: checked === true
+                })
+              }
+            />
+            <label 
+              htmlFor="syncWithWifi" 
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Sync with Wi-Fi credentials
+            </label>
           </div>
           <div className="flex justify-end">
             <Button onClick={onSave}>
