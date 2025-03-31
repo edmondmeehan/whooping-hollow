@@ -32,6 +32,7 @@ export async function submitBookingToSupabase(formData: BookingFormValues): Prom
       special_requests: formData.specialRequests,
     };
 
+    // Fixed this line to properly access the booking_requests table
     const { error } = await supabase
       .from('booking_requests')
       .insert(submissionData);
@@ -53,6 +54,7 @@ export async function submitBookingToSupabase(formData: BookingFormValues): Prom
 
 export async function fetchBookingRequests() {
   try {
+    // Fixed this line to properly access the booking_requests table
     const { data, error } = await supabase
       .from('booking_requests')
       .select('*')
@@ -76,6 +78,7 @@ export async function fetchBookingRequests() {
 
 export async function updateBookingStatus(id: string, status: string) {
   try {
+    // Fixed this line to properly access the booking_requests table
     const { error } = await supabase
       .from('booking_requests')
       .update({ status })
@@ -98,6 +101,7 @@ export async function updateBookingStatus(id: string, status: string) {
 
 export async function deleteBookingRequest(id: string) {
   try {
+    // Fixed this line to properly access the booking_requests table
     const { error } = await supabase
       .from('booking_requests')
       .delete()

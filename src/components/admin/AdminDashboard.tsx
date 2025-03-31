@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePathname } from '@/hooks/use-pathname';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import AdminHero from './AdminHero';
 import AdminProperties from './AdminProperties';
 import AdminLocalArea from './AdminLocalArea';
@@ -15,6 +16,7 @@ import AdminUsers from './AdminUsers';
 
 const AdminDashboard = () => {
   const pathname = usePathname();
+  const { adminData } = useAdminAuth();
   const [activeTab, setActiveTab] = useState<string>(
     pathname.includes('#') 
       ? pathname.split('#')[1] 
@@ -70,7 +72,7 @@ const AdminDashboard = () => {
           <AdminApis />
         </TabsContent>
         <TabsContent value="users">
-          <AdminUsers />
+          <AdminUsers currentUserEmail={adminData?.email || ''} />
         </TabsContent>
       </Tabs>
     </div>
