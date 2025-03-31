@@ -61,6 +61,7 @@ const AdminNewsletter = () => {
     setIsSending(true);
     
     try {
+      console.log('Starting to send newsletter...');
       const success = await sendNewsletterEmail(subscribers, subject, content);
       
       if (success) {
@@ -133,6 +134,13 @@ const AdminNewsletter = () => {
               </div>
               
               <div className="pt-2">
+                <Alert className="mb-4">
+                  <AlertDescription>
+                    <strong>Important:</strong> Make sure you've added a valid Resend API key in the API Keys tab.
+                    You must also verify your sending domain in the Resend dashboard.
+                  </AlertDescription>
+                </Alert>
+                
                 <Button 
                   onClick={handleSendNewsletter} 
                   disabled={isSending || !subject || !content || subscribers.length === 0}

@@ -64,6 +64,8 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
   const propertyName = formatPropertyName(formData.location);
 
   try {
+    console.log('Sending booking confirmation email with API key:', apiKey.substring(0, 5) + '...');
+    
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -71,7 +73,7 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        from: 'Whooping Hollow Haven <bookings@whoopinghollowhaven.com>',
+        from: 'Whooping Hollow Haven <onboarding@resend.dev>',
         to: formData.email,
         subject: 'Your Booking Request at Whooping Hollow Haven',
         html: `
@@ -106,9 +108,12 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
 
     if (!response.ok) {
       const error = await response.json();
+      console.error('Resend API error:', error);
       throw new Error(error.message || 'Failed to send email');
     }
 
+    const result = await response.json();
+    console.log('Email sent successfully:', result);
     return true;
   } catch (error) {
     console.error('Error sending confirmation email:', error);
@@ -134,6 +139,8 @@ export const sendAdminNotification = async (formData: BookingFormDataWithDates):
   const propertyName = formatPropertyName(formData.location);
 
   try {
+    console.log('Sending admin notification email...');
+    
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -141,7 +148,7 @@ export const sendAdminNotification = async (formData: BookingFormDataWithDates):
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        from: 'Whooping Hollow Haven <bookings@whoopinghollowhaven.com>',
+        from: 'Whooping Hollow Haven <onboarding@resend.dev>',
         to: 'admin@whoopinghollowhaven.com', // Replace with your admin email
         subject: 'New Direct Booking Request',
         html: `
@@ -172,9 +179,12 @@ export const sendAdminNotification = async (formData: BookingFormDataWithDates):
 
     if (!response.ok) {
       const error = await response.json();
+      console.error('Resend API error:', error);
       throw new Error(error.message || 'Failed to send admin notification');
     }
     
+    const result = await response.json();
+    console.log('Admin notification sent successfully:', result);
     return true;
   } catch (error) {
     console.error('Error sending admin notification:', error);
@@ -196,6 +206,8 @@ export const sendNewsletterEmail = async (recipients: string[], subject: string,
   }
 
   try {
+    console.log('Sending newsletter to', recipients.length, 'recipients');
+    
     // For demo purposes, we'll send to one recipient at a time
     // In production, you might want to use a service that supports bulk sending
     let successCount = 0;
@@ -208,7 +220,7 @@ export const sendNewsletterEmail = async (recipients: string[], subject: string,
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          from: 'Whooping Hollow Haven <newsletter@whoopinghollowhaven.com>',
+          from: 'Whooping Hollow Haven <onboarding@resend.dev>',
           to: recipient,
           subject: subject,
           html: `
@@ -230,9 +242,11 @@ export const sendNewsletterEmail = async (recipients: string[], subject: string,
       });
 
       if (response.ok) {
+        console.log(`Email sent successfully to ${recipient}`);
         successCount++;
       } else {
-        console.error(`Failed to send to ${recipient}`);
+        const error = await response.json();
+        console.error(`Failed to send to ${recipient}:`, error);
       }
     }
     
