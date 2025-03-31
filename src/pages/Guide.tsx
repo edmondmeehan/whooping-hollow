@@ -17,6 +17,9 @@ const Guide = () => {
     if (sessionAuth === 'true') {
       setIsAuthenticated(true);
     }
+    
+    // Reset localStorage to ensure clean slate with correct credentials
+    localStorage.removeItem('guideCredentials');
   }, []);
 
   const handleLogin = (username: string, password: string) => {
