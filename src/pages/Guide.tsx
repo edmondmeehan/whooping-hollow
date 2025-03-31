@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import GuideBanner from '@/components/GuideBanner';
 import GuideTabs from '@/components/GuideTabs';
 import GuideLogin from '@/components/GuideLogin';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { InfoIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Guide = () => {
@@ -49,11 +49,33 @@ const Guide = () => {
     return false;
   };
 
+  const handleLogout = () => {
+    // Remove authentication token
+    localStorage.removeItem('guideAuthToken');
+    // Update state
+    setIsLoggedIn(false);
+    // Show logout toast
+    toast({
+      title: "Logged out",
+      description: "You have been logged out of the Guest Guide",
+    });
+  };
+
   return (
     <div>
       <GuideBanner />
       {isLoggedIn ? (
         <div className="container-custom py-8">
+          <div className="flex justify-end mb-4">
+            <Button 
+              variant="destructive" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
           <GuideTabs key={`guide-tabs-${forceUpdate}`} />
         </div>
       ) : (
