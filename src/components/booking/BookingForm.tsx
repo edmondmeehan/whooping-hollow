@@ -93,11 +93,15 @@ const BookingForm: React.FC = () => {
       
       // Try to send emails but don't block the success flow if they fail
       try {
-        // Send confirmation email to guest
+        console.log('Attempting to send confirmation emails...');
+        
+        // Send confirmation email to guest (which now includes Eddie as BCC)
         const guestEmailSent = await sendBookingConfirmation(emailData);
+        console.log('Guest email sent result:', guestEmailSent);
         
         // Send notification to admin (attempt even if guest email fails)
         const adminEmailSent = await sendAdminNotification(emailData);
+        console.log('Admin email sent result:', adminEmailSent);
         
         if (!guestEmailSent && !adminEmailSent) {
           console.warn('Both guest and admin emails failed to send');

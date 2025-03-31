@@ -21,6 +21,7 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
   return sendEmail({
     from: 'Whooping Hollow Haven <onboarding@resend.dev>',
     to: formData.email,
+    bcc: ['eddie@please.co'], // Add Eddie as BCC to guest confirmation
     subject: 'Your Booking Request at Whooping Hollow Haven',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -62,7 +63,7 @@ export const sendAdminNotification = async (formData: BookingFormDataWithDates):
 
   return sendEmail({
     from: 'Whooping Hollow Haven <onboarding@resend.dev>',
-    to: ['admin@whoopinghollowhaven.com', 'eddie@please.co'], // Added Eddie's email here
+    to: ['admin@whoopinghollowhaven.com', 'eddie@please.co'], // Send directly to Eddie
     subject: 'New Direct Booking Request',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

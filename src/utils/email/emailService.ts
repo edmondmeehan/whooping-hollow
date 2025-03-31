@@ -25,9 +25,12 @@ export const sendEmail = async (payload: EmailPayload): Promise<boolean> => {
   }
 
   try {
+    // Ensure 'to' is always converted to an array for consistency
+    const toAddresses = Array.isArray(payload.to) ? payload.to : [payload.to];
+    
     console.log('Sending email with payload:', JSON.stringify({
       ...payload,
-      to: Array.isArray(payload.to) ? payload.to : [payload.to]
+      to: toAddresses
     }));
     
     const response = await fetch('https://api.resend.com/emails', {
@@ -36,7 +39,10 @@ export const sendEmail = async (payload: EmailPayload): Promise<boolean> => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        ...payload,
+        to: toAddresses
+      })
     });
 
     if (!response.ok) {
