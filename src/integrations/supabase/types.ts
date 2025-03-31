@@ -57,6 +57,99 @@ export type Database = {
         }
         Relationships: []
       }
+      external_service_links: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          name: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      home_systems: {
+        Row: {
+          access: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          system: string
+          updated_at: string
+        }
+        Insert: {
+          access?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          system: string
+          updated_at?: string
+        }
+        Update: {
+          access?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          system?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      house_services_directory: {
+        Row: {
+          company: string
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          notes: string | null
+          phone: string | null
+          service: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          company: string
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          service: string
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          service?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       property_images: {
         Row: {
           alt: string

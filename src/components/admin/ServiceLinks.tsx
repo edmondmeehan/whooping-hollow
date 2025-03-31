@@ -1,15 +1,15 @@
 
 import React from 'react';
-import ExternalServiceLinks from './services/ExternalServiceLinks';
+import EditableExternalServiceLinks from './services/EditableExternalServiceLinks';
 import HomeSystems from './services/HomeSystems';
-import HouseServicesDirectory from './services/HouseServicesDirectory';
+import EditableHouseServicesDirectory from './services/EditableHouseServicesDirectory';
 
 const ServiceLinks = () => {
   return (
     <div className="space-y-6">
-      <ExternalServiceLinks />
+      <EditableExternalServiceLinks />
       <HomeSystems />
-      <HouseServicesDirectory />
+      <EditableHouseServicesDirectory />
     </div>
   );
 };

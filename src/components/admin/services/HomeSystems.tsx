@@ -2,9 +2,8 @@
 import React from 'react';
 import { HomeIcon } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import HomeSystemsTable from './HomeSystemsTable';
+import EditableHomeSystemsTable from './EditableHomeSystemsTable';
 import SecurityNotice from './SecurityNotice';
-import { homeSystemsData } from './data/homeSystemsData';
 
 const HomeSystems = () => {
   return (
@@ -19,7 +18,7 @@ const HomeSystems = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <HomeSystemsTable data={homeSystemsData} />
+        <EditableHomeSystemsTable />
         <SecurityNotice />
       </CardContent>
     </Card>
