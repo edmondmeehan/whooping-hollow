@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link, Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { Link, Plus, Edit, Trash2, Save, X, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { useHouseServices } from '@/hooks/admin/use-house-services';
 import { HouseService } from '@/services/admin/house-services-service';
 
 const EditableHouseServicesDirectory: React.FC = () => {
-  const { services, isLoading, error, addService, updateService, deleteService } = useHouseServices();
+  const { services, isLoading, error, addService, updateService, deleteService, reload } = useHouseServices();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [form, setForm] = useState<HouseService>({
@@ -92,9 +92,15 @@ const EditableHouseServicesDirectory: React.FC = () => {
               Complete information about all house services and contacts
             </CardDescription>
           </div>
-          <Button onClick={startAdding} disabled={isAdding || editingId !== null}>
-            <Plus className="mr-2 h-4 w-4" /> Add Service
-          </Button>
+          <div className="flex space-x-2">
+            <Button variant="outline" onClick={reload}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+            <Button onClick={startAdding} disabled={isAdding || editingId !== null}>
+              <Plus className="mr-2 h-4 w-4" /> Add Service
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -264,7 +270,7 @@ const EditableHouseServicesDirectory: React.FC = () => {
                       <TableCell>
                         <div className="flex space-x-1">
                           <Button size="sm" onClick={saveEdit}>
-                            <Save className="h-4 w-4" />
+                            <Save className="h-4 w-4 mr-1" /> Save
                           </Button>
                           <Button size="sm" variant="outline" onClick={cancelEdit}>
                             <X className="h-4 w-4" />

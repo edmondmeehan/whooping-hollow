@@ -106,7 +106,7 @@ const EditableHomeSystemsTable: React.FC = () => {
                 <TableCell>
                   <div className="flex space-x-2">
                     <Button size="sm" onClick={saveNew}>
-                      <Save className="h-4 w-4" />
+                      <Save className="h-4 w-4 mr-1" /> Save
                     </Button>
                     <Button size="sm" variant="outline" onClick={cancelEdit}>
                       <X className="h-4 w-4" />
@@ -163,7 +163,7 @@ const EditableHomeSystemsTable: React.FC = () => {
                   {editingId === system.id ? (
                     <div className="flex space-x-2">
                       <Button size="sm" onClick={saveEdit}>
-                        <Save className="h-4 w-4" />
+                        <Save className="h-4 w-4 mr-1" /> Save
                       </Button>
                       <Button size="sm" variant="outline" onClick={cancelEdit}>
                         <X className="h-4 w-4" />

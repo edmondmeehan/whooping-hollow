@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ExternalLink, Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { ExternalLink, Plus, Edit, Trash2, Save, X, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { useExternalLinks } from '@/hooks/admin/use-external-links';
 import { ExternalServiceLink } from '@/services/admin/external-links-service';
 
 const EditableExternalServiceLinks: React.FC = () => {
-  const { links, isLoading, error, addLink, updateLink, deleteLink } = useExternalLinks();
+  const { links, isLoading, error, addLink, updateLink, deleteLink, reload } = useExternalLinks();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [form, setForm] = useState<ExternalServiceLink>({ name: '', url: '', description: '' });
@@ -69,9 +69,15 @@ const EditableExternalServiceLinks: React.FC = () => {
               Quick access to important external services
             </CardDescription>
           </div>
-          <Button onClick={startAdding} disabled={isAdding || editingId !== null}>
-            <Plus className="mr-2 h-4 w-4" /> Add Link
-          </Button>
+          <div className="flex space-x-2">
+            <Button variant="outline" onClick={reload}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+            <Button onClick={startAdding} disabled={isAdding || editingId !== null}>
+              <Plus className="mr-2 h-4 w-4" /> Add Link
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
