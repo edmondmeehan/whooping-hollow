@@ -151,6 +151,12 @@ const HouseServicesDirectory = () => {
     }
   ];
 
+  // Sort services by status: Updated first, then Active, then Inactive
+  const sortedServices = [...houseServices].sort((a, b) => {
+    const statusOrder = { 'Updated': 1, 'Active': 2, 'Inactive': 3 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
   return (
     <Card className="shadow-md border-none">
       <CardHeader className="bg-hamptons-light pb-2">
@@ -177,7 +183,7 @@ const HouseServicesDirectory = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {houseServices.map((service, index) => (
+              {sortedServices.map((service, index) => (
                 <TableRow 
                   key={index} 
                   className={index % 2 === 0 ? 'bg-white' : 'bg-muted/20'}
