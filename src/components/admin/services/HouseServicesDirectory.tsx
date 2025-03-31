@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'lucide-react';
+import { Link, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
@@ -13,7 +13,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '',
       email: '',
-      notes: 'Account: 9934378844'
+      notes: 'Account: 9934378844',
+      website: 'https://www.pseg.com'
     },
     {
       service: 'Gas',
@@ -22,7 +23,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '',
       email: '',
-      notes: '78934-42199'
+      notes: '78934-42199',
+      website: 'https://www.nationalgridus.com'
     },
     {
       service: 'Internet',
@@ -31,7 +33,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '',
       email: '',
-      notes: 'Account 07816-018984-16-7 / eddiemeehan / Brickhouse5150'
+      notes: 'Account 07816-018984-16-7 / eddiemeehan / Brickhouse5150',
+      website: 'https://www.optimum.com'
     },
     {
       service: 'Garbage',
@@ -40,7 +43,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '631-696-6300',
       email: '',
-      notes: 'Trash day is Wednesday'
+      notes: 'Trash day is Wednesday',
+      website: 'https://maggioenvironmental.com'
     },
     {
       service: 'Pool',
@@ -49,7 +53,8 @@ const HouseServicesDirectory = () => {
       contactName: 'JoAnn Whitmer',
       phone: '631-553-9919',
       email: 'jwpoolcare@aol.com',
-      notes: ''
+      notes: '',
+      website: ''
     },
     {
       service: 'Landscaping',
@@ -58,7 +63,8 @@ const HouseServicesDirectory = () => {
       contactName: 'Luis Uzcha',
       phone: '‭+1 (631) 284-7601‬',
       email: 'luisuzhca@hotmail.com',
-      notes: ''
+      notes: '',
+      website: ''
     },
     {
       service: 'Irrigation / Sprinklers',
@@ -67,7 +73,8 @@ const HouseServicesDirectory = () => {
       contactName: 'Mike Coggins',
       phone: '631-430-4324',
       email: 'birrigation64@yahoo.com',
-      notes: 'Shutoff needs to be scheduled, contact them to take control of app, module in garage'
+      notes: 'Shutoff needs to be scheduled, contact them to take control of app, module in garage',
+      website: ''
     },
     {
       service: 'Generator',
@@ -76,7 +83,8 @@ const HouseServicesDirectory = () => {
       contactName: 'Allison Steedle',
       phone: '',
       email: 'allison@getgenready.com',
-      notes: 'Contact them to take control of generator app'
+      notes: 'Contact them to take control of generator app',
+      website: 'https://getgenready.com'
     },
     {
       service: 'Handyperson',
@@ -85,7 +93,8 @@ const HouseServicesDirectory = () => {
       contactName: 'John Sebastian Ramirez',
       phone: '631-605-0294',
       email: 'prestinemanagement631@gmail.com',
-      notes: ''
+      notes: '',
+      website: ''
     },
     {
       service: 'Cleaning',
@@ -94,7 +103,8 @@ const HouseServicesDirectory = () => {
       contactName: 'Isabel Acevedo',
       phone: '631-833-7932',
       email: 'isabelacevedop@gmail.com',
-      notes: ''
+      notes: '',
+      website: ''
     },
     {
       service: 'Pest control',
@@ -103,7 +113,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '631-771-3145',
       email: '',
-      notes: ''
+      notes: '',
+      website: 'https://eastendpestmanagement.com'
     },
     {
       service: 'Property management',
@@ -112,7 +123,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '631-301-2960',
       email: 'maintenance@staymarquis.com',
-      notes: ''
+      notes: '',
+      website: 'https://staymarquis.com'
     },
     {
       service: 'Painter',
@@ -121,7 +133,8 @@ const HouseServicesDirectory = () => {
       contactName: 'Inactive',
       phone: '917-209-0403',
       email: 'abrito@optonline.net',
-      notes: ''
+      notes: '',
+      website: ''
     },
     {
       service: 'Rental License',
@@ -130,7 +143,8 @@ const HouseServicesDirectory = () => {
       contactName: '',
       phone: '',
       email: 'rentalregistry@ehamptonny.gov',
-      notes: 'If you plan to rent the house out make sure to renew this to remain in compliance with the town'
+      notes: 'If you plan to rent the house out make sure to renew this to remain in compliance with the town',
+      website: 'https://ehamptonny.gov/313/Rental-Registry-Program'
     }
   ];
 
@@ -156,6 +170,7 @@ const HouseServicesDirectory = () => {
                 <TableHead>Contact</TableHead>
                 <TableHead>Phone</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Website</TableHead>
                 <TableHead>Notes</TableHead>
               </TableRow>
             </TableHeader>
@@ -182,6 +197,19 @@ const HouseServicesDirectory = () => {
                         className="text-hamptons-accent hover:underline"
                       >
                         {service.email}
+                      </a>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {service.website && (
+                      <a 
+                        href={service.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-hamptons-accent hover:underline flex items-center"
+                      >
+                        <span className="mr-1">Visit</span>
+                        <ExternalLink className="h-3 w-3" />
                       </a>
                     )}
                   </TableCell>
