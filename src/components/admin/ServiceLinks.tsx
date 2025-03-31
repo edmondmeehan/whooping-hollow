@@ -19,9 +19,9 @@ const ServiceLinks = () => {
         />
       </div>
       
-      <EditableExternalServiceLinks />
-      <HomeSystems />
-      <EditableHouseServicesDirectory />
+      <EditableExternalServiceLinks property={selectedProperty} />
+      <HomeSystems property={selectedProperty} />
+      <EditableHouseServicesDirectory property={selectedProperty} />
     </div>
   );
 };
