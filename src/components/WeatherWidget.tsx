@@ -25,7 +25,7 @@ const WeatherWidget = ({ location }: WeatherWidgetProps) => {
         <WeatherError 
           error={
             <span>
-              OpenWeatherMap API key is missing or invalid. Please update it in the{' '}
+              VisualCrossing Weather API key is missing or invalid. Please update it in the{' '}
               <Link to="/admin" className="text-blue-600 hover:underline">admin panel</Link>.
             </span>
           } 

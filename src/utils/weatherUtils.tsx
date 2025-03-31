@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { 
   Sun, Cloud, CloudRain, CloudSnow, CloudLightning, 
-  CloudDrizzle, Wind
+  CloudDrizzle, Wind, CloudFog
 } from 'lucide-react';
 
 export interface WeatherData {
@@ -14,20 +13,24 @@ export interface WeatherData {
 }
 
 // Separate function to map weather codes to icons
-export const getWeatherIcon = (weatherCode: number): React.ReactNode => {
-  if (weatherCode >= 200 && weatherCode < 300) {
+export const getWeatherIcon = (conditionCode: string): React.ReactNode => {
+  const code = conditionCode.toLowerCase();
+  
+  if (code.includes('thunder') || code.includes('lightning')) {
     return <CloudLightning className="text-purple-500 h-10 w-10" />;
-  } else if (weatherCode >= 300 && weatherCode < 400) {
+  } else if (code.includes('drizzle')) {
     return <CloudDrizzle className="text-blue-400 h-10 w-10" />;
-  } else if (weatherCode >= 500 && weatherCode < 600) {
+  } else if (code.includes('rain') || code.includes('shower')) {
     return <CloudRain className="text-blue-500 h-10 w-10" />;
-  } else if (weatherCode >= 600 && weatherCode < 700) {
+  } else if (code.includes('snow') || code.includes('ice') || code.includes('sleet')) {
     return <CloudSnow className="text-blue-200 h-10 w-10" />;
-  } else if (weatherCode >= 700 && weatherCode < 800) {
+  } else if (code.includes('fog') || code.includes('mist')) {
+    return <CloudFog className="text-gray-400 h-10 w-10" />;
+  } else if (code.includes('wind')) {
     return <Wind className="text-gray-400 h-10 w-10" />;
-  } else if (weatherCode === 800) {
+  } else if (code.includes('clear') || code.includes('sunny')) {
     return <Sun className="text-yellow-500 h-10 w-10" />;
-  } else if (weatherCode > 800) {
+  } else if (code.includes('cloud') || code.includes('overcast') || code.includes('part')) {
     return <Cloud className="text-gray-500 h-10 w-10" />;
   }
   
@@ -58,8 +61,8 @@ export const getIconForCondition = (condition: string): React.ReactNode => {
   }
 };
 
-// Get the OpenWeatherMap API key from localStorage
-export const getOpenWeatherApiKey = (): string => {
+// Get the VisualCrossing API key from localStorage
+export const getWeatherApiKey = (): string => {
   // Try to find an existing API key from the stored API keys
   try {
     const savedApiKeys = localStorage.getItem('whh_api_keys');
@@ -69,17 +72,18 @@ export const getOpenWeatherApiKey = (): string => {
       const apiKeys = JSON.parse(savedApiKeys);
       console.log('Parsed API keys:', apiKeys);
       
-      // Try to find a key specifically for OpenWeatherMap
+      // Try to find a key specifically for VisualCrossing
       const weatherApiKey = apiKeys.find((api: any) => 
-        api.name.toLowerCase().includes('weather') || 
-        api.name.toLowerCase().includes('openweather')
+        api.name.toLowerCase().includes('visualcrossing') || 
+        api.name.toLowerCase().includes('weather') ||
+        api.name.toLowerCase().includes('visual crossing')
       );
       
       if (weatherApiKey) {
         console.log('Found weather API key:', weatherApiKey.name, 'Key exists:', !!weatherApiKey.key, 'Key length:', weatherApiKey.key?.length);
         
         if (weatherApiKey.key && weatherApiKey.key.trim() !== '') {
-          console.log('Using OpenWeather API key from storage:', weatherApiKey.name);
+          console.log('Using VisualCrossing API key from storage:', weatherApiKey.name);
           return weatherApiKey.key;
         } else {
           console.log('Weather API key found but empty or invalid');
@@ -100,16 +104,16 @@ export const getOpenWeatherApiKey = (): string => {
 };
 
 export const fetchWeatherData = async (location: string): Promise<WeatherData> => {
-  // Get the API key from localStorage or use the default
-  const apiKey = getOpenWeatherApiKey();
+  // Get the API key from localStorage
+  const apiKey = getWeatherApiKey();
   
   if (!apiKey) {
-    console.error('No valid OpenWeatherMap API key found');
-    throw new Error('OpenWeatherMap API key is missing. Please add a valid key in the admin panel.');
+    console.error('No valid VisualCrossing API key found');
+    throw new Error('VisualCrossing Weather API key is missing. Please add a valid key in the admin panel.');
   }
   
   const city = encodeURIComponent(location.split(',')[0].trim()); // Extract and encode city from location
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=us&key=${apiKey}&contentType=json`;
   
   console.log('Fetching weather from:', url.replace(apiKey, '***API_KEY***'));
   
@@ -125,15 +129,15 @@ export const fetchWeatherData = async (location: string): Promise<WeatherData> =
     const data = await response.json();
     console.log('Weather data received:', data);
     
-    // Get weather icon based on OpenWeatherMap condition code
-    const weatherCode = data.weather[0].id;
-    const icon = getWeatherIcon(weatherCode);
+    // Extract the current conditions from the VisualCrossing API response
+    const currentConditions = data.currentConditions;
+    const icon = getWeatherIcon(currentConditions.conditions || 'cloudy');
     
     return {
-      temperature: Math.round(data.main.temp),
-      condition: data.weather[0].description,
-      humidity: data.main.humidity,
-      windSpeed: Math.round(data.wind.speed),
+      temperature: Math.round(currentConditions.temp),
+      condition: currentConditions.conditions || 'Unknown',
+      humidity: currentConditions.humidity || 0,
+      windSpeed: Math.round(currentConditions.windspeed || 0),
       icon: icon
     };
   } catch (error) {

@@ -33,15 +33,15 @@ const AdminApis = () => {
       setCloudinaryUrl(savedUrl);
     }
     
-    // Ensure we have an OpenWeatherMap API key entry if one doesn't exist
-    ensureApiKeyExists('OpenWeatherMap API', '');
+    // Ensure we have a VisualCrossing API key entry if one doesn't exist
+    ensureApiKeyExists('VisualCrossing Weather API', '');
   }, [ensureApiKeyExists]);
 
   useEffect(() => {
-    // Check if the OpenWeatherMap API key is set
+    // Check if the VisualCrossing API key is set
     const weatherKey = apiKeys.find(api => 
       api.name.toLowerCase().includes('weather') || 
-      api.name.toLowerCase().includes('openweather')
+      api.name.toLowerCase().includes('visualcrossing')
     );
     
     setHasWeatherApiKey(!!weatherKey && !!weatherKey.key && weatherKey.key.trim() !== '');
@@ -57,7 +57,7 @@ const AdminApis = () => {
     // Check if we have a weather API key after saving
     const weatherKey = apiKeys.find(api => 
       api.name.toLowerCase().includes('weather') || 
-      api.name.toLowerCase().includes('openweather')
+      api.name.toLowerCase().includes('visualcrossing')
     );
     
     if (weatherKey && weatherKey.key && weatherKey.key.trim() !== '') {
@@ -68,7 +68,7 @@ const AdminApis = () => {
     } else {
       toast({
         title: "API Keys Saved",
-        description: "Weather functionality requires an OpenWeatherMap API key.",
+        description: "Weather functionality requires a VisualCrossing Weather API key.",
         variant: "destructive"
       });
     }
@@ -124,15 +124,15 @@ const AdminApis = () => {
           <div>
             <h3 className="font-medium text-amber-800">Weather Widget Needs API Key</h3>
             <p className="text-sm text-amber-700">
-              To display real weather data, add your OpenWeatherMap API key below. 
+              To display real weather data, add your VisualCrossing Weather API key below. 
               You can get a free API key by signing up at{' '}
               <a 
-                href="https://home.openweathermap.org/users/sign_up" 
+                href="https://www.visualcrossing.com/weather-api" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="underline"
               >
-                OpenWeatherMap
+                VisualCrossing
               </a>.
             </p>
           </div>

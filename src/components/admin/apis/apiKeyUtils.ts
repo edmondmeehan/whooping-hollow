@@ -17,7 +17,7 @@ export const useApiKeys = () => {
       { id: '3', name: 'Payment Gateway', key: '', isVisible: false },
       { id: '4', name: 'Booking System', key: '', isVisible: false },
       { id: '5', name: 'Resend API', key: '', isVisible: false },
-      { id: '6', name: 'OpenWeatherMap API', key: '', isVisible: false }
+      { id: '6', name: 'VisualCrossing Weather API', key: '', isVisible: false }
     ];
   });
 
@@ -102,6 +102,6 @@ export const getIconForApi = (name: string) => {
   if (name.toLowerCase().includes('booking')) return 'CalendarCheck';
   if (name.toLowerCase().includes('resend')) return 'Send';
   if (name.toLowerCase().includes('cloudinary')) return 'Cloud';
-  if (name.toLowerCase().includes('weather')) return 'Cloud';
+  if (name.toLowerCase().includes('weather') || name.toLowerCase().includes('visualcrossing')) return 'Cloud';
   return 'Lock';
 };

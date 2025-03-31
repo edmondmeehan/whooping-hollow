@@ -32,7 +32,7 @@ export const useWeather = (location: string) => {
         if (errorMessage.includes('API key') || errorMessage.includes('401')) {
           toast({
             title: "Weather API Key Issue",
-            description: "Please add a valid OpenWeatherMap API key in the admin panel.",
+            description: "Please add a valid VisualCrossing Weather API key in the admin panel.",
             variant: "destructive"
           });
         } else {

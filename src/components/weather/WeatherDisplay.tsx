@@ -41,7 +41,7 @@ const WeatherDisplay = ({ location, weather }: WeatherDisplayProps) => {
         </div>
         
         <div className="mt-4 text-xs text-gray-500 text-center pt-2 border-t">
-          <p>Weather data provided by OpenWeatherMap</p>
+          <p>Weather data provided by VisualCrossing</p>
           <p>Last updated: {new Date().toLocaleTimeString()}</p>
         </div>
       </div>
