@@ -61,21 +61,28 @@ const BookingForm: React.FC = () => {
       };
       
       // Send confirmation email to guest
-      const emailSent = await sendBookingConfirmation(emailData);
+      const guestEmailSent = await sendBookingConfirmation(emailData);
       
-      if (emailSent) {
-        // Send notification to admin
-        await sendAdminNotification(emailData);
-        
+      // Send notification to admin (attempt even if guest email fails)
+      const adminEmailSent = await sendAdminNotification(emailData);
+      
+      if (guestEmailSent) {
         toast.success('Booking request submitted successfully!', {
           description: 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
         });
         
         form.reset();
-      } else {
-        // Email failed but we'll still process the booking
+      } else if (adminEmailSent) {
+        // Admin email worked but guest email failed
         toast.success('Booking request submitted', {
           description: 'Your request was received, but there was an issue sending the confirmation email. We\'ll contact you soon.'
+        });
+        
+        form.reset();
+      } else {
+        // Both emails failed
+        toast.error('There was a problem processing your booking request', {
+          description: 'Please check your email address or try again later.'
         });
       }
     } catch (error) {
