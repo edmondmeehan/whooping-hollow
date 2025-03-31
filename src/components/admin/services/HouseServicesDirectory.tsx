@@ -1,8 +1,11 @@
 
 import React from 'react';
-import { Link, ExternalLink } from 'lucide-react';
+import { Link, ExternalLink, Phone, Mail, FileText } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Tooltip } from '@/components/ui/tooltip';
+import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const HouseServicesDirectory = () => {
   const houseServices = [
@@ -149,34 +152,36 @@ const HouseServicesDirectory = () => {
   ];
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
+    <Card className="shadow-md border-none">
+      <CardHeader className="bg-hamptons-light pb-2">
+        <CardTitle className="flex items-center text-hamptons-dark">
           <Link className="mr-2 h-5 w-5 text-hamptons-accent" />
           House Services Directory
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           Complete information about all house services and contacts
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted/40">
                 <TableHead>Service</TableHead>
                 <TableHead>Company</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Contact</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Website</TableHead>
+                <TableHead>Contact Info</TableHead>
                 <TableHead>Notes</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {houseServices.map((service, index) => (
-                <TableRow key={index}>
+                <TableRow 
+                  key={index} 
+                  className={index % 2 === 0 ? 'bg-white' : 'bg-muted/20'}
+                >
                   <TableCell className="font-medium">{service.service}</TableCell>
                   <TableCell>{service.company}</TableCell>
                   <TableCell>
@@ -188,17 +193,66 @@ const HouseServicesDirectory = () => {
                       {service.status}
                     </span>
                   </TableCell>
-                  <TableCell>{service.contactName}</TableCell>
-                  <TableCell>{service.phone}</TableCell>
+                  <TableCell>{service.contactName || '—'}</TableCell>
                   <TableCell>
-                    {service.email && (
-                      <a 
-                        href={`mailto:${service.email}`}
-                        className="text-hamptons-accent hover:underline"
-                      >
-                        {service.email}
-                      </a>
-                    )}
+                    <div className="flex space-x-2">
+                      {service.phone && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => window.location.href = `tel:${service.phone}`}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Phone className="h-4 w-4 text-hamptons-accent" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{service.phone}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      
+                      {service.email && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => window.location.href = `mailto:${service.email}`}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Mail className="h-4 w-4 text-hamptons-accent" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{service.email}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="max-w-xs">
+                    {service.notes ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                              <FileText className="h-3 w-3 mr-1" />
+                              View Notes
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">
+                            <p className="text-sm">{service.notes}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : '—'}
                   </TableCell>
                   <TableCell>
                     {service.website && (
@@ -208,12 +262,13 @@ const HouseServicesDirectory = () => {
                         rel="noopener noreferrer"
                         className="text-hamptons-accent hover:underline flex items-center"
                       >
-                        <span className="mr-1">Visit</span>
-                        <ExternalLink className="h-3 w-3" />
+                        <Button size="sm" variant="outline" className="h-8">
+                          <span className="mr-1">Visit</span>
+                          <ExternalLink className="h-3 w-3" />
+                        </Button>
                       </a>
                     )}
                   </TableCell>
-                  <TableCell className="max-w-xs whitespace-normal text-sm">{service.notes}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
