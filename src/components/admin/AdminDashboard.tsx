@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePathname } from '@/hooks/use-pathname';
@@ -12,6 +11,7 @@ import AdminGuide from './AdminGuide';
 import AdminBookings from './AdminBookings';
 import AdminApis from './AdminApis';
 import AdminUsers from './AdminUsers';
+import ServiceLinks from './ServiceLinks';
 
 const AdminDashboard = () => {
   const pathname = usePathname();
@@ -24,7 +24,6 @@ const AdminDashboard = () => {
 
   const handleTabChange = (newTab: string) => {
     setActiveTab(newTab);
-    // Update URL without page reload
     window.history.pushState({}, '', `#${newTab}`);
   };
 
@@ -70,6 +69,9 @@ const AdminDashboard = () => {
           <AdminUsers currentUserEmail={adminData?.email || ''} />
         </TabsContent>
       </Tabs>
+      <div className="mt-8">
+        <ServiceLinks />
+      </div>
     </div>
   );
 };
