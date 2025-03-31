@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Trash2, Send, Users, Copy, AlertCircle, InfoIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { sendNewsletterEmail } from '@/utils/emailUtils';
+import { sendNewsletterEmail } from '@/utils/email/newsletterEmails';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const AdminNewsletter = () => {

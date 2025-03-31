@@ -1,0 +1,51 @@
+
+import { getResendApiKey, handleEmailError } from './emailHelpers';
+import { toast } from 'sonner';
+
+interface EmailPayload {
+  from: string;
+  to: string | string[];
+  subject: string;
+  html: string;
+  bcc?: string[];
+}
+
+/**
+ * Sends an email using the Resend API
+ */
+export const sendEmail = async (payload: EmailPayload): Promise<boolean> => {
+  const apiKey = getResendApiKey();
+  
+  if (!apiKey) {
+    toast.error("API Key Missing", {
+      description: "Please add your Resend API key in the Admin panel"
+    });
+    return false;
+  }
+
+  try {
+    console.log('Sending email with API key:', apiKey.substring(0, 5) + '...');
+    
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Resend API error:', error);
+      throw new Error(error.message || 'Failed to send email');
+    }
+
+    const result = await response.json();
+    console.log('Email sent successfully:', result);
+    return true;
+  } catch (error) {
+    handleEmailError(error, 'sending email');
+    return false;
+  }
+};
