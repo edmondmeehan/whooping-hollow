@@ -5,12 +5,9 @@ import GuideSection from '../GuideSection';
 import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 const WelcomeTab = () => {
-  const { guideCredentials } = useGuideCredentials();
-  
-  // Use guide password for WiFi if syncing is enabled
-  const wifiPassword = guideCredentials.syncWithWifi 
-    ? guideCredentials.password 
-    : 'whoopinghollow';
+  // Hard-coded WiFi credentials
+  const wifiNetwork = "whoopinghollow";
+  const wifiPassword = "26262626";
 
   return (
     <>
@@ -49,7 +46,7 @@ const WelcomeTab = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Network Name:</p>
-            <p className="font-mono bg-white p-2 rounded border">guest</p>
+            <p className="font-mono bg-white p-2 rounded border">{wifiNetwork}</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="font-medium mb-2">Password:</p>

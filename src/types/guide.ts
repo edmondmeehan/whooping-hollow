@@ -1,8 +1,6 @@
-
 export interface GuideCredentials {
   username: string;
   password: string;
-  syncWithWifi: boolean;
 }
 
 export interface GuideSection {

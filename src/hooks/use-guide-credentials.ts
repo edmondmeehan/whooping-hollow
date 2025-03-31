@@ -6,8 +6,7 @@ import { useToast } from './use-toast';
 // Updated initial guide credentials
 const initialGuideCredentials: GuideCredentials = {
   username: 'wh',
-  password: 'enjoy',
-  syncWithWifi: true // Default to synced
+  password: 'enjoy'
 };
 
 const STORAGE_KEY_CREDENTIALS = 'guideCredentials';
@@ -38,19 +37,11 @@ export const useGuideCredentials = () => {
     setShowCredentials(false);
   };
 
-  const toggleSyncWithWifi = () => {
-    setGuideCredentials(prev => ({
-      ...prev,
-      syncWithWifi: !prev.syncWithWifi
-    }));
-  };
-
   return {
     guideCredentials,
     showCredentials,
     setGuideCredentials,
     setShowCredentials,
-    handleUpdateCredentials,
-    toggleSyncWithWifi
+    handleUpdateCredentials
   };
 };
