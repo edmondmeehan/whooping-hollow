@@ -9,11 +9,11 @@ const AdminContent = () => {
   const { isAuthenticated, adminData, handleLogout } = useAdminAuth();
 
   if (!isAuthenticated) {
-    return <AdminLogin />; // Remove the onLogin prop as it's not needed here
+    return <AdminLogin />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-12">
       <AdminNavbar 
         onLogout={() => handleLogout(false)} 
         adminEmail={adminData?.email}

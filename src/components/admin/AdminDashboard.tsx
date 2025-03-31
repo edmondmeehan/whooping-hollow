@@ -9,9 +9,8 @@ import AdminLocalArea from './AdminLocalArea';
 import AdminImages from './AdminImages';
 import AdminNewsletter from './AdminNewsletter';
 import AdminGuide from './AdminGuide';
-import AdminBookingRequests from './AdminBookingRequests';
-import AdminApis from './AdminApis';
 import AdminBookings from './AdminBookings';
+import AdminApis from './AdminApis';
 import AdminUsers from './AdminUsers';
 
 const AdminDashboard = () => {
@@ -33,13 +32,12 @@ const AdminDashboard = () => {
     <div className="container-custom py-8">
       <Tabs defaultValue={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-8">
-          <TabsTrigger value="bookings">Calendar</TabsTrigger>
-          <TabsTrigger value="booking-requests">Direct Bookings</TabsTrigger>
-          <TabsTrigger value="hero">Home Page</TabsTrigger>
+          <TabsTrigger value="bookings">Bookings</TabsTrigger>
           <TabsTrigger value="properties">Properties</TabsTrigger>
           <TabsTrigger value="local-area">Local Area</TabsTrigger>
-          <TabsTrigger value="images">Images</TabsTrigger>
+          <TabsTrigger value="hero">Home Page</TabsTrigger>
           <TabsTrigger value="guide">Guest Guide</TabsTrigger>
+          <TabsTrigger value="images">Images</TabsTrigger>
           <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
           <TabsTrigger value="apis">API Keys</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
@@ -47,23 +45,20 @@ const AdminDashboard = () => {
         <TabsContent value="bookings">
           <AdminBookings />
         </TabsContent>
-        <TabsContent value="booking-requests">
-          <AdminBookingRequests />
-        </TabsContent>
-        <TabsContent value="hero">
-          <AdminHero />
-        </TabsContent>
         <TabsContent value="properties">
           <AdminProperties />
         </TabsContent>
         <TabsContent value="local-area">
           <AdminLocalArea />
         </TabsContent>
-        <TabsContent value="images">
-          <AdminImages />
+        <TabsContent value="hero">
+          <AdminHero />
         </TabsContent>
         <TabsContent value="guide">
           <AdminGuide />
+        </TabsContent>
+        <TabsContent value="images">
+          <AdminImages />
         </TabsContent>
         <TabsContent value="newsletter">
           <AdminNewsletter />

@@ -2,8 +2,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut, ArrowLeft, User } from 'lucide-react';
+import { LogOut, ArrowLeft, User, ExternalLink } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AdminNavbarProps {
   onLogout: () => void;
@@ -28,6 +29,28 @@ const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName }: AdminNavb
         </div>
         
         <div className="flex items-center space-x-4">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a 
+                  href="https://staymarquis.com/owners" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-hamptons-dark hover:text-hamptons-accent transition-colors flex items-center"
+                >
+                  <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-1">
+                    StayMarquis Portal
+                    <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                  <ExternalLink className="h-5 w-5 sm:hidden" />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Open StayMarquis Owner Portal</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
           {adminEmail && (
             <div className="flex items-center mr-2 text-sm">
               <Avatar className="h-8 w-8 mr-2">
@@ -39,7 +62,7 @@ const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName }: AdminNavb
                   </AvatarFallback>
                 )}
               </Avatar>
-              <span className="text-gray-600">{adminName || adminEmail}</span>
+              <span className="text-gray-600 hidden sm:inline">{adminName || adminEmail}</span>
             </div>
           )}
           <Button 
@@ -49,7 +72,7 @@ const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName }: AdminNavb
             className="flex items-center gap-1"
           >
             <LogOut className="h-4 w-4" />
-            <span>Logout</span>
+            <span className="hidden sm:inline">Logout</span>
           </Button>
         </div>
       </div>

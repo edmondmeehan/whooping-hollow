@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { usePathname } from '@/hooks/use-pathname';
@@ -63,6 +63,19 @@ const Navbar = () => {
             Admin
           </Link>
           
+          <a 
+            href="https://staymarquis.com/owners" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={cn(
+              "font-medium transition duration-200 flex items-center",
+              isAdminPage ? "text-white hover:text-white/80" : "text-hamptons-dark hover:text-hamptons-accent"
+            )}
+          >
+            StayMarquis
+            <ExternalLink className="ml-1 h-3 w-3" />
+          </a>
+          
           <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90">
             <a 
               href="https://www.airbnb.com/rooms/1314531825053234635" 
@@ -114,6 +127,17 @@ const Navbar = () => {
             >
               Admin
             </Link>
+            
+            <a 
+              href="https://staymarquis.com/owners" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block font-medium text-hamptons-dark hover:text-hamptons-accent py-2 flex items-center"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              StayMarquis
+              <ExternalLink className="ml-1 h-3 w-3" />
+            </a>
             
             <Button className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90">
               <a 
