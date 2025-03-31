@@ -1,4 +1,3 @@
-
 import { toast } from 'sonner';
 import { BookingFormData } from '@/types/bookingForm';
 
@@ -53,10 +52,8 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
   const apiKey = getResendApiKey();
   
   if (!apiKey) {
-    toast({
-      title: "API Key Missing",
-      description: "Please add your Resend API key in the Admin panel",
-      variant: "destructive",
+    toast.error("API Key Missing", {
+      description: "Please add your Resend API key in the Admin panel"
     });
     return false;
   }
@@ -114,10 +111,8 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
     return true;
   } catch (error) {
     console.error('Error sending confirmation email:', error);
-    toast({
-      title: "Email Sending Failed",
-      description: error instanceof Error ? error.message : "Failed to send confirmation email",
-      variant: "destructive",
+    toast.error("Email Sending Failed", {
+      description: error instanceof Error ? error.message : "Failed to send confirmation email"
     });
     return false;
   }
@@ -126,7 +121,12 @@ export const sendBookingConfirmation = async (formData: BookingFormDataWithDates
 export const sendAdminNotification = async (formData: BookingFormDataWithDates): Promise<boolean> => {
   const apiKey = getResendApiKey();
   
-  if (!apiKey) return false;
+  if (!apiKey) {
+    toast.error("API Key Missing", {
+      description: "Please add your Resend API key in the Admin panel"
+    });
+    return false;
+  }
 
   const checkIn = formatDate(formData.dates.from);
   const checkOut = formData.dates.to ? formatDate(formData.dates.to) : '';
@@ -177,6 +177,9 @@ export const sendAdminNotification = async (formData: BookingFormDataWithDates):
     return true;
   } catch (error) {
     console.error('Error sending admin notification:', error);
+    toast.error("Notification Sending Failed", {
+      description: error instanceof Error ? error.message : "Failed to send admin notification"
+    });
     return false;
   }
 };
