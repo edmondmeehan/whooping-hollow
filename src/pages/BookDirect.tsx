@@ -3,6 +3,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BookingForm from '../components/booking/BookingForm';
+import NewsletterForm from '../components/newsletter/NewsletterForm';
 
 const BookDirect = () => {
   return (
@@ -18,6 +19,10 @@ const BookDirect = () => {
           </p>
           
           <BookingForm />
+          
+          <div className="mt-12 border-t pt-8">
+            <NewsletterForm className="max-w-md mx-auto" />
+          </div>
           
           <div className="mt-8 text-center">
             <p className="text-sm text-muted-foreground">
