@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookIcon, UserIcon, LockIcon, EyeIcon, EyeOffIcon } from 'lucide-react';
-import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 interface GuideLoginProps {
   onLogin: (username: string, password: string) => boolean;
@@ -16,7 +15,6 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { guideCredentials } = useGuideCredentials();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,6 +104,20 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
               {error && (
                 <p className="text-sm text-red-500 text-center">{error}</p>
               )}
+
+              <div className="bg-gray-100 p-4 rounded-lg mt-6">
+                <p className="text-sm text-gray-700 mb-2">Hint:</p>
+                <div className="grid grid-cols-1 gap-2">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500">Network Name:</p>
+                    <p className="text-sm font-mono">whoppinghollow</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-gray-500">Password:</p>
+                    <p className="text-sm font-mono">26262626</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
           <CardFooter>
