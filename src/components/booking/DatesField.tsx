@@ -46,7 +46,20 @@ const DatesField: React.FC<DatesFieldProps> = ({ form }) => {
                 <Calendar
                   mode="single"
                   selected={field.value}
-                  onSelect={field.onChange}
+                  onSelect={(date) => {
+                    if (date) {
+                      field.onChange(date);
+                      
+                      // Get the checkout date and check if it's before the new check-in date
+                      const checkOut = form.getValues().checkOut;
+                      if (checkOut && date >= checkOut) {
+                        // Set checkout date to the day after check-in
+                        const newCheckOut = new Date(date);
+                        newCheckOut.setDate(newCheckOut.getDate() + 1);
+                        form.setValue('checkOut', newCheckOut);
+                      }
+                    }
+                  }}
                   disabled={(date) => date < new Date()}
                   initialFocus
                 />

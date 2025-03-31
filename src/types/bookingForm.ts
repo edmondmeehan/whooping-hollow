@@ -25,7 +25,10 @@ export const bookingFormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   specialRequests: z.string().optional(),
-}).refine(data => data.checkOut > data.checkIn, {
+}).refine(data => {
+  // Ensure checkOut is after checkIn and both are valid dates
+  return data.checkOut && data.checkIn && data.checkOut > data.checkIn;
+}, {
   message: "Check-out date must be after check-in date",
   path: ["checkOut"],
 });
