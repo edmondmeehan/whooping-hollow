@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +10,7 @@ import { sendBookingConfirmation, sendAdminNotification } from '@/utils/email';
 import { addDays } from 'date-fns';
 import { useBookings } from '@/hooks/use-bookings';
 import { BookingStatus } from '@/types/booking';
+import { submitBookingToSupabase } from '@/utils/bookingUtils';
 
 // Import form field components
 import PersonalInfoFields from './PersonalInfoFields';
@@ -50,7 +50,14 @@ const BookingForm: React.FC = () => {
     try {
       console.log('Form submitted:', data);
       
-      // Add booking to the admin dashboard
+      // Submit to Supabase
+      const supabaseResult = await submitBookingToSupabase(data);
+      
+      if (!supabaseResult.success) {
+        throw new Error(supabaseResult.error || 'Failed to submit booking to database');
+      }
+      
+      // Add booking to the admin dashboard (keeping for backward compatibility)
       const booking = {
         name: `${data.firstName} ${data.lastName}`,
         email: data.email,
@@ -65,7 +72,7 @@ const BookingForm: React.FC = () => {
         isBlockedDate: false
       };
       
-      // Add to the booking system
+      // Add to the booking system (for local state management)
       addBooking(booking);
       
       // Convert BookingFormValues to BookingFormData format for email utils
