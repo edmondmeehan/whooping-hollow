@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, Trash2, Save, X } from 'lucide-react';
+import { Edit, Trash2, Save, X, Link } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -89,6 +89,14 @@ const HouseServiceRow: React.FC<HouseServiceRowProps> = ({
             />
           </TableCell>
           <TableCell>
+            <Input 
+              name="website" 
+              value={form.website || ''} 
+              onChange={onInputChange} 
+              placeholder="https://example.com"
+            />
+          </TableCell>
+          <TableCell>
             <Textarea 
               name="notes" 
               value={form.notes || ''} 
@@ -123,6 +131,19 @@ const HouseServiceRow: React.FC<HouseServiceRowProps> = ({
                 className="text-hamptons-accent hover:underline"
               >
                 {service.email}
+              </a>
+            )}
+          </TableCell>
+          <TableCell>
+            {service.website && (
+              <a 
+                href={service.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-hamptons-accent hover:underline"
+              >
+                <Link className="h-4 w-4 mr-1" />
+                Visit Site
               </a>
             )}
           </TableCell>

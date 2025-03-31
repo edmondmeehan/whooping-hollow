@@ -10,6 +10,7 @@ export interface HouseService {
   phone: string | null;
   email: string | null;
   notes: string | null;
+  website?: string | null;
 }
 
 export const fetchHouseServices = async (): Promise<HouseService[]> => {
@@ -54,6 +55,7 @@ export const updateHouseService = async (service: HouseService): Promise<HouseSe
       phone: service.phone,
       email: service.email,
       notes: service.notes,
+      website: service.website,
       updated_at: new Date().toISOString()
     })
     .eq('id', service.id)

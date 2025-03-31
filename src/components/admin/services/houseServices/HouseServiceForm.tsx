@@ -88,6 +88,15 @@ const HouseServiceForm: React.FC<HouseServiceFormProps> = ({
             placeholder="Email address"
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Website</label>
+          <Input 
+            name="website" 
+            value={form.website || ''} 
+            onChange={onInputChange} 
+            placeholder="Website URL"
+          />
+        </div>
         <div className="md:col-span-2">
           <label className="block text-sm font-medium mb-1">Notes</label>
           <Textarea 

@@ -38,6 +38,7 @@ const HouseServicesTable: React.FC<HouseServicesTableProps> = ({
             <TableHead>Contact</TableHead>
             <TableHead>Phone</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Website</TableHead>
             <TableHead>Notes</TableHead>
             <TableHead className="w-20">Actions</TableHead>
           </TableRow>

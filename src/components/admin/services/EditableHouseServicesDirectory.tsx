@@ -18,7 +18,8 @@ const EditableHouseServicesDirectory: React.FC = () => {
     contact_name: '',
     phone: '',
     email: '',
-    notes: ''
+    notes: '',
+    website: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,7 +45,8 @@ const EditableHouseServicesDirectory: React.FC = () => {
       contact_name: '',
       phone: '',
       email: '',
-      notes: ''
+      notes: '',
+      website: ''
     });
     setIsAdding(true);
     setEditingId(null);
