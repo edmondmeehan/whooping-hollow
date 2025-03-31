@@ -26,6 +26,9 @@ const ExternalLinkRow: React.FC<ExternalLinkRowProps> = ({
   onCancel,
   onChange
 }) => {
+  // Only render delete button if the link has an ID
+  const canDelete = link.id !== undefined;
+  
   return (
     <div className="flex flex-col border rounded-md overflow-hidden">
       {isEditing ? (
@@ -55,9 +58,11 @@ const ExternalLinkRow: React.FC<ExternalLinkRowProps> = ({
             <Button size="icon" variant="ghost" onClick={() => onEdit(link)}>
               <Edit className="h-4 w-4" />
             </Button>
-            <Button size="icon" variant="ghost" onClick={() => onDelete(link.id!)}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            {canDelete && (
+              <Button size="icon" variant="ghost" onClick={() => link.id && onDelete(link.id)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
       )}
