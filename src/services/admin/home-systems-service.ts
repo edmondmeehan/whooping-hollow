@@ -11,12 +11,12 @@ export interface HomeSystem {
 
 export const getHomeSystems = async (property?: string): Promise<HomeSystem[]> => {
   try {
-    const query = supabase
+    let query = supabase
       .from('home_systems')
       .select('*');
     
     if (property) {
-      query.eq('property', property);
+      query = query.eq('property', property);
     }
     
     const { data, error } = await query;
@@ -33,7 +33,12 @@ export const addHomeSystem = async (system: HomeSystem): Promise<HomeSystem | nu
   try {
     const { data, error } = await supabase
       .from('home_systems')
-      .insert(system)
+      .insert({
+        system: system.system,
+        access: system.access || '',
+        notes: system.notes || '',
+        property: system.property
+      })
       .select()
       .single();
     
@@ -46,10 +51,17 @@ export const addHomeSystem = async (system: HomeSystem): Promise<HomeSystem | nu
 };
 
 export const updateHomeSystem = async (system: HomeSystem): Promise<HomeSystem | null> => {
+  if (!system.id) return null;
+  
   try {
     const { data, error } = await supabase
       .from('home_systems')
-      .update(system)
+      .update({
+        system: system.system,
+        access: system.access || '',
+        notes: system.notes || '',
+        property: system.property
+      })
       .eq('id', system.id)
       .select()
       .single();

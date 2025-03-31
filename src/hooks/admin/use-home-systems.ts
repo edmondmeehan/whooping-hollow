@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  fetchHomeSystems, 
+  getHomeSystems, 
   addHomeSystem, 
   updateHomeSystem, 
   deleteHomeSystem,
@@ -19,7 +19,7 @@ export const useHomeSystems = (property?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchHomeSystems(property);
+      const data = await getHomeSystems(property);
       setSystems(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load home systems');
@@ -35,14 +35,16 @@ export const useHomeSystems = (property?: string) => {
 
   const addSystem = async (system: HomeSystem) => {
     try {
-      // Ensure the property is included
+      // Ensure the property is included in the system
       const systemWithProperty = property ? { ...system, property } : system;
       const newSystem = await addHomeSystem(systemWithProperty);
-      setSystems(prev => [...prev, newSystem]);
-      toast({
-        title: 'Success',
-        description: 'Home system added successfully',
-      });
+      if (newSystem) {
+        setSystems(prev => [...prev, newSystem]);
+        toast({
+          title: 'Success',
+          description: 'Home system added successfully',
+        });
+      }
       return newSystem;
     } catch (err: any) {
       toast({
@@ -56,12 +58,15 @@ export const useHomeSystems = (property?: string) => {
 
   const updateSystem = async (system: HomeSystem) => {
     try {
+      // Preserve the property field if it exists
       const updatedSystem = await updateHomeSystem(system);
-      setSystems(prev => prev.map(s => s.id === system.id ? updatedSystem : s));
-      toast({
-        title: 'Success',
-        description: 'Home system updated successfully',
-      });
+      if (updatedSystem) {
+        setSystems(prev => prev.map(s => s.id === system.id ? updatedSystem : s));
+        toast({
+          title: 'Success',
+          description: 'Home system updated successfully',
+        });
+      }
       return updatedSystem;
     } catch (err: any) {
       toast({
@@ -75,12 +80,14 @@ export const useHomeSystems = (property?: string) => {
 
   const deleteSystem = async (id: string) => {
     try {
-      await deleteHomeSystem(id);
-      setSystems(prev => prev.filter(s => s.id !== id));
-      toast({
-        title: 'Success',
-        description: 'Home system deleted successfully',
-      });
+      const success = await deleteHomeSystem(id);
+      if (success) {
+        setSystems(prev => prev.filter(s => s.id !== id));
+        toast({
+          title: 'Success',
+          description: 'Home system deleted successfully',
+        });
+      }
     } catch (err: any) {
       toast({
         title: 'Error',

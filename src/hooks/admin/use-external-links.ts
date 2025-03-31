@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  fetchExternalServiceLinks, 
-  addExternalServiceLink, 
-  updateExternalServiceLink, 
-  deleteExternalServiceLink,
+  getExternalLinks, 
+  addExternalLink, 
+  updateExternalLink, 
+  deleteExternalLink,
   ExternalServiceLink
 } from '@/services/admin/external-links-service';
 
@@ -19,7 +19,7 @@ export const useExternalLinks = (property?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchExternalServiceLinks(property);
+      const data = await getExternalLinks(property);
       setLinks(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load external service links');
@@ -37,12 +37,14 @@ export const useExternalLinks = (property?: string) => {
     try {
       // Ensure the property is included in the link
       const linkWithProperty = property ? { ...link, property } : link;
-      const newLink = await addExternalServiceLink(linkWithProperty);
-      setLinks(prev => [...prev, newLink]);
-      toast({
-        title: 'Success',
-        description: 'External service link added successfully',
-      });
+      const newLink = await addExternalLink(linkWithProperty);
+      if (newLink) {
+        setLinks(prev => [...prev, newLink]);
+        toast({
+          title: 'Success',
+          description: 'External service link added successfully',
+        });
+      }
       return newLink;
     } catch (err: any) {
       toast({
@@ -57,12 +59,14 @@ export const useExternalLinks = (property?: string) => {
   const updateLink = async (link: ExternalServiceLink) => {
     try {
       // Preserve the property field if it exists
-      const updatedLink = await updateExternalServiceLink(link);
-      setLinks(prev => prev.map(l => l.id === link.id ? updatedLink : l));
-      toast({
-        title: 'Success',
-        description: 'External service link updated successfully',
-      });
+      const updatedLink = await updateExternalLink(link);
+      if (updatedLink) {
+        setLinks(prev => prev.map(l => l.id === link.id ? updatedLink : l));
+        toast({
+          title: 'Success',
+          description: 'External service link updated successfully',
+        });
+      }
       return updatedLink;
     } catch (err: any) {
       toast({
@@ -76,12 +80,14 @@ export const useExternalLinks = (property?: string) => {
 
   const deleteLink = async (id: string) => {
     try {
-      await deleteExternalServiceLink(id);
-      setLinks(prev => prev.filter(l => l.id !== id));
-      toast({
-        title: 'Success',
-        description: 'External service link deleted successfully',
-      });
+      const success = await deleteExternalLink(id);
+      if (success) {
+        setLinks(prev => prev.filter(l => l.id !== id));
+        toast({
+          title: 'Success',
+          description: 'External service link deleted successfully',
+        });
+      }
     } catch (err: any) {
       toast({
         title: 'Error',

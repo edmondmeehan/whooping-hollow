@@ -16,12 +16,12 @@ export interface HouseService {
 
 export const getHouseServices = async (property?: string): Promise<HouseService[]> => {
   try {
-    const query = supabase
-      .from('house_services')
+    let query = supabase
+      .from('house_services_directory')
       .select('*');
     
     if (property) {
-      query.eq('property', property);
+      query = query.eq('property', property);
     }
     
     const { data, error } = await query;
@@ -37,8 +37,18 @@ export const getHouseServices = async (property?: string): Promise<HouseService[
 export const addHouseService = async (service: HouseService): Promise<HouseService | null> => {
   try {
     const { data, error } = await supabase
-      .from('house_services')
-      .insert(service)
+      .from('house_services_directory')
+      .insert({
+        service: service.service,
+        company: service.company,
+        status: service.status,
+        contact_name: service.contact_name || '',
+        phone: service.phone || '',
+        email: service.email || '',
+        notes: service.notes || '',
+        website: service.website || '',
+        property: service.property
+      })
       .select()
       .single();
     
@@ -51,10 +61,22 @@ export const addHouseService = async (service: HouseService): Promise<HouseServi
 };
 
 export const updateHouseService = async (service: HouseService): Promise<HouseService | null> => {
+  if (!service.id) return null;
+  
   try {
     const { data, error } = await supabase
-      .from('house_services')
-      .update(service)
+      .from('house_services_directory')
+      .update({
+        service: service.service,
+        company: service.company,
+        status: service.status,
+        contact_name: service.contact_name || '',
+        phone: service.phone || '',
+        email: service.email || '',
+        notes: service.notes || '',
+        website: service.website || '',
+        property: service.property
+      })
       .eq('id', service.id)
       .select()
       .single();
@@ -70,7 +92,7 @@ export const updateHouseService = async (service: HouseService): Promise<HouseSe
 export const deleteHouseService = async (id: string): Promise<boolean> => {
   try {
     const { error } = await supabase
-      .from('house_services')
+      .from('house_services_directory')
       .delete()
       .eq('id', id);
     

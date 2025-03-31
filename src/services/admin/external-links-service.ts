@@ -11,12 +11,12 @@ export interface ExternalServiceLink {
 
 export const getExternalLinks = async (property?: string): Promise<ExternalServiceLink[]> => {
   try {
-    const query = supabase
+    let query = supabase
       .from('external_service_links')
       .select('*');
     
     if (property) {
-      query.eq('property', property);
+      query = query.eq('property', property);
     }
     
     const { data, error } = await query;
@@ -33,7 +33,12 @@ export const addExternalLink = async (link: ExternalServiceLink): Promise<Extern
   try {
     const { data, error } = await supabase
       .from('external_service_links')
-      .insert(link)
+      .insert({
+        name: link.name,
+        url: link.url,
+        description: link.description || '',
+        property: link.property
+      })
       .select()
       .single();
     
@@ -46,10 +51,17 @@ export const addExternalLink = async (link: ExternalServiceLink): Promise<Extern
 };
 
 export const updateExternalLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink | null> => {
+  if (!link.id) return null;
+  
   try {
     const { data, error } = await supabase
       .from('external_service_links')
-      .update(link)
+      .update({
+        name: link.name,
+        url: link.url,
+        description: link.description || '',
+        property: link.property
+      })
       .eq('id', link.id)
       .select()
       .single();

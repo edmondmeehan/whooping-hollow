@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  fetchHouseServices, 
+  getHouseServices, 
   addHouseService, 
   updateHouseService, 
   deleteHouseService,
@@ -19,7 +19,7 @@ export const useHouseServices = (property?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchHouseServices(property);
+      const data = await getHouseServices(property);
       setServices(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load house services');
@@ -35,14 +35,16 @@ export const useHouseServices = (property?: string) => {
 
   const addService = async (service: HouseService) => {
     try {
-      // Ensure the property is included
+      // Ensure the property is included in the service
       const serviceWithProperty = property ? { ...service, property } : service;
       const newService = await addHouseService(serviceWithProperty);
-      setServices(prev => [...prev, newService]);
-      toast({
-        title: 'Success',
-        description: 'House service added successfully',
-      });
+      if (newService) {
+        setServices(prev => [...prev, newService]);
+        toast({
+          title: 'Success',
+          description: 'House service added successfully',
+        });
+      }
       return newService;
     } catch (err: any) {
       toast({
@@ -56,12 +58,15 @@ export const useHouseServices = (property?: string) => {
 
   const updateService = async (service: HouseService) => {
     try {
+      // Preserve the property field if it exists
       const updatedService = await updateHouseService(service);
-      setServices(prev => prev.map(s => s.id === service.id ? updatedService : s));
-      toast({
-        title: 'Success',
-        description: 'House service updated successfully',
-      });
+      if (updatedService) {
+        setServices(prev => prev.map(s => s.id === service.id ? updatedService : s));
+        toast({
+          title: 'Success',
+          description: 'House service updated successfully',
+        });
+      }
       return updatedService;
     } catch (err: any) {
       toast({
@@ -75,12 +80,14 @@ export const useHouseServices = (property?: string) => {
 
   const deleteService = async (id: string) => {
     try {
-      await deleteHouseService(id);
-      setServices(prev => prev.filter(s => s.id !== id));
-      toast({
-        title: 'Success',
-        description: 'House service deleted successfully',
-      });
+      const success = await deleteHouseService(id);
+      if (success) {
+        setServices(prev => prev.filter(s => s.id !== id));
+        toast({
+          title: 'Success',
+          description: 'House service deleted successfully',
+        });
+      }
     } catch (err: any) {
       toast({
         title: 'Error',
