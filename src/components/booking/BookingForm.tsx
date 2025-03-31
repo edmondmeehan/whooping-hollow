@@ -10,6 +10,7 @@ import { BookingFormValues, BookingFormData, bookingFormSchema } from '@/types/b
 import { sendBookingConfirmation, sendAdminNotification } from '@/utils/email';
 import { addDays } from 'date-fns';
 import { useBookings } from '@/hooks/use-bookings';
+import { BookingStatus } from '@/types/booking';
 
 // Import form field components
 import PersonalInfoFields from './PersonalInfoFields';
@@ -58,7 +59,7 @@ const BookingForm: React.FC = () => {
         checkOut: data.checkOut.toISOString().split('T')[0],
         adults: data.adults,
         children: data.children || 0,
-        status: 'new',
+        status: 'new' as BookingStatus,
         message: data.specialRequests,
         notes: `Booking made through direct booking form for ${data.property}`,
         isBlockedDate: false
