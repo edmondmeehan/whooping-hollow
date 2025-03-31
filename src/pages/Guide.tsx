@@ -29,7 +29,11 @@ const Guide = () => {
         <Alert className="mb-6 bg-coastal-50 border-coastal-200">
           <InfoIcon className="h-4 w-4 text-coastal-600" />
           <AlertDescription className="text-coastal-800">
-            This guide uses the same login credentials as the internet in the house, which were also included in your welcome email.
+            <p className="mb-2">Hint:</p>
+            <p className="mb-1">Network Name:</p>
+            <p className="font-mono mb-3">whoopinghollow</p>
+            <p className="mb-1">Password:</p>
+            <p className="font-mono">26262626</p>
           </AlertDescription>
         </Alert>
         <GuideTabs key={`guide-tabs-${forceUpdate}`} />
