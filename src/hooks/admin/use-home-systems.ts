@@ -9,7 +9,7 @@ import {
   HomeSystem
 } from '@/services/admin/home-systems-service';
 
-export const useHomeSystems = () => {
+export const useHomeSystems = (property?: string) => {
   const [systems, setSystems] = useState<HomeSystem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export const useHomeSystems = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchHomeSystems();
+      const data = await fetchHomeSystems(property);
       setSystems(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load home systems');
@@ -35,7 +35,9 @@ export const useHomeSystems = () => {
 
   const addSystem = async (system: HomeSystem) => {
     try {
-      const newSystem = await addHomeSystem(system);
+      // Ensure the property is included
+      const systemWithProperty = property ? { ...system, property } : system;
+      const newSystem = await addHomeSystem(systemWithProperty);
       setSystems(prev => [...prev, newSystem]);
       toast({
         title: 'Success',
@@ -91,7 +93,7 @@ export const useHomeSystems = () => {
 
   useEffect(() => {
     loadSystems();
-  }, []);
+  }, [property]);
 
   return {
     systems,

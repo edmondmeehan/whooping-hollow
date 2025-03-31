@@ -6,9 +6,12 @@ import { HouseService } from '@/services/admin/house-services-service';
 import HouseServicesHeader from './houseServices/HouseServicesHeader';
 import HouseServiceForm from './houseServices/HouseServiceForm';
 import HouseServicesTable from './houseServices/HouseServicesTable';
+import PropertySelector from './PropertySelector';
+import { useProperties } from '@/hooks/admin/use-properties';
 
 const EditableHouseServicesDirectory: React.FC = () => {
-  const { services, isLoading, error, addService, updateService, deleteService, reload } = useHouseServices();
+  const { properties, selectedProperty, selectProperty } = useProperties();
+  const { services, isLoading, error, addService, updateService, deleteService, reload } = useHouseServices(selectedProperty);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [form, setForm] = useState<HouseService>({
@@ -81,11 +84,18 @@ const EditableHouseServicesDirectory: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <HouseServicesHeader
-          onAddService={startAdding}
-          onRefresh={reload}
-          isAddingOrEditing={isAdding || editingId !== null}
-        />
+        <div className="space-y-4">
+          <HouseServicesHeader
+            onAddService={startAdding}
+            onRefresh={reload}
+            isAddingOrEditing={isAdding || editingId !== null}
+          />
+          <PropertySelector 
+            properties={properties}
+            selectedProperty={selectedProperty}
+            onPropertyChange={selectProperty}
+          />
+        </div>
       </CardHeader>
       <CardContent>
         {isAdding && (
@@ -99,17 +109,23 @@ const EditableHouseServicesDirectory: React.FC = () => {
           />
         )}
 
-        <HouseServicesTable
-          services={services}
-          editingId={editingId}
-          form={form}
-          onInputChange={handleInputChange}
-          onStatusChange={handleStatusChange}
-          onEdit={startEditing}
-          onDelete={handleDelete}
-          onSave={saveEdit}
-          onCancel={cancelEdit}
-        />
+        {isLoading ? (
+          <div>Loading house services directory...</div>
+        ) : error ? (
+          <div>Error loading house services directory: {error}</div>
+        ) : (
+          <HouseServicesTable
+            services={services}
+            editingId={editingId}
+            form={form}
+            onInputChange={handleInputChange}
+            onStatusChange={handleStatusChange}
+            onEdit={startEditing}
+            onDelete={handleDelete}
+            onSave={saveEdit}
+            onCancel={cancelEdit}
+          />
+        )}
       </CardContent>
     </Card>
   );

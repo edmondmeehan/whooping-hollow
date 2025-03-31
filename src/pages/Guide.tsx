@@ -10,6 +10,8 @@ import { toast } from '@/hooks/use-toast';
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Set a default property for the guide (this could be passed as a URL parameter or set in localStorage)
+  const defaultProperty = '26-whooping-hollow';
 
   // Check if user is logged in
   useEffect(() => {
@@ -76,7 +78,7 @@ const Guide = () => {
               Logout
             </Button>
           </div>
-          <GuideTabs key={`guide-tabs-${forceUpdate}`} />
+          <GuideTabs key={`guide-tabs-${forceUpdate}`} propertyId={defaultProperty} />
         </div>
       ) : (
         <GuideLogin onLogin={handleLogin} />

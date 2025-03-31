@@ -9,7 +9,7 @@ import {
   HouseService
 } from '@/services/admin/house-services-service';
 
-export const useHouseServices = () => {
+export const useHouseServices = (property?: string) => {
   const [services, setServices] = useState<HouseService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export const useHouseServices = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchHouseServices();
+      const data = await fetchHouseServices(property);
       setServices(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load house services');
@@ -35,7 +35,9 @@ export const useHouseServices = () => {
 
   const addService = async (service: HouseService) => {
     try {
-      const newService = await addHouseService(service);
+      // Ensure the property is included
+      const serviceWithProperty = property ? { ...service, property } : service;
+      const newService = await addHouseService(serviceWithProperty);
       setServices(prev => [...prev, newService]);
       toast({
         title: 'Success',
@@ -91,7 +93,7 @@ export const useHouseServices = () => {
 
   useEffect(() => {
     loadServices();
-  }, []);
+  }, [property]);
 
   return {
     services,

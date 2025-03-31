@@ -6,13 +6,20 @@ export interface ExternalServiceLink {
   name: string;
   url: string;
   description: string;
+  property?: string;
 }
 
-export const fetchExternalServiceLinks = async (): Promise<ExternalServiceLink[]> => {
-  const { data, error } = await supabase
+export const fetchExternalServiceLinks = async (property?: string): Promise<ExternalServiceLink[]> => {
+  let query = supabase
     .from('external_service_links')
     .select('*')
     .order('name');
+  
+  if (property) {
+    query = query.eq('property', property);
+  }
+  
+  const { data, error } = await query;
   
   if (error) {
     console.error('Error fetching external service links:', error);
@@ -46,6 +53,7 @@ export const updateExternalServiceLink = async (link: ExternalServiceLink): Prom
       name: link.name,
       url: link.url,
       description: link.description,
+      property: link.property,
       updated_at: new Date().toISOString()
     })
     .eq('id', link.id)

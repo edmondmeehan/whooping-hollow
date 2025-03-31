@@ -5,9 +5,12 @@ import { useExternalLinks } from '@/hooks/admin/use-external-links';
 import { ExternalServiceLink } from '@/services/admin/external-links-service';
 import ExternalLinksHeader from './external-links/ExternalLinksHeader';
 import ExternalLinksGrid from './external-links/ExternalLinksGrid';
+import PropertySelector from './PropertySelector';
+import { useProperties } from '@/hooks/admin/use-properties';
 
 const EditableExternalServiceLinks: React.FC = () => {
-  const { links, isLoading, error, addLink, updateLink, deleteLink, reload } = useExternalLinks();
+  const { properties, selectedProperty, selectProperty } = useProperties();
+  const { links, isLoading, error, addLink, updateLink, deleteLink, reload } = useExternalLinks(selectedProperty);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newForm, setNewForm] = useState<ExternalServiceLink>({ name: '', url: '', description: '' });
@@ -64,27 +67,40 @@ const EditableExternalServiceLinks: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <ExternalLinksHeader 
-          onAddLink={startAdding}
-          onRefresh={reload}
-          isAddingOrEditing={isAdding || editingId !== null}
-        />
+        <div className="space-y-4">
+          <ExternalLinksHeader 
+            onAddLink={startAdding}
+            onRefresh={reload}
+            isAddingOrEditing={isAdding || editingId !== null}
+          />
+          <PropertySelector 
+            properties={properties}
+            selectedProperty={selectedProperty}
+            onPropertyChange={selectProperty}
+          />
+        </div>
       </CardHeader>
       <CardContent>
-        <ExternalLinksGrid 
-          links={links}
-          isAdding={isAdding}
-          editingId={editingId}
-          newLinkForm={newForm}
-          editForm={editForm}
-          onStartEditing={startEditing}
-          onDelete={handleDelete}
-          onSaveEdit={saveEdit}
-          onSaveNew={saveNew}
-          onCancel={cancelEdit}
-          onChangeNewForm={handleNewFormChange}
-          onChangeEditForm={handleEditFormChange}
-        />
+        {isLoading ? (
+          <div>Loading external service links...</div>
+        ) : error ? (
+          <div>Error loading external service links: {error}</div>
+        ) : (
+          <ExternalLinksGrid 
+            links={links}
+            isAdding={isAdding}
+            editingId={editingId}
+            newLinkForm={newForm}
+            editForm={editForm}
+            onStartEditing={startEditing}
+            onDelete={handleDelete}
+            onSaveEdit={saveEdit}
+            onSaveNew={saveNew}
+            onCancel={cancelEdit}
+            onChangeNewForm={handleNewFormChange}
+            onChangeEditForm={handleEditFormChange}
+          />
+        )}
       </CardContent>
     </Card>
   );

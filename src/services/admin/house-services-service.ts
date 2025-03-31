@@ -11,13 +11,20 @@ export interface HouseService {
   email: string | null;
   notes: string | null;
   website?: string | null;
+  property?: string;
 }
 
-export const fetchHouseServices = async (): Promise<HouseService[]> => {
-  const { data, error } = await supabase
+export const fetchHouseServices = async (property?: string): Promise<HouseService[]> => {
+  let query = supabase
     .from('house_services_directory')
     .select('*')
     .order('service');
+  
+  if (property) {
+    query = query.eq('property', property);
+  }
+  
+  const { data, error } = await query;
   
   if (error) {
     console.error('Error fetching house services:', error);
@@ -38,7 +45,8 @@ export const addHouseService = async (service: HouseService): Promise<HouseServi
       phone: service.phone,
       email: service.email,
       notes: service.notes,
-      website: service.website
+      website: service.website,
+      property: service.property
     })
     .select()
     .single();
@@ -65,6 +73,7 @@ export const updateHouseService = async (service: HouseService): Promise<HouseSe
       email: service.email,
       notes: service.notes,
       website: service.website,
+      property: service.property,
       updated_at: new Date().toISOString()
     })
     .eq('id', service.id)

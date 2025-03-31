@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Key, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -8,8 +7,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { useHomeSystems } from '@/hooks/admin/use-home-systems';
 import { HomeSystem } from '@/services/admin/home-systems-service';
 
-const EditableHomeSystemsTable: React.FC = () => {
-  const { systems, isLoading, error, addSystem, updateSystem, deleteSystem } = useHomeSystems();
+interface EditableHomeSystemsTableProps {
+  property?: string;
+}
+
+const EditableHomeSystemsTable: React.FC<EditableHomeSystemsTableProps> = ({ property }) => {
+  const { systems, isLoading, error, addSystem, updateSystem, deleteSystem, reload } = useHomeSystems(property);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [form, setForm] = useState<HomeSystem>({ system: '', access: '', notes: '' });
@@ -54,12 +57,19 @@ const EditableHomeSystemsTable: React.FC = () => {
     }
   };
 
+  const refreshData = () => {
+    reload();
+  };
+
   if (isLoading) return <div>Loading home systems...</div>;
   if (error) return <div>Error loading home systems: {error}</div>;
 
   return (
     <div>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between mb-4">
+        <Button onClick={refreshData} variant="outline" size="sm">
+          <Save className="mr-2 h-4 w-4" /> Refresh Data
+        </Button>
         <Button onClick={startAdding} disabled={isAdding || editingId !== null}>
           <Plus className="mr-2 h-4 w-4" /> Add System
         </Button>

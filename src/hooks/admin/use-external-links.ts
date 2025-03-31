@@ -9,7 +9,7 @@ import {
   ExternalServiceLink
 } from '@/services/admin/external-links-service';
 
-export const useExternalLinks = () => {
+export const useExternalLinks = (property?: string) => {
   const [links, setLinks] = useState<ExternalServiceLink[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export const useExternalLinks = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchExternalServiceLinks();
+      const data = await fetchExternalServiceLinks(property);
       setLinks(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load external service links');
@@ -35,7 +35,9 @@ export const useExternalLinks = () => {
 
   const addLink = async (link: ExternalServiceLink) => {
     try {
-      const newLink = await addExternalServiceLink(link);
+      // Ensure the property is included in the link
+      const linkWithProperty = property ? { ...link, property } : link;
+      const newLink = await addExternalServiceLink(linkWithProperty);
       setLinks(prev => [...prev, newLink]);
       toast({
         title: 'Success',
@@ -54,6 +56,7 @@ export const useExternalLinks = () => {
 
   const updateLink = async (link: ExternalServiceLink) => {
     try {
+      // Preserve the property field if it exists
       const updatedLink = await updateExternalServiceLink(link);
       setLinks(prev => prev.map(l => l.id === link.id ? updatedLink : l));
       toast({
@@ -91,7 +94,7 @@ export const useExternalLinks = () => {
 
   useEffect(() => {
     loadLinks();
-  }, []);
+  }, [property]);
 
   return {
     links,

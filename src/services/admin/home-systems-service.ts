@@ -6,13 +6,20 @@ export interface HomeSystem {
   system: string;
   access: string | null;
   notes: string | null;
+  property?: string;
 }
 
-export const fetchHomeSystems = async (): Promise<HomeSystem[]> => {
-  const { data, error } = await supabase
+export const fetchHomeSystems = async (property?: string): Promise<HomeSystem[]> => {
+  let query = supabase
     .from('home_systems')
     .select('*')
     .order('system');
+  
+  if (property) {
+    query = query.eq('property', property);
+  }
+  
+  const { data, error } = await query;
   
   if (error) {
     console.error('Error fetching home systems:', error);
@@ -46,6 +53,7 @@ export const updateHomeSystem = async (system: HomeSystem): Promise<HomeSystem> 
       system: system.system,
       access: system.access,
       notes: system.notes,
+      property: system.property,
       updated_at: new Date().toISOString()
     })
     .eq('id', system.id)
