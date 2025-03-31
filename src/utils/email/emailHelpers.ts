@@ -2,23 +2,12 @@
 import { toast } from 'sonner';
 
 /**
- * Retrieves the Resend API key from localStorage
+ * This function is kept for backward compatibility but is no longer used
+ * as we now handle API keys via Supabase environment variables.
  */
 export const getResendApiKey = (): string | null => {
-  const savedKeys = localStorage.getItem('whh_api_keys');
-  if (!savedKeys) return null;
-  
-  try {
-    const keys = JSON.parse(savedKeys);
-    const resendKey = keys.find((key: any) => 
-      key.name === 'Resend API' || 
-      key.name.toLowerCase().includes('resend')
-    );
-    return resendKey?.key || null;
-  } catch (error) {
-    console.error('Error parsing API keys:', error);
-    return null;
-  }
+  // API key now managed by Supabase edge function environment variables
+  return "Using Supabase Environment Variable";
 };
 
 /**

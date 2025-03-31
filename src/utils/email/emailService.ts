@@ -1,6 +1,7 @@
 
 import { getResendApiKey, handleEmailError } from './emailHelpers';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface EmailPayload {
   from: string;
@@ -11,48 +12,29 @@ interface EmailPayload {
 }
 
 /**
- * Sends an email using the Resend API
+ * Sends an email using the Resend API via Supabase Edge Function
  */
 export const sendEmail = async (payload: EmailPayload): Promise<boolean> => {
-  const apiKey = getResendApiKey();
-  
-  if (!apiKey) {
-    console.error("Missing Resend API key");
-    toast.error("API Key Missing", {
-      description: "Please add your Resend API key in the Admin panel"
-    });
-    return false;
-  }
-
   try {
-    // Ensure 'to' is always converted to an array for consistency
-    const toAddresses = Array.isArray(payload.to) ? payload.to : [payload.to];
-    
-    console.log('Sending email with payload:', JSON.stringify({
+    console.log('Preparing to send email with payload:', JSON.stringify({
       ...payload,
-      to: toAddresses
+      to: Array.isArray(payload.to) ? payload.to : [payload.to]
     }));
     
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
+    // Call the Supabase Edge Function
+    const { data, error } = await supabase.functions.invoke('send-email', {
+      body: {
         ...payload,
-        to: toAddresses
-      })
+        to: Array.isArray(payload.to) ? payload.to : [payload.to]
+      }
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Resend API error:', error);
+    if (error) {
+      console.error('Edge function error:', error);
       throw new Error(error.message || 'Failed to send email');
     }
 
-    const result = await response.json();
-    console.log('Email sent successfully:', result);
+    console.log('Email sent successfully:', data);
     return true;
   } catch (error) {
     handleEmailError(error, 'sending email');
