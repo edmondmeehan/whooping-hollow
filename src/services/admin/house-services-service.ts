@@ -6,96 +6,78 @@ export interface HouseService {
   service: string;
   company: string;
   status: string;
-  contact_name: string | null;
-  phone: string | null;
-  email: string | null;
-  notes: string | null;
-  website?: string | null;
+  contact_name?: string;
+  phone?: string;
+  email?: string;
+  notes?: string;
+  website?: string;
   property?: string;
 }
 
-export const fetchHouseServices = async (property?: string): Promise<HouseService[]> => {
-  let query = supabase
-    .from('house_services_directory')
-    .select('*')
-    .order('service');
-  
-  if (property) {
-    query = query.eq('property', property);
+export const getHouseServices = async (property?: string): Promise<HouseService[]> => {
+  try {
+    const query = supabase
+      .from('house_services')
+      .select('*');
+    
+    if (property) {
+      query.eq('property', property);
+    }
+    
+    const { data, error } = await query;
+    
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting house services:', error);
+    return [];
   }
-  
-  const { data, error } = await query;
-  
-  if (error) {
-    console.error('Error fetching house services:', error);
-    throw new Error(error.message);
-  }
-  
-  return data || [];
 };
 
-export const addHouseService = async (service: HouseService): Promise<HouseService> => {
-  const { data, error } = await supabase
-    .from('house_services_directory')
-    .insert({
-      service: service.service,
-      company: service.company,
-      status: service.status,
-      contact_name: service.contact_name,
-      phone: service.phone,
-      email: service.email,
-      notes: service.notes,
-      website: service.website,
-      property: service.property
-    })
-    .select()
-    .single();
-  
-  if (error) {
+export const addHouseService = async (service: HouseService): Promise<HouseService | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('house_services')
+      .insert(service)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
     console.error('Error adding house service:', error);
-    throw new Error(error.message);
+    return null;
   }
-  
-  return data;
 };
 
-export const updateHouseService = async (service: HouseService): Promise<HouseService> => {
-  if (!service.id) throw new Error('Service ID is required for updates');
-  
-  const { data, error } = await supabase
-    .from('house_services_directory')
-    .update({
-      service: service.service,
-      company: service.company,
-      status: service.status,
-      contact_name: service.contact_name,
-      phone: service.phone,
-      email: service.email,
-      notes: service.notes,
-      website: service.website,
-      property: service.property,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', service.id)
-    .select()
-    .single();
-  
-  if (error) {
+export const updateHouseService = async (service: HouseService): Promise<HouseService | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('house_services')
+      .update(service)
+      .eq('id', service.id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
     console.error('Error updating house service:', error);
-    throw new Error(error.message);
+    return null;
   }
-  
-  return data;
 };
 
-export const deleteHouseService = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('house_services_directory')
-    .delete()
-    .eq('id', id);
-  
-  if (error) {
+export const deleteHouseService = async (id: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('house_services')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    return true;
+  } catch (error) {
     console.error('Error deleting house service:', error);
-    throw new Error(error.message);
+    return false;
   }
 };

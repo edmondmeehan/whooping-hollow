@@ -5,77 +5,74 @@ export interface ExternalServiceLink {
   id?: string;
   name: string;
   url: string;
-  description: string;
+  description?: string;
   property?: string;
 }
 
-export const fetchExternalServiceLinks = async (property?: string): Promise<ExternalServiceLink[]> => {
-  let query = supabase
-    .from('external_service_links')
-    .select('*')
-    .order('name');
-  
-  if (property) {
-    query = query.eq('property', property);
+export const getExternalLinks = async (property?: string): Promise<ExternalServiceLink[]> => {
+  try {
+    const query = supabase
+      .from('external_service_links')
+      .select('*');
+    
+    if (property) {
+      query.eq('property', property);
+    }
+    
+    const { data, error } = await query;
+    
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting external links:', error);
+    return [];
   }
-  
-  const { data, error } = await query;
-  
-  if (error) {
-    console.error('Error fetching external service links:', error);
-    throw new Error(error.message);
-  }
-  
-  return data || [];
 };
 
-export const addExternalServiceLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink> => {
-  const { data, error } = await supabase
-    .from('external_service_links')
-    .insert(link)
-    .select()
-    .single();
-  
-  if (error) {
-    console.error('Error adding external service link:', error);
-    throw new Error(error.message);
+export const addExternalLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('external_service_links')
+      .insert(link)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error adding external link:', error);
+    return null;
   }
-  
-  return data;
 };
 
-export const updateExternalServiceLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink> => {
-  if (!link.id) throw new Error('Link ID is required for updates');
-  
-  const { data, error } = await supabase
-    .from('external_service_links')
-    .update({
-      name: link.name,
-      url: link.url,
-      description: link.description,
-      property: link.property,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', link.id)
-    .select()
-    .single();
-  
-  if (error) {
-    console.error('Error updating external service link:', error);
-    throw new Error(error.message);
+export const updateExternalLink = async (link: ExternalServiceLink): Promise<ExternalServiceLink | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('external_service_links')
+      .update(link)
+      .eq('id', link.id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error updating external link:', error);
+    return null;
   }
-  
-  return data;
 };
 
-export const deleteExternalServiceLink = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('external_service_links')
-    .delete()
-    .eq('id', id);
-  
-  if (error) {
-    console.error('Error deleting external service link:', error);
-    throw new Error(error.message);
+export const deleteExternalLink = async (id: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('external_service_links')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error deleting external link:', error);
+    return false;
   }
 };

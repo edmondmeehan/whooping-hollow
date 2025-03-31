@@ -17,6 +17,7 @@ interface ExternalLinksGridProps {
   onCancel: () => void;
   onChangeNewForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeEditForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isMobile?: boolean;
 }
 
 const ExternalLinksGrid: React.FC<ExternalLinksGridProps> = ({
@@ -31,7 +32,8 @@ const ExternalLinksGrid: React.FC<ExternalLinksGridProps> = ({
   onSaveNew,
   onCancel,
   onChangeNewForm,
-  onChangeEditForm
+  onChangeEditForm,
+  isMobile = false
 }) => {
   return (
     <div>
@@ -43,11 +45,12 @@ const ExternalLinksGrid: React.FC<ExternalLinksGridProps> = ({
             onSave={onSaveNew}
             onCancel={onCancel}
             isNew={true}
+            isMobile={isMobile}
           />
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className={`grid grid-cols-1 ${isMobile ? "" : "md:grid-cols-2 lg:grid-cols-3"} gap-3`}>
         {links.map((link) => (
           <ExternalLinkRow
             key={link.id}
@@ -59,6 +62,7 @@ const ExternalLinksGrid: React.FC<ExternalLinksGridProps> = ({
             onSave={onSaveEdit}
             onCancel={onCancel}
             onChange={onChangeEditForm}
+            isMobile={isMobile}
           />
         ))}
       </div>

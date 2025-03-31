@@ -1,16 +1,17 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useExternalLinks } from '@/hooks/admin/use-external-links';
 import { ExternalServiceLink } from '@/services/admin/external-links-service';
 import ExternalLinksHeader from './external-links/ExternalLinksHeader';
 import ExternalLinksGrid from './external-links/ExternalLinksGrid';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ExternalServiceLinksProps {
   property?: string;
 }
 
 const ExternalServiceLinks: React.FC<ExternalServiceLinksProps> = ({ property }) => {
+  const isMobile = useIsMobile();
   const { links, isLoading, error, updateLink, reload } = useExternalLinks(property);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
@@ -58,19 +59,20 @@ const ExternalServiceLinks: React.FC<ExternalServiceLinksProps> = ({ property })
   const handleDelete = async (id: string) => {
   };
 
-  if (isLoading) return <div>Loading external service links...</div>;
-  if (error) return <div>Error loading external service links: {error}</div>;
+  if (isLoading) return <div className="p-4 text-center">Loading external service links...</div>;
+  if (error) return <div className="p-4 text-center text-red-500">Error loading external service links: {error}</div>;
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className={isMobile ? "mx-0" : ""}>
+      <CardHeader className={isMobile ? "px-3 py-4" : ""}>
         <ExternalLinksHeader 
           onAddLink={startAdding}
           onRefresh={reload}
           isAddingOrEditing={isAdding || editingId !== null}
+          isMobile={isMobile}
         />
       </CardHeader>
-      <CardContent>
+      <CardContent className={isMobile ? "px-3 pb-4" : ""}>
         <ExternalLinksGrid 
           links={links}
           isAdding={isAdding}
@@ -84,6 +86,7 @@ const ExternalServiceLinks: React.FC<ExternalServiceLinksProps> = ({ property })
           onCancel={cancelEdit}
           onChangeNewForm={handleNewFormChange}
           onChangeEditForm={handleEditFormChange}
+          isMobile={isMobile}
         />
       </CardContent>
     </Card>
