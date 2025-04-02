@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 import { useHeroFeatures } from '@/hooks/use-hero-features';
 import { AlertCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const { heroFeatures } = useHeroFeatures();
@@ -143,15 +144,10 @@ const Hero = () => {
               {currentFeature.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button className="bg-hamptons-accent text-hamptons-dark text-lg font-medium hover:bg-hamptons-accent/90 px-8 py-6">
-                <a 
-                  href="https://www.airbnb.com/rooms/1314531825053234635" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center"
-                >
+              <Button className="bg-hamptons-accent text-hamptons-dark text-lg font-medium hover:bg-hamptons-accent/90 px-8 py-6" asChild>
+                <Link to="/book-direct" className="flex items-center">
                   Book Now
-                </a>
+                </Link>
               </Button>
               <Button 
                 variant="outline" 
