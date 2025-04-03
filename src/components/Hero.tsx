@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
@@ -13,14 +12,12 @@ const Hero = () => {
   const [error, setError] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   
-  // Check if we have features and set loading state
   useEffect(() => {
     if (heroFeatures && heroFeatures.length > 0) {
       setLoading(false);
     }
   }, [heroFeatures]);
   
-  // Function to cycle to the next feature
   const cycleFeature = useCallback(() => {
     if (heroFeatures.length <= 1) return;
     setCurrentFeatureIndex(prevIndex => 
@@ -28,7 +25,6 @@ const Hero = () => {
     );
   }, [heroFeatures.length]);
   
-  // Auto cycle features every 10 seconds
   useEffect(() => {
     if (heroFeatures.length <= 1) return;
     
@@ -36,37 +32,31 @@ const Hero = () => {
     return () => clearInterval(intervalId);
   }, [cycleFeature, heroFeatures.length]);
   
-  // Reset image error state when feature changes
   useEffect(() => {
     setImageError(false);
   }, [currentFeatureIndex]);
   
-  // Get current feature
   const currentFeature = heroFeatures[currentFeatureIndex] || {
     id: "",
-    title: "Welcome to Our Property",
+    title: "Whooping Hollow",
     subtitle: "Experience luxury in the heart of the Hamptons",
-    imageUrl: "/hero-image.jpg", // Default fallback
+    imageUrl: "/hero-image.jpg",
     videoUrl: ""
   };
   
-  // Handle image loading error
   const handleImageError = () => {
     console.error("Failed to load hero image:", currentFeature.imageUrl);
     setImageError(true);
   };
   
-  // Default linear gradient while image loads
   const defaultStyle = {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   };
   
-  // Fallback image if the current one fails
-  const fallbackImage = "/hero-image.jpg"; // Using the local hero image as fallback
+  const fallbackImage = "/hero-image.jpg";
   
-  // Hero style with loaded image
   const heroBackgroundStyle = {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
     backgroundSize: 'cover',
@@ -75,12 +65,11 @@ const Hero = () => {
 
   return (
     <div className="hero-section flex items-center justify-center text-center relative overflow-hidden">
-      {/* Video Background */}
       <div className="absolute inset-0 w-full h-full z-0">
         <div className="absolute inset-0 bg-black/40 z-10"></div>
         {currentFeature.videoUrl && !imageError ? (
           <video
-            key={currentFeature.id} // Key to force recreation when feature changes
+            key={currentFeature.id}
             autoPlay
             muted
             loop
@@ -93,7 +82,6 @@ const Hero = () => {
             }}
           >
             <source src={currentFeature.videoUrl} type="video/mp4" />
-            {/* Fallback if video fails */}
             <div 
               className="absolute inset-0 w-full h-full" 
               style={heroBackgroundStyle}
@@ -159,7 +147,6 @@ const Hero = () => {
               </Button>
             </div>
             
-            {/* Feature Indicators (only show if multiple features) */}
             {heroFeatures.length > 1 && (
               <div className="flex justify-center mt-8 gap-2">
                 {heroFeatures.map((_, index) => (
