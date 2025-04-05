@@ -15,7 +15,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-coastal-50">
       <div className="container-custom">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-hamptons-dark mb-4">
@@ -30,11 +30,11 @@ const Features = () => {
           {amenities.map((amenity, index) => (
             <div 
               key={index} 
-              className="bg-hamptons-light rounded-lg p-6 shadow-sm card-hover"
+              className="bg-white rounded-lg p-6 shadow-md card-hover border-t-2 border-coastal-300"
             >
               <div className="flex items-center mb-4">
                 {amenity.icon}
-                <h3 className="ml-3 font-medium text-gray-800">{amenity.name}</h3>
+                <h3 className="ml-3 font-medium text-hamptons-dark">{amenity.name}</h3>
               </div>
               <p className="text-gray-600 text-sm">
                 Enjoy our {amenity.name.toLowerCase()} during your stay at Whooping Hollow.

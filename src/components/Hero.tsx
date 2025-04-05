@@ -50,7 +50,7 @@ const Hero = () => {
   };
   
   const defaultStyle = {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))`,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4))`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   };
@@ -58,7 +58,7 @@ const Hero = () => {
   const fallbackImage = "/hero-image.jpg";
   
   const heroBackgroundStyle = {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
+    backgroundImage: `linear-gradient(rgba(28, 59, 68, 0.35), rgba(28, 59, 68, 0.35)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   };
@@ -66,7 +66,7 @@ const Hero = () => {
   return (
     <div className="hero-section flex items-center justify-center text-center relative overflow-hidden">
       <div className="absolute inset-0 w-full h-full z-0">
-        <div className="absolute inset-0 bg-black/40 z-10"></div>
+        <div className="absolute inset-0 bg-hamptons-dark/40 z-10"></div>
         {currentFeature.videoUrl && !imageError ? (
           <video
             key={currentFeature.id}
@@ -125,21 +125,21 @@ const Hero = () => {
           </div>
         ) : (
           <>
-            <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6">
+            <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6 drop-shadow-md">
               {currentFeature.title}
             </h1>
-            <p className="text-white text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto">
+            <p className="text-white text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto drop-shadow">
               {currentFeature.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button className="bg-hamptons-accent text-hamptons-dark text-lg font-medium hover:bg-hamptons-accent/90 px-8 py-6" asChild>
+              <Button className="bg-hamptons-accent hover:bg-hamptons-accent/90 text-hamptons-dark text-lg font-medium px-8 py-6 shadow-md" asChild>
                 <Link to="/book-direct" className="flex items-center">
                   Book Now
                 </Link>
               </Button>
               <Button 
                 variant="outline" 
-                className="bg-white/20 backdrop-blur-sm text-white border-white hover:bg-white/30 text-lg font-medium px-8 py-6"
+                className="bg-white/30 backdrop-blur-sm text-white border-white hover:bg-white/40 text-lg font-medium px-8 py-6 shadow-md"
               >
                 <a href="#about" className="flex items-center">
                   Learn More

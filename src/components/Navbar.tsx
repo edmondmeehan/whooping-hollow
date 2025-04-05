@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -9,7 +10,7 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className="bg-white bg-opacity-90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-coastal-100">
       <div className="container-custom py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
@@ -29,7 +30,7 @@ const Navbar = () => {
             <Link to="/guide" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
               Guest Guide
             </Link>
-            <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90" asChild>
+            <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90 shadow-sm" asChild>
               <Link to="/properties" className="flex items-center">
                 Book Now
               </Link>

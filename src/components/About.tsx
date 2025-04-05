@@ -8,7 +8,7 @@ const About = () => {
   const { featured } = propertiesData;
 
   return (
-    <section id="about" className="section-padding bg-hamptons-light">
+    <section id="about" className="section-padding bg-gradient-to-b from-hamptons-light to-white">
       <div className="container-custom">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-hamptons-dark mb-4">
