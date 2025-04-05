@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { ExternalServiceLink, ExternalServiceLinkInput } from '@/types/service-types';
 import { 
   getExternalLinks, 
   addExternalLink, 
   updateExternalLink, 
-  deleteExternalLink,
-  ExternalServiceLink
+  deleteExternalLink 
 } from '@/services/admin/external-links-service';
 
 export const useExternalLinks = (property?: string) => {
@@ -88,6 +88,7 @@ export const useExternalLinks = (property?: string) => {
           description: 'External service link deleted successfully',
         });
       }
+      return success;
     } catch (err: any) {
       toast({
         title: 'Error',

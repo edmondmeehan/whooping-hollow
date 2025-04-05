@@ -1,7 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { HomeSystem, HomeSystemInput } from '@/hooks/admin/use-home-systems';
-import { BaseService } from '../supabase/base-service';
+import { HomeSystem, HomeSystemInput, BaseService } from '@/types/service-types';
 
 export class HomeSystemsService extends BaseService {
   private static instance: HomeSystemsService;
@@ -17,11 +16,17 @@ export class HomeSystemsService extends BaseService {
     return HomeSystemsService.instance;
   }
 
-  public async getHomeSystems(): Promise<HomeSystem[]> {
-    const { data, error } = await supabase
+  public async getHomeSystems(property?: string): Promise<HomeSystem[]> {
+    let query = supabase
       .from('home_systems')
       .select('*')
       .order('created_at', { ascending: false });
+      
+    if (property) {
+      query = query.eq('property', property);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching home systems:', error);
@@ -62,7 +67,7 @@ export class HomeSystemsService extends BaseService {
     return data;
   }
 
-  public async deleteHomeSystem(id: string): Promise<void> {
+  public async deleteHomeSystem(id: string): Promise<boolean> {
     const { error } = await supabase
       .from('home_systems')
       .delete()
@@ -72,5 +77,25 @@ export class HomeSystemsService extends BaseService {
       console.error('Error deleting home system:', error);
       throw new Error(`Failed to delete home system: ${error.message}`);
     }
+
+    return true;
   }
 }
+
+// Export service functions for easier usage
+export const getHomeSystems = async (property?: string): Promise<HomeSystem[]> => {
+  return HomeSystemsService.getInstance().getHomeSystems(property);
+};
+
+export const addHomeSystem = async (system: HomeSystemInput): Promise<HomeSystem> => {
+  return HomeSystemsService.getInstance().createHomeSystem(system);
+};
+
+export const updateHomeSystem = async (system: HomeSystem): Promise<HomeSystem> => {
+  if (!system.id) throw new Error('System ID is required for updates');
+  return HomeSystemsService.getInstance().updateHomeSystem(system.id, system);
+};
+
+export const deleteHomeSystem = async (id: string): Promise<boolean> => {
+  return HomeSystemsService.getInstance().deleteHomeSystem(id);
+};

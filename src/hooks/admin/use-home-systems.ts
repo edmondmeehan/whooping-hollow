@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { HomeSystem, HomeSystemInput } from '@/types/service-types';
 import { 
   getHomeSystems, 
   addHomeSystem, 
   updateHomeSystem, 
-  deleteHomeSystem,
-  HomeSystem
+  deleteHomeSystem
 } from '@/services/admin/home-systems-service';
 
 export const useHomeSystems = (property?: string) => {
@@ -88,6 +88,7 @@ export const useHomeSystems = (property?: string) => {
           description: 'Home system deleted successfully',
         });
       }
+      return success;
     } catch (err: any) {
       toast({
         title: 'Error',

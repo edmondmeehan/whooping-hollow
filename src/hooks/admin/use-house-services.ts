@@ -1,16 +1,18 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { HouseService, HouseServiceCategory, HouseServiceInput } from '@/types/service-types';
 import { 
   getHouseServices, 
+  getHouseServiceCategories,
   addHouseService, 
   updateHouseService, 
-  deleteHouseService,
-  HouseService
+  deleteHouseService
 } from '@/services/admin/house-services-service';
 
 export const useHouseServices = (property?: string) => {
   const [services, setServices] = useState<HouseService[]>([]);
+  const [categories, setCategories] = useState<HouseServiceCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -21,6 +23,10 @@ export const useHouseServices = (property?: string) => {
     try {
       const data = await getHouseServices(property);
       setServices(data);
+      
+      // Also load categories if needed
+      const categoriesData = await getHouseServiceCategories();
+      setCategories(categoriesData);
     } catch (err: any) {
       setError(err.message || 'Failed to load house services');
       toast({
@@ -88,6 +94,7 @@ export const useHouseServices = (property?: string) => {
           description: 'House service deleted successfully',
         });
       }
+      return success;
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -104,6 +111,7 @@ export const useHouseServices = (property?: string) => {
 
   return {
     services,
+    categories,
     isLoading,
     error,
     reload: loadServices,
