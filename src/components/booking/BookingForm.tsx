@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { BookingFormValues, BookingFormData, bookingFormSchema } from '@/types/bookingForm';
-import { sendBookingConfirmation, sendAdminNotification } from '@/utils/email';
 import { addDays } from 'date-fns';
 import { useBookings } from '@/hooks/use-bookings';
 import { BookingStatus } from '@/types/booking';
 import { submitBookingToSupabase } from '@/utils/bookingUtils';
+import { supabase } from '@/integrations/supabase/client';
 
 // Import form field components
 import PersonalInfoFields from './PersonalInfoFields';
@@ -75,48 +75,44 @@ const BookingForm: React.FC = () => {
       // Add to the booking system (for local state management)
       addBooking(booking);
       
-      // Convert BookingFormValues to BookingFormData format for email utils
-      const emailData: BookingFormData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        location: data.property,
-        dates: { 
-          from: data.checkIn,
-          to: data.checkOut
-        },
-        guests: String(data.adults + (data.children || 0)),
-        specialRequests: data.specialRequests
-      };
-      
-      // Try to send emails but don't block the success flow if they fail
+      // Send emails via Supabase edge function
       try {
         console.log('Attempting to send confirmation emails...');
         
-        // Send confirmation email to guest (which now includes Eddie as BCC)
-        const guestEmailSent = await sendBookingConfirmation(emailData);
-        console.log('Guest email sent result:', guestEmailSent);
+        // Prepare email data
+        const emailData = {
+          guestName: `${data.firstName} ${data.lastName}`,
+          guestEmail: data.email,
+          adminEmail: 'eddie@please.co',
+          property: data.property,
+          checkIn: data.checkIn.toISOString().split('T')[0],
+          checkOut: data.checkOut.toISOString().split('T')[0],
+          guests: data.adults + (data.children || 0),
+          phone: data.phone,
+          specialRequests: data.specialRequests || ''
+        };
         
-        // Send notification to admin (attempt even if guest email fails)
-        const adminEmailSent = await sendAdminNotification(emailData);
-        console.log('Admin email sent result:', adminEmailSent);
+        // Call the send-email edge function
+        const { error: emailError } = await supabase.functions.invoke('send-email', {
+          body: {
+            type: 'booking-confirmation',
+            data: emailData
+          }
+        });
         
-        if (!guestEmailSent && !adminEmailSent) {
-          console.warn('Both guest and admin emails failed to send');
-          // Still showing success but with modified message
+        if (emailError) {
+          console.error('Error sending emails:', emailError);
+          // Still show success but with modified message
           toast.success('Booking request submitted successfully!', {
             description: 'Your request was received, but there was an issue sending confirmation emails. We\'ll contact you soon.'
           });
         } else {
           toast.success('Booking request submitted successfully!', {
-            description: guestEmailSent 
-              ? 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
-              : 'Your request was received, but there was an issue sending the confirmation email. We\'ll contact you soon.'
+            description: 'We\'ve sent you a confirmation email. We will contact you shortly with your special discount.'
           });
         }
       } catch (emailError) {
-        console.error('Error sending emails:', emailError);
+        console.error('Error with email function:', emailError);
         // Still show success since the booking was saved to database
         toast.success('Booking request submitted successfully!', {
           description: 'Your booking was received, but there was an issue sending confirmation emails. We\'ll contact you soon.'
