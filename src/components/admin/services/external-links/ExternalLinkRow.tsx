@@ -2,7 +2,7 @@
 import React from 'react';
 import { ExternalLink, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ExternalServiceLink } from '@/services/admin/external-links-service';
+import { ExternalServiceLink } from '@/types/service-types';
 import ExternalLinkForm from './ExternalLinkForm';
 
 interface ExternalLinkRowProps {

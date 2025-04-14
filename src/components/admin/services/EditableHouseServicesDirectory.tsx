@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useHouseServices } from '@/hooks/admin/use-house-services';
-import { HouseService } from '@/services/admin/house-services-service';
+import { HouseService } from '@/types/service-types';
 import HouseServicesHeader from './houseServices/HouseServicesHeader';
 import HouseServiceForm from './houseServices/HouseServiceForm';
 import HouseServicesTable from './houseServices/HouseServicesTable';

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Key, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useHomeSystems } from '@/hooks/admin/use-home-systems';
-import { HomeSystem } from '@/services/admin/home-systems-service';
+import { HomeSystem } from '@/types/service-types';
 
 interface EditableHomeSystemsTableProps {
   property?: string;

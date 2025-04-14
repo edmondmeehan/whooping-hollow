@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { HouseService } from '@/services/admin/house-services-service';
+import { HouseService } from '@/types/service-types';
 import HouseServiceRow from './HouseServiceRow';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';

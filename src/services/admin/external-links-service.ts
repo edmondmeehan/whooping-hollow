@@ -39,7 +39,7 @@ export class ExternalLinksService extends BaseService {
   public async createExternalLink(link: ExternalServiceLinkInput): Promise<ExternalServiceLink> {
     const { data, error } = await supabase
       .from('external_service_links')
-      .insert([link])
+      .insert(link)
       .select('*')
       .single();
 

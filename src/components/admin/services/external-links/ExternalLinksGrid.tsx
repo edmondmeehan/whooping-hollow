@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ExternalServiceLink } from '@/services/admin/external-links-service';
+import { ExternalServiceLink } from '@/types/service-types';
 import ExternalLinkRow from './ExternalLinkRow';
 import ExternalLinkForm from './ExternalLinkForm';
 

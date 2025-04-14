@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useExternalLinks } from '@/hooks/admin/use-external-links';
-import { ExternalServiceLink } from '@/services/admin/external-links-service';
+import { ExternalServiceLink } from '@/types/service-types';
 import ExternalLinksHeader from './external-links/ExternalLinksHeader';
 import ExternalLinksGrid from './external-links/ExternalLinksGrid';
 import { useIsMobile } from '@/hooks/use-mobile';

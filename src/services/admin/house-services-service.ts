@@ -54,7 +54,7 @@ export class HouseServicesService extends BaseService {
   public async createHouseService(service: HouseServiceInput): Promise<HouseService> {
     const { data, error } = await supabase
       .from('house_services_directory')
-      .insert([service])
+      .insert(service)
       .select('*')
       .single();
 

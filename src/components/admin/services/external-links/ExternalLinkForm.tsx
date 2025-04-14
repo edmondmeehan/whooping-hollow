@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ExternalServiceLink } from '@/services/admin/external-links-service';
+import { ExternalServiceLink } from '@/types/service-types';
 import { Save, X } from 'lucide-react';
 
 interface ExternalLinkFormProps {

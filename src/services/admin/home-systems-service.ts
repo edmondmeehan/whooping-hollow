@@ -39,7 +39,7 @@ export class HomeSystemsService extends BaseService {
   public async createHomeSystem(system: HomeSystemInput): Promise<HomeSystem> {
     const { data, error } = await supabase
       .from('home_systems')
-      .insert([system])
+      .insert(system)
       .select('*')
       .single();
 
