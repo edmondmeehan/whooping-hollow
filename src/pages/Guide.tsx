@@ -5,17 +5,13 @@ import GuideTabs from '@/components/GuideTabs';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, Link as LinkIcon } from 'lucide-react';
-import { usePDF } from 'react-to-pdf';
+import { generatePDF } from 'react-to-pdf';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const defaultProperty = '26-whooping-hollow';
   const contentRef = useRef(null);
-  const { toPDF, targetRef } = usePDF({
-    filename: 'whooping-hollow-guest-guide.pdf',
-    page: { margin: 20, format: 'letter' }
-  });
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
@@ -44,8 +40,14 @@ const Guide = () => {
     });
     
     try {
-      // Generate the PDF using the hook's toPDF function
-      const blob = await toPDF();
+      // Use the correct function from react-to-pdf
+      const blob = await generatePDF(contentRef, {
+        filename: 'whooping-hollow-guest-guide.pdf',
+        page: {
+          margin: 20,
+          format: 'letter',
+        },
+      });
       
       if (blob) {
         // Create a URL for the PDF blob
@@ -91,7 +93,7 @@ const Guide = () => {
             </Button>
           )}
         </div>
-        <div ref={targetRef}>
+        <div ref={contentRef}>
           <GuideTabs key={`guide-tabs-${forceUpdate}`} />
         </div>
       </div>

@@ -21,6 +21,7 @@ const ExternalLinkForm: React.FC<ExternalLinkFormProps> = ({ link, onChange }) =
           onChange={onChange}
           placeholder="Enter link name"
           className="mt-1"
+          required
         />
       </div>
       
@@ -33,6 +34,7 @@ const ExternalLinkForm: React.FC<ExternalLinkFormProps> = ({ link, onChange }) =
           onChange={onChange}
           placeholder="Enter URL (https://...)"
           className="mt-1"
+          required
         />
       </div>
       
@@ -45,6 +47,7 @@ const ExternalLinkForm: React.FC<ExternalLinkFormProps> = ({ link, onChange }) =
           onChange={onChange}
           placeholder="Enter description"
           className="mt-1"
+          required
         />
       </div>
     </div>
