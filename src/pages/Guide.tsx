@@ -5,7 +5,7 @@ import GuideTabs from '@/components/GuideTabs';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, Link as LinkIcon } from 'lucide-react';
-import { toPDF } from 'react-to-pdf';
+import { generatePDF } from 'react-to-pdf';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
@@ -33,40 +33,38 @@ const Guide = () => {
     });
   }, []);
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     toast({
       title: "Preparing PDF...",
       description: "Your guest guide PDF is being generated",
     });
     
-    const options = {
-      filename: 'whooping-hollow-guest-guide.pdf',
-      page: {
-        margin: 20,
-        format: 'letter',
-      },
-      returnPromise: true,
-    };
-
-    toPDF(contentRef, options)
-      .then((blob: Blob) => {
-        // Create direct link to the PDF
-        const pdfObjectUrl = URL.createObjectURL(blob);
-        setPdfUrl(pdfObjectUrl);
-        
-        toast({
-          title: "PDF Created Successfully",
-          description: "Your guest guide PDF is now available for download",
-        });
-      })
-      .catch(err => {
-        console.error("PDF generation error:", err);
-        toast({
-          title: "Error",
-          description: "Failed to generate the PDF. Please try again.",
-          variant: "destructive",
-        });
+    try {
+      // Use the correct function from react-to-pdf
+      const blob = await generatePDF(contentRef, {
+        filename: 'whooping-hollow-guest-guide.pdf',
+        page: {
+          margin: 20,
+          format: 'letter',
+        },
       });
+      
+      // Create a URL for the PDF blob
+      const pdfObjectUrl = URL.createObjectURL(blob);
+      setPdfUrl(pdfObjectUrl);
+        
+      toast({
+        title: "PDF Created Successfully",
+        description: "Your guest guide PDF is now available for download",
+      });
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      toast({
+        title: "Error",
+        description: "Failed to generate the PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

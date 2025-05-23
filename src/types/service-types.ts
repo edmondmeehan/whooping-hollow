@@ -70,8 +70,3 @@ export interface HouseServiceCategory {
   name: string;
   created_at?: string;
 }
-
-// No need for inheritance, which can cause TypeScript depth issues
-export class BaseService {
-  // Base implementation (empty for now)
-}
