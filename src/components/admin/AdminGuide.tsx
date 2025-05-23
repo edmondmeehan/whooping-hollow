@@ -34,27 +34,12 @@ const AdminGuide = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage Guide Content</h2>
         <div className="flex space-x-2">
-          <Button 
-            variant="outline"
-            onClick={() => setShowCredentials(!showCredentials)}
-          >
-            <LockIcon className="h-4 w-4 mr-2" />
-            Access Settings
-          </Button>
           <Button onClick={handleAddSection}>
             <PlusIcon className="h-4 w-4 mr-2" />
             Add Section
           </Button>
         </div>
       </div>
-      
-      {showCredentials && (
-        <GuideCredentialsCard
-          guideCredentials={guideCredentials}
-          setGuideCredentials={setGuideCredentials}
-          onSave={handleUpdateCredentials}
-        />
-      )}
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">

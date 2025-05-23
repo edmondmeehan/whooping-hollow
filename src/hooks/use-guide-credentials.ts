@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { GuideCredentials } from '@/types/guide';
 import { useToast } from './use-toast';
 
-// Updated initial guide credentials
+// Simplified guide credentials - no longer used for authentication
 const initialGuideCredentials: GuideCredentials = {
-  username: 'wh',
-  password: 'enjoy'
+  username: '',
+  password: ''
 };
 
 const STORAGE_KEY_CREDENTIALS = 'guideCredentials';

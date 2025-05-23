@@ -2,23 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import GuideBanner from '@/components/GuideBanner';
 import GuideTabs from '@/components/GuideTabs';
-import GuideLogin from '@/components/GuideLogin';
-import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // Set a default property for the guide (this could be passed as a URL parameter or set in localStorage)
   const defaultProperty = '26-whooping-hollow';
-
-  // Check if user is logged in
-  useEffect(() => {
-    // Check for any authentication token or session storage
-    const hasAuthToken = localStorage.getItem('guideAuthToken') !== null;
-    setIsLoggedIn(hasAuthToken);
-  }, []);
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
@@ -32,57 +20,20 @@ const Guide = () => {
       storageArea: localStorage
     });
     window.dispatchEvent(event);
-  }, []);
-
-  const handleLogin = (username: string, password: string) => {
-    // Check credentials
-    if (username === 'whoopinghollow' && password === '26262626') {
-      // Set token in localStorage
-      localStorage.setItem('guideAuthToken', 'true');
-      // Update state
-      setIsLoggedIn(true);
-      // Show success toast
-      toast({
-        title: "Login successful",
-        description: "Welcome to the Whooping Hollow Guest Guide",
-      });
-      return true;
-    }
-    return false;
-  };
-
-  const handleLogout = () => {
-    // Remove authentication token
-    localStorage.removeItem('guideAuthToken');
-    // Update state
-    setIsLoggedIn(false);
-    // Show logout toast
+    
+    // Show welcome toast
     toast({
-      title: "Logged out",
-      description: "You have been logged out of the Guest Guide",
+      title: "Welcome to the Guest Guide",
+      description: "Browse through the tabs to find information about your stay",
     });
-  };
+  }, []);
 
   return (
     <div>
       <GuideBanner />
-      {isLoggedIn ? (
-        <div className="container-custom py-8">
-          <div className="flex justify-end mb-4">
-            <Button 
-              variant="destructive" 
-              onClick={handleLogout}
-              className="flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
-          </div>
-          <GuideTabs key={`guide-tabs-${forceUpdate}`} />
-        </div>
-      ) : (
-        <GuideLogin onLogin={handleLogin} />
-      )}
+      <div className="container-custom py-8">
+        <GuideTabs key={`guide-tabs-${forceUpdate}`} />
+      </div>
     </div>
   );
 };
