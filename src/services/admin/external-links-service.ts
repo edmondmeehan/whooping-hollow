@@ -3,34 +3,36 @@ import { supabase } from '@/integrations/supabase/client';
 import { ExternalServiceLink, ExternalServiceLinkInput } from '@/types/service-types';
 
 export const getExternalLinks = async (property?: string): Promise<ExternalServiceLink[]> => {
-  let query = supabase
-    .from('external_service_links')
-    .select('*')
-    .order('created_at', { ascending: false });
-    
-  if (property) {
-    query = query.eq('property', property);
+  try {
+    let query = supabase
+      .from('external_service_links')
+      .select('*');
+      
+    if (property) {
+      query = query.eq('property', property);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching external links:', error);
+      throw new Error(`Failed to fetch external links: ${error.message}`);
+    }
+
+    return data || [];
+  } catch (err) {
+    console.error('Error in getExternalLinks:', err);
+    throw err;
   }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error('Error fetching external links:', error);
-    throw new Error(`Failed to fetch external links: ${error.message}`);
-  }
-
-  return data || [];
 };
 
 export const addExternalLink = async (link: ExternalServiceLinkInput): Promise<ExternalServiceLink> => {
   // Ensure description is included as it's required in the DB schema
-  if (link.description === undefined) {
-    link = { ...link, description: '' };
-  }
+  const linkToInsert = link.description === undefined ? { ...link, description: '' } : link;
 
   const { data, error } = await supabase
     .from('external_service_links')
-    .insert(link)
+    .insert(linkToInsert)
     .select('*')
     .single();
 

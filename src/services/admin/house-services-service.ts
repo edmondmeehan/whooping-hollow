@@ -7,23 +7,27 @@ import {
 } from '@/types/service-types';
 
 export const getHouseServices = async (property?: string): Promise<HouseService[]> => {
-  let query = supabase
-    .from('house_services_directory')
-    .select('*')
-    .order('created_at', { ascending: false });
-    
-  if (property) {
-    query = query.eq('property', property);
+  try {
+    let query = supabase
+      .from('house_services_directory')
+      .select('*');
+      
+    if (property) {
+      query = query.eq('property', property);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching house services:', error);
+      throw new Error(`Failed to fetch house services: ${error.message}`);
+    }
+
+    return data || [];
+  } catch (err) {
+    console.error('Error in getHouseServices:', err);
+    throw err;
   }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error('Error fetching house services:', error);
-    throw new Error(`Failed to fetch house services: ${error.message}`);
-  }
-
-  return data || [];
 };
 
 export const getHouseServiceCategories = async (): Promise<HouseServiceCategory[]> => {

@@ -3,23 +3,27 @@ import { supabase } from '@/integrations/supabase/client';
 import { HomeSystem, HomeSystemInput } from '@/types/service-types';
 
 export const getHomeSystems = async (property?: string): Promise<HomeSystem[]> => {
-  let query = supabase
-    .from('home_systems')
-    .select('*')
-    .order('created_at', { ascending: false });
-    
-  if (property) {
-    query = query.eq('property', property);
+  try {
+    let query = supabase
+      .from('home_systems')
+      .select('*');
+      
+    if (property) {
+      query = query.eq('property', property);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching home systems:', error);
+      throw new Error(`Failed to fetch home systems: ${error.message}`);
+    }
+
+    return data || [];
+  } catch (err) {
+    console.error('Error in getHomeSystems:', err);
+    throw err;
   }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error('Error fetching home systems:', error);
-    throw new Error(`Failed to fetch home systems: ${error.message}`);
-  }
-
-  return data || [];
 };
 
 export const addHomeSystem = async (system: HomeSystemInput): Promise<HomeSystem> => {
