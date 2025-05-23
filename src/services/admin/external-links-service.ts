@@ -1,13 +1,12 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { ExternalServiceLink, ExternalServiceLinkInput, BaseService } from '@/types/service-types';
+import { ExternalServiceLink, ExternalServiceLinkInput } from '@/types/service-types';
 
-export class ExternalLinksService extends BaseService {
+// No inheritance to avoid TypeScript depth issues
+export class ExternalLinksService {
   private static instance: ExternalLinksService;
 
-  private constructor() {
-    super();
-  }
+  private constructor() {}
 
   public static getInstance(): ExternalLinksService {
     if (!ExternalLinksService.instance) {
@@ -37,6 +36,11 @@ export class ExternalLinksService extends BaseService {
   }
 
   public async createExternalLink(link: ExternalServiceLinkInput): Promise<ExternalServiceLink> {
+    // Ensure description is included as it's required in the DB schema
+    if (link.description === undefined) {
+      link = { ...link, description: '' };
+    }
+
     const { data, error } = await supabase
       .from('external_service_links')
       .insert(link)

@@ -6,7 +6,7 @@ export interface ExternalServiceLink {
   id?: string;
   name: string;
   url: string;
-  description?: string;
+  description: string; // Making description required to match the DB schema
   property?: string;
   created_at?: string;
   updated_at?: string;
@@ -15,7 +15,7 @@ export interface ExternalServiceLink {
 export interface ExternalServiceLinkInput {
   name: string;
   url: string;
-  description?: string;
+  description: string; // Making description required to match the DB schema
   property?: string;
 }
 
@@ -71,7 +71,7 @@ export interface HouseServiceCategory {
   created_at?: string;
 }
 
-// Base Service class for extending
+// No need for inheritance, which can cause TypeScript depth issues
 export class BaseService {
   // Base implementation (empty for now)
 }

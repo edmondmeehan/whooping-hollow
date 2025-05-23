@@ -1,5 +1,8 @@
 
 import React from 'react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ExternalServiceLink } from '@/types/service-types';
 import ExternalLinkRow from './ExternalLinkRow';
 import ExternalLinkForm from './ExternalLinkForm';
@@ -35,37 +38,49 @@ const ExternalLinksGrid: React.FC<ExternalLinksGridProps> = ({
   onChangeEditForm,
   isMobile = false
 }) => {
+  // Form validation for new link
+  const isValidNewLink = newLinkForm.name && newLinkForm.url && newLinkForm.description;
+  
+  // Form validation for edit link  
+  const isValidEditLink = editForm.name && editForm.url && editForm.description;
+
   return (
-    <div>
+    <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}`}>
       {isAdding && (
-        <div className="mb-4 p-4 border rounded-md">
-          <ExternalLinkForm 
-            form={newLinkForm}
-            onChange={onChangeNewForm}
-            onSave={onSaveNew}
-            onCancel={onCancel}
-            isNew={true}
-            isMobile={isMobile}
-          />
-        </div>
+        <Card className="shadow-md border-2 border-dashed border-gray-300">
+          <CardContent className="pt-4">
+            <ExternalLinkForm 
+              link={newLinkForm}
+              onChange={onChangeNewForm}
+            />
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+            <Button onClick={onSaveNew} disabled={!isValidNewLink}>Save</Button>
+          </CardFooter>
+        </Card>
       )}
 
-      <div className={`grid grid-cols-1 ${isMobile ? "" : "md:grid-cols-2 lg:grid-cols-3"} gap-3`}>
-        {links.map((link) => (
-          <ExternalLinkRow
-            key={link.id}
-            link={link}
-            isEditing={editingId === link.id}
-            editForm={editForm}
-            onEdit={onStartEditing}
-            onDelete={onDelete}
-            onSave={onSaveEdit}
-            onCancel={onCancel}
-            onChange={onChangeEditForm}
-            isMobile={isMobile}
-          />
-        ))}
-      </div>
+      {links.map(link => (
+        <ExternalLinkRow
+          key={link.id}
+          link={link}
+          editingId={editingId}
+          editForm={editForm}
+          onStartEditing={onStartEditing}
+          onDelete={onDelete}
+          onSaveEdit={onSaveEdit}
+          onCancel={onCancel}
+          onChangeEditForm={onChangeEditForm}
+          isValidEditLink={isValidEditLink}
+        />
+      ))}
+      
+      {!isAdding && links.length === 0 && (
+        <Card className="flex items-center justify-center h-40 bg-gray-50">
+          <p className="text-gray-500">No external links found. Add one to get started.</p>
+        </Card>
+      )}
     </div>
   );
 };

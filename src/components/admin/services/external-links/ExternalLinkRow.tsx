@@ -1,85 +1,79 @@
 
 import React from 'react';
-import { ExternalLink, Edit, Trash2 } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ExternalLink, Edit, Trash2 } from 'lucide-react';
 import { ExternalServiceLink } from '@/types/service-types';
 import ExternalLinkForm from './ExternalLinkForm';
 
 interface ExternalLinkRowProps {
   link: ExternalServiceLink;
-  isEditing: boolean;
+  editingId: string | null;
   editForm: ExternalServiceLink;
-  onEdit: (link: ExternalServiceLink) => void;
+  onStartEditing: (link: ExternalServiceLink) => void;
   onDelete: (id: string) => void;
-  onSave: () => void;
+  onSaveEdit: () => void;
   onCancel: () => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isMobile?: boolean;
+  onChangeEditForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isValidEditLink: boolean;
 }
 
 const ExternalLinkRow: React.FC<ExternalLinkRowProps> = ({
   link,
-  isEditing,
+  editingId,
   editForm,
-  onEdit,
+  onStartEditing,
   onDelete,
-  onSave,
+  onSaveEdit,
   onCancel,
-  onChange,
-  isMobile = false
+  onChangeEditForm,
+  isValidEditLink
 }) => {
-  // Only render delete button if the link has an ID
-  const canDelete = link.id !== undefined;
+  const isEditing = editingId === link.id;
   
   return (
-    <div className="flex flex-col border rounded-md overflow-hidden">
+    <Card className="shadow-sm">
       {isEditing ? (
-        <div className="p-3">
-          <ExternalLinkForm 
-            form={editForm}
-            onChange={onChange}
-            onSave={onSave}
-            onCancel={onCancel}
-            isMobile={isMobile}
-          />
-        </div>
+        <>
+          <CardContent className="pt-4">
+            <ExternalLinkForm 
+              link={editForm}
+              onChange={onChangeEditForm}
+            />
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+            <Button onClick={onSaveEdit} disabled={!isValidEditLink}>Save</Button>
+          </CardFooter>
+        </>
       ) : (
-        <div className="flex items-center justify-between p-3">
-          <a 
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center flex-grow hover:underline"
-          >
-            <div className="mr-3">
-              <ExternalLink className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-gray-500`} />
-            </div>
-            <div className={isMobile ? "text-sm" : ""}>
-              <div className="font-medium">{link.name}</div>
-              <div className={`${isMobile ? "text-xs" : "text-sm"} text-gray-500`}>{link.description}</div>
-            </div>
-          </a>
-          <div className="flex space-x-1">
-            <Button 
-              size={isMobile ? "sm" : "icon"} 
-              variant="ghost" 
-              onClick={() => onEdit(link)}
-            >
-              <Edit className={`${isMobile ? "h-3 w-3" : "h-4 w-4"}`} />
-            </Button>
-            {canDelete && (
-              <Button 
-                size={isMobile ? "sm" : "icon"} 
-                variant="ghost" 
-                onClick={() => link.id && onDelete(link.id)}
+        <>
+          <CardContent className="pt-4">
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">{link.name}</h3>
+              <p className="text-gray-600 text-sm">{link.description || 'No description'}</p>
+              <a 
+                href={link.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center text-blue-600 text-sm hover:underline"
               >
-                <Trash2 className={`${isMobile ? "h-3 w-3" : "h-4 w-4"}`} />
-              </Button>
-            )}
-          </div>
-        </div>
+                <ExternalLink className="h-3.5 w-3.5 mr-1" />
+                {link.url}
+              </a>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="icon" onClick={() => onStartEditing(link)}>
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={() => onDelete(link.id!)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </CardFooter>
+        </>
       )}
-    </div>
+    </Card>
   );
 };
 

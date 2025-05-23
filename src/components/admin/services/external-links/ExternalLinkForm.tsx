@@ -1,75 +1,51 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { ExternalServiceLink } from '@/types/service-types';
-import { Save, X } from 'lucide-react';
 
 interface ExternalLinkFormProps {
-  form: ExternalServiceLink;
+  link: ExternalServiceLink;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSave: () => void;
-  onCancel: () => void;
-  isNew?: boolean;
-  isMobile?: boolean;
 }
 
-const ExternalLinkForm: React.FC<ExternalLinkFormProps> = ({
-  form,
-  onChange,
-  onSave,
-  onCancel,
-  isNew = false,
-  isMobile = false
-}) => {
+const ExternalLinkForm: React.FC<ExternalLinkFormProps> = ({ link, onChange }) => {
   return (
     <div className="space-y-3">
       <div>
-        <label htmlFor="name" className="text-sm font-medium">Name</label>
+        <Label htmlFor="name">Link Name</Label>
         <Input
           id="name"
           name="name"
-          value={form.name}
+          value={link.name}
           onChange={onChange}
-          placeholder="Service name"
+          placeholder="Enter link name"
           className="mt-1"
         />
       </div>
+      
       <div>
-        <label htmlFor="url" className="text-sm font-medium">URL</label>
+        <Label htmlFor="url">URL</Label>
         <Input
           id="url"
           name="url"
-          value={form.url}
+          value={link.url}
           onChange={onChange}
-          placeholder="https://example.com"
+          placeholder="Enter URL (https://...)"
           className="mt-1"
         />
       </div>
+      
       <div>
-        <label htmlFor="description" className="text-sm font-medium">Description</label>
+        <Label htmlFor="description">Description</Label>
         <Input
           id="description"
           name="description"
-          value={form.description || ''}
+          value={link.description || ''}
           onChange={onChange}
-          placeholder="Brief description"
+          placeholder="Enter description"
           className="mt-1"
         />
-      </div>
-      <div className="flex justify-end space-x-2 pt-2">
-        <Button onClick={onSave} size={isMobile ? "sm" : "default"}>
-          <Save className={`${isMobile ? "h-3 w-3" : "h-4 w-4"} mr-1`} />
-          {isNew ? 'Add' : 'Save'}
-        </Button>
-        <Button 
-          onClick={onCancel} 
-          variant="outline" 
-          size={isMobile ? "sm" : "default"}
-        >
-          <X className={`${isMobile ? "h-3 w-3" : "h-4 w-4"} mr-1`} />
-          Cancel
-        </Button>
       </div>
     </div>
   );

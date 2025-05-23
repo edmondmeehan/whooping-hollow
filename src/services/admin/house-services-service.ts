@@ -4,15 +4,13 @@ import {
   HouseService, 
   HouseServiceInput,
   HouseServiceCategory,
-  BaseService 
 } from '@/types/service-types';
 
-export class HouseServicesService extends BaseService {
+// Remove inheritance to avoid TypeScript depth issues
+export class HouseServicesService {
   private static instance: HouseServicesService;
 
-  private constructor() {
-    super();
-  }
+  private constructor() {}
 
   public static getInstance(): HouseServicesService {
     if (!HouseServicesService.instance) {

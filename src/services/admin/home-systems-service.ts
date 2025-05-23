@@ -1,13 +1,12 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { HomeSystem, HomeSystemInput, BaseService } from '@/types/service-types';
+import { HomeSystem, HomeSystemInput } from '@/types/service-types';
 
-export class HomeSystemsService extends BaseService {
+// Remove inheritance to avoid TypeScript depth issues
+export class HomeSystemsService {
   private static instance: HomeSystemsService;
 
-  private constructor() {
-    super();
-  }
+  private constructor() {}
 
   public static getInstance(): HomeSystemsService {
     if (!HomeSystemsService.instance) {
