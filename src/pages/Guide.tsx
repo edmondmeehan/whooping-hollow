@@ -5,7 +5,7 @@ import GuideTabs from '@/components/GuideTabs';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, Link as LinkIcon } from 'lucide-react';
-import { toPDF } from 'react-to-pdf';
+import generatePDF from 'react-to-pdf';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
@@ -40,8 +40,8 @@ const Guide = () => {
     });
     
     try {
-      // Updated to use toPDF which returns a Blob directly
-      const blob = await toPDF(contentRef, {
+      // Use the default import from react-to-pdf
+      await generatePDF(contentRef, {
         filename: 'whooping-hollow-guest-guide.pdf',
         page: {
           margin: 20,
@@ -49,16 +49,10 @@ const Guide = () => {
         },
       });
       
-      if (blob) {
-        // Create a URL for the PDF blob
-        const pdfObjectUrl = URL.createObjectURL(blob);
-        setPdfUrl(pdfObjectUrl);
-          
-        toast({
-          title: "PDF Created Successfully",
-          description: "Your guest guide PDF is now available for download",
-        });
-      }
+      toast({
+        title: "PDF Downloaded Successfully",
+        description: "Your guest guide PDF has been downloaded",
+      });
     } catch (err) {
       console.error("PDF generation error:", err);
       toast({
@@ -78,20 +72,6 @@ const Guide = () => {
             <Download size={18} />
             Generate PDF
           </Button>
-          
-          {pdfUrl && (
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2"
-              onClick={() => window.open(pdfUrl, '_blank')}
-              asChild
-            >
-              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-                <LinkIcon size={18} />
-                View Full PDF
-              </a>
-            </Button>
-          )}
         </div>
         <div ref={contentRef}>
           <GuideTabs key={`guide-tabs-${forceUpdate}`} />
