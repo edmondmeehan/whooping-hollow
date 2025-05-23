@@ -4,15 +4,14 @@ import { HomeSystem, HomeSystemInput } from '@/types/service-types';
 
 export const getHomeSystems = async (property?: string): Promise<HomeSystem[]> => {
   try {
-    let query = supabase
+    const query = supabase
       .from('home_systems')
-      .select('*');
-      
-    if (property) {
-      query = query.eq('property', property);
-    }
+      .select('*')
+      .order('created_at', { ascending: false });
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = property 
+      ? await query.eq('property', property)
+      : await query;
 
     if (error) {
       console.error('Error fetching home systems:', error);
