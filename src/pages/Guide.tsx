@@ -5,7 +5,7 @@ import GuideTabs from '@/components/GuideTabs';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, Link as LinkIcon } from 'lucide-react';
-import generatePDF from 'react-to-pdf';
+import { toPDF } from 'react-to-pdf';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
@@ -40,8 +40,8 @@ const Guide = () => {
     });
     
     try {
-      // Use the default import from react-to-pdf
-      const blob = await generatePDF(contentRef, {
+      // Updated to use toPDF which returns a Blob directly
+      const blob = await toPDF(contentRef, {
         filename: 'whooping-hollow-guest-guide.pdf',
         page: {
           margin: 20,
