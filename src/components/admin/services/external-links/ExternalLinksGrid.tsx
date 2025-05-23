@@ -39,10 +39,10 @@ const ExternalLinksGrid: React.FC<ExternalLinksGridProps> = ({
   isMobile = false
 }) => {
   // Form validation for new link
-  const isValidNewLink = newLinkForm.name && newLinkForm.url && newLinkForm.description;
+  const isValidNewLink = Boolean(newLinkForm.name && newLinkForm.url && newLinkForm.description);
   
   // Form validation for edit link  
-  const isValidEditLink = editForm.name && editForm.url && editForm.description;
+  const isValidEditLink = Boolean(editForm.name && editForm.url && editForm.description);
 
   return (
     <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}`}>
