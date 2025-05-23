@@ -6,9 +6,9 @@ import {
   HouseServiceCategory,
 } from '@/types/service-types';
 
-// Remove inheritance to avoid TypeScript depth issues
+// Simplified service implementation without inheritance
 export class HouseServicesService {
-  private static instance: HouseServicesService;
+  private static instance: HouseServicesService | null = null;
 
   private constructor() {}
 

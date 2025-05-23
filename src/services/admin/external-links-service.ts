@@ -2,9 +2,9 @@
 import { supabase } from '@/integrations/supabase/client';
 import { ExternalServiceLink, ExternalServiceLinkInput } from '@/types/service-types';
 
-// No inheritance to avoid TypeScript depth issues
+// Simplified service implementation without inheritance
 export class ExternalLinksService {
-  private static instance: ExternalLinksService;
+  private static instance: ExternalLinksService | null = null;
 
   private constructor() {}
 

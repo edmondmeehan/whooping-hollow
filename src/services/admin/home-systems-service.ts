@@ -2,9 +2,9 @@
 import { supabase } from '@/integrations/supabase/client';
 import { HomeSystem, HomeSystemInput } from '@/types/service-types';
 
-// Remove inheritance to avoid TypeScript depth issues
+// Simplified service implementation without inheritance
 export class HomeSystemsService {
-  private static instance: HomeSystemsService;
+  private static instance: HomeSystemsService | null = null;
 
   private constructor() {}
 
