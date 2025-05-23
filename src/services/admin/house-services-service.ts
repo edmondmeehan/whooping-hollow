@@ -8,14 +8,19 @@ import {
 
 export const getHouseServices = async (property?: string): Promise<HouseService[]> => {
   try {
-    const query = supabase
+    const baseQuery = supabase
       .from('house_services_directory')
       .select('*')
       .order('created_at', { ascending: false });
 
-    const { data, error } = property 
-      ? await query.eq('property', property)
-      : await query;
+    let result;
+    if (property) {
+      result = await baseQuery.eq('property', property);
+    } else {
+      result = await baseQuery;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       console.error('Error fetching house services:', error);

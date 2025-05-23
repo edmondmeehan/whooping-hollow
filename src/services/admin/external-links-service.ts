@@ -4,14 +4,19 @@ import { ExternalServiceLink, ExternalServiceLinkInput } from '@/types/service-t
 
 export const getExternalLinks = async (property?: string): Promise<ExternalServiceLink[]> => {
   try {
-    const query = supabase
+    const baseQuery = supabase
       .from('external_service_links')
       .select('*')
       .order('created_at', { ascending: false });
 
-    const { data, error } = property 
-      ? await query.eq('property', property)
-      : await query;
+    let result;
+    if (property) {
+      result = await baseQuery.eq('property', property);
+    } else {
+      result = await baseQuery;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       console.error('Error fetching external links:', error);
