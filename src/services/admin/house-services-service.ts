@@ -6,21 +6,12 @@ import {
   HouseServiceCategory,
 } from '@/types/service-types';
 
-export const getHouseServices = async (property?: string): Promise<HouseService[]> => {
+export const getHouseServices = async (): Promise<HouseService[]> => {
   try {
-    const baseQuery = supabase
+    const { data, error } = await supabase
       .from('house_services_directory')
       .select('*')
       .order('created_at', { ascending: false });
-
-    let result;
-    if (property) {
-      result = await baseQuery.eq('property', property);
-    } else {
-      result = await baseQuery;
-    }
-
-    const { data, error } = result;
 
     if (error) {
       console.error('Error fetching house services:', error);

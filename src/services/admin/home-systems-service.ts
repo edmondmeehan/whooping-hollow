@@ -2,21 +2,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import { HomeSystem, HomeSystemInput } from '@/types/service-types';
 
-export const getHomeSystems = async (property?: string): Promise<HomeSystem[]> => {
+export const getHomeSystems = async (): Promise<HomeSystem[]> => {
   try {
-    const baseQuery = supabase
+    const { data, error } = await supabase
       .from('home_systems')
       .select('*')
       .order('created_at', { ascending: false });
-
-    let result;
-    if (property) {
-      result = await baseQuery.eq('property', property);
-    } else {
-      result = await baseQuery;
-    }
-
-    const { data, error } = result;
 
     if (error) {
       console.error('Error fetching home systems:', error);
