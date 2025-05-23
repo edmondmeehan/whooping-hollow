@@ -4,11 +4,12 @@ import GuideBanner from '@/components/GuideBanner';
 import GuideTabs from '@/components/GuideTabs';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Link as LinkIcon } from 'lucide-react';
 import { toPDF } from 'react-to-pdf';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const defaultProperty = '26-whooping-hollow';
   const contentRef = useRef(null);
 
@@ -44,13 +45,18 @@ const Guide = () => {
         margin: 20,
         format: 'letter',
       },
+      returnPromise: true,
     };
 
     toPDF(contentRef, options)
-      .then(() => {
+      .then((blob: Blob) => {
+        // Create direct link to the PDF
+        const pdfObjectUrl = URL.createObjectURL(blob);
+        setPdfUrl(pdfObjectUrl);
+        
         toast({
-          title: "Download Complete",
-          description: "Your guest guide has been downloaded",
+          title: "PDF Created Successfully",
+          description: "Your guest guide PDF is now available for download",
         });
       })
       .catch(err => {
@@ -67,11 +73,25 @@ const Guide = () => {
     <div>
       <GuideBanner />
       <div className="container-custom py-8">
-        <div className="flex justify-end mb-6">
+        <div className="flex flex-col sm:flex-row justify-end gap-4 mb-6">
           <Button onClick={handleDownloadPDF} className="flex items-center gap-2">
             <Download size={18} />
-            Download Guide PDF
+            Generate PDF
           </Button>
+          
+          {pdfUrl && (
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2"
+              onClick={() => window.open(pdfUrl, '_blank')}
+              asChild
+            >
+              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                <LinkIcon size={18} />
+                View Full PDF
+              </a>
+            </Button>
+          )}
         </div>
         <div ref={contentRef}>
           <GuideTabs key={`guide-tabs-${forceUpdate}`} />
