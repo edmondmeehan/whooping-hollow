@@ -19,7 +19,7 @@ export const useHomeSystems = (property?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await getHomeSystems(property);
+      const data = await getHomeSystems();
       setSystems(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load home systems');

@@ -19,7 +19,7 @@ export const useExternalLinks = (property?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await getExternalLinks(property);
+      const data = await getExternalLinks();
       setLinks(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load external service links');

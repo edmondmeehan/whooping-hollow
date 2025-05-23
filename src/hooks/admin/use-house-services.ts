@@ -21,7 +21,7 @@ export const useHouseServices = (property?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await getHouseServices(property);
+      const data = await getHouseServices();
       setServices(data);
       
       // Also load categories if needed
