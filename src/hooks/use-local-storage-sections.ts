@@ -1,31 +1,39 @@
 
 import { useState, useEffect } from 'react';
 import { GuideSection } from '@/types/guide';
+import { initialGuideSections } from '@/data/initialGuideSections';
 
 const STORAGE_KEY_SECTIONS = 'guideContentSections';
 
-export const useLocalStorageSections = (sectionKey: string) => {
+export const useLocalStorageSections = (tabKey: string): GuideSection[] => {
   const [sections, setSections] = useState<GuideSection[]>([]);
 
   useEffect(() => {
-    // Function to load sections from localStorage
     const loadSections = () => {
-      const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
-      if (storedSections) {
-        const parsedSections = JSON.parse(storedSections);
-        if (parsedSections[sectionKey]) {
-          setSections(parsedSections[sectionKey]);
+      try {
+        const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
+        let guideSections;
+        
+        if (storedSections) {
+          guideSections = JSON.parse(storedSections);
+        } else {
+          // Initialize with default data if nothing exists
+          guideSections = initialGuideSections;
+          localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(guideSections));
         }
+        
+        // Return sections for the specific tab, or empty array if tab doesn't exist
+        setSections(guideSections[tabKey] || []);
+      } catch (error) {
+        console.error('Error loading guide sections from localStorage:', error);
+        // Fallback to initial data
+        setSections(initialGuideSections[tabKey] || []);
       }
     };
 
-    // Load sections initially
     loadSections();
 
-    // Set up an interval to check for updates (useful for same-window updates)
-    const checkInterval = setInterval(loadSections, 1000);
-
-    // Set up storage event listener for cross-window updates
+    // Listen for storage changes
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === STORAGE_KEY_SECTIONS) {
         loadSections();
@@ -34,12 +42,18 @@ export const useLocalStorageSections = (sectionKey: string) => {
 
     window.addEventListener('storage', handleStorageChange);
     
-    // Clean up
-    return () => {
-      clearInterval(checkInterval);
-      window.removeEventListener('storage', handleStorageChange);
+    // Also listen for custom events in case of same-window updates
+    const handleCustomStorageChange = () => {
+      loadSections();
     };
-  }, [sectionKey]);
+    
+    window.addEventListener('guideContentUpdated', handleCustomStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('guideContentUpdated', handleCustomStorageChange);
+    };
+  }, [tabKey]);
 
   return sections;
 };

@@ -4,27 +4,42 @@ import GuideBanner from '@/components/GuideBanner';
 import GuideTabs from '@/components/GuideTabs';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Download, Link as LinkIcon } from 'lucide-react';
+import { Download } from 'lucide-react';
 import generatePDF from 'react-to-pdf';
+import { initialGuideSections } from '@/data/initialGuideSections';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const defaultProperty = '26-whooping-hollow';
   const contentRef = useRef(null);
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
+    // Ensure localStorage has guide content
+    const STORAGE_KEY_SECTIONS = 'guideContentSections';
+    const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
+    
+    if (!storedSections) {
+      // Initialize with default data if nothing exists
+      localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(initialGuideSections));
+      console.log('Initialized guide sections in localStorage');
+    }
+    
     // This will trigger a re-render of all tabs
     setForceUpdate(prev => prev + 1);
     
-    // Force reload data from localStorage
-    const event = new StorageEvent('storage', {
-      key: 'guideContentSections',
-      newValue: localStorage.getItem('guideContentSections'),
-      storageArea: localStorage
-    });
-    window.dispatchEvent(event);
+    // Force reload data from localStorage with a small delay to ensure localStorage is set
+    setTimeout(() => {
+      const event = new StorageEvent('storage', {
+        key: STORAGE_KEY_SECTIONS,
+        newValue: localStorage.getItem(STORAGE_KEY_SECTIONS),
+        storageArea: localStorage
+      });
+      window.dispatchEvent(event);
+      
+      // Also dispatch custom event
+      window.dispatchEvent(new CustomEvent('guideContentUpdated'));
+    }, 100);
     
     // Show welcome toast
     toast({
