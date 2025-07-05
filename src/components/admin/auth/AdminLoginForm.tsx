@@ -34,8 +34,8 @@ const AdminLoginForm = ({
               <UserIcon className="h-4 w-4 text-gray-400" />
             </div>
             <Input
-              type="email"
-              placeholder="Email"
+              type="text"
+              placeholder="Username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10"

@@ -31,7 +31,7 @@ const AdminLogin = () => {
           </div>
           <CardTitle className="text-center text-2xl">Admin Login</CardTitle>
           <CardDescription className="text-center">
-            Enter your email and password to access the admin area
+            Enter your username and password to access the admin area
           </CardDescription>
         </CardHeader>
         

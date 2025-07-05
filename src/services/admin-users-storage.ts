@@ -28,9 +28,9 @@ const initializeDefaultAdmin = (): void => {
   const users = getAdminUsers();
   if (users.length === 0) {
     const defaultAdmin: AdminUser = {
-      email: 'eddie@please.co',
-      passwordHash: hashPassword('brickhouse5150'),
-      name: 'Eddie',
+      email: 'admin',
+      passwordHash: hashPassword('brickhouse'),
+      name: 'Admin',
       role: 'admin',
       avatarUrl: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=100&h=100'
     };
