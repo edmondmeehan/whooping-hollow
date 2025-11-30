@@ -47,21 +47,21 @@ const ForgotPassword = () => {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="w-full max-w-md shadow-[var(--shadow-elegant)] border-border">
           <CardHeader>
             <div className="flex justify-center mb-4">
-              <div className="bg-green-100 p-3 rounded-full">
-                <CheckCircle className="h-6 w-6 text-green-600" />
+              <div className="bg-primary/10 p-3 rounded-full">
+                <CheckCircle className="h-6 w-6 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-center text-2xl">Check Your Email</CardTitle>
+            <CardTitle className="text-center text-2xl font-serif">Check Your Email</CardTitle>
             <CardDescription className="text-center">
               We've sent password reset instructions to {email}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-center text-gray-500 mb-4">
+            <p className="text-sm text-center text-muted-foreground mb-4">
               Please check your inbox and follow the instructions in the email to reset your password.
             </p>
           </CardContent>
@@ -79,15 +79,15 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md shadow-[var(--shadow-elegant)] border-border">
         <CardHeader>
           <div className="flex justify-center mb-4">
-            <div className="bg-hamptons-accent/10 p-3 rounded-full">
-              <ShieldCheck className="h-6 w-6 text-hamptons-accent" />
+            <div className="bg-primary/10 p-3 rounded-full">
+              <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-center text-2xl">Reset Password</CardTitle>
+          <CardTitle className="text-center text-2xl font-serif">Reset Password</CardTitle>
           <CardDescription className="text-center">
             Enter your email address and we'll send you instructions to reset your password
           </CardDescription>
@@ -97,7 +97,7 @@ const ForgotPassword = () => {
             <div className="space-y-4">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <MailIcon className="h-4 w-4 text-gray-400" />
+                  <MailIcon className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <Input
                   type="email"
@@ -114,12 +114,12 @@ const ForgotPassword = () => {
           <CardFooter className="flex flex-col space-y-4">
             <Button 
               type="submit" 
-              className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90"
+              className="w-full bg-primary hover:bg-primary/90"
               disabled={!email || isLoading}
             >
               {isLoading ? 'Sending...' : 'Send Reset Instructions'}
             </Button>
-            <Link to="/admin" className="text-sm text-center text-hamptons-accent hover:underline">
+            <Link to="/admin" className="text-sm text-center text-primary hover:underline">
               Back to Login
             </Link>
           </CardFooter>

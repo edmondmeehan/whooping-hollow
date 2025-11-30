@@ -37,8 +37,9 @@ const AdminAuthContext = createContext<AdminAuthContextType>({
   setLastActivity: () => {},
 });
 
-// Inactivity timeout constant
-const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+// Inactivity timeout disabled for admin convenience
+// Sessions will persist until manually logged out
+const INACTIVITY_TIMEOUT = Infinity; // No automatic timeout
 
 // Custom hook to use the auth context
 export const useAdminAuth = () => useContext(AdminAuthContext);
@@ -134,7 +135,8 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return () => subscription.unsubscribe();
   }, [toast]);
 
-  // Handle user activity and inactivity timeout
+  // Inactivity timeout disabled - sessions persist until manual logout
+  // Keeping activity tracking for potential future use
   useEffect(() => {
     if (!isAuthenticated) return;
     
@@ -142,30 +144,19 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setLastActivity(Date.now());
     };
     
-    // Attach event listeners to track user activity
+    // Track user activity (for analytics/future use)
     window.addEventListener('mousemove', resetTimer);
     window.addEventListener('keypress', resetTimer);
     window.addEventListener('click', resetTimer);
     window.addEventListener('scroll', resetTimer);
     
-    // Check for inactivity
-    const interval = setInterval(() => {
-      const now = Date.now();
-      if (now - lastActivity > INACTIVITY_TIMEOUT) {
-        // Log out due to inactivity
-        handleLogout(true);
-      }
-    }, 60000); // Check every minute
-    
     return () => {
-      // Clean up event listeners
       window.removeEventListener('mousemove', resetTimer);
       window.removeEventListener('keypress', resetTimer);
       window.removeEventListener('click', resetTimer);
       window.removeEventListener('scroll', resetTimer);
-      clearInterval(interval);
     };
-  }, [isAuthenticated, lastActivity]);
+  }, [isAuthenticated]);
 
   const handleLogin = (adminUserData: AdminUserData) => {
     setIsAuthenticated(true);
