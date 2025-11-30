@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { authenticateAdmin } from '@/services/admin-users-storage';
+import { supabase } from '@/integrations/supabase/client';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 export function useAdminAuthForm() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ export function useAdminAuthForm() {
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   
   const { handleLogin } = useAdminAuth();
+  const { toast } = useToast();
   
   useEffect(() => {
     const storedLockout = localStorage.getItem('adminLockout');
@@ -53,49 +55,64 @@ export function useAdminAuthForm() {
     }
   }, [isLocked, timeRemaining]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isLocked) return;
     
-    const adminUser = authenticateAdmin(email, password);
-    
-    if (adminUser) {
-      setFailedAttempts(0);
-      localStorage.setItem('adminFailedAttempts', '0');
-      
-      const expiry = new Date();
-      expiry.setMinutes(expiry.getMinutes() + 30);
-      
-      localStorage.setItem('adminSession', JSON.stringify({
-        email: adminUser.email,
-        role: adminUser.role,
-        expiry: expiry.toISOString()
-      }));
-      
-      handleLogin({ 
-        email: adminUser.email,
-        role: adminUser.role,
-        name: adminUser.name,
-        avatarUrl: adminUser.avatarUrl
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-    } else {
-      const newFailedAttempts = failedAttempts + 1;
-      setFailedAttempts(newFailedAttempts);
-      localStorage.setItem('adminFailedAttempts', newFailedAttempts.toString());
-      
-      if (newFailedAttempts >= 3) {
-        const lockoutDuration = 5 * 60 * 1000;
-        const expiryTime = new Date().getTime() + lockoutDuration;
+
+      if (error) {
+        const newFailedAttempts = failedAttempts + 1;
+        setFailedAttempts(newFailedAttempts);
+        localStorage.setItem('adminFailedAttempts', newFailedAttempts.toString());
         
-        setIsLocked(true);
-        setLockoutTime(expiryTime);
-        setTimeRemaining(Math.ceil(lockoutDuration / 1000));
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
         
-        localStorage.setItem('adminLockout', JSON.stringify({
-          expiry: expiryTime
-        }));
+        if (newFailedAttempts >= 3) {
+          const lockoutDuration = 5 * 60 * 1000;
+          const expiryTime = new Date().getTime() + lockoutDuration;
+          
+          setIsLocked(true);
+          setLockoutTime(expiryTime);
+          setTimeRemaining(Math.ceil(lockoutDuration / 1000));
+          
+          localStorage.setItem('adminLockout', JSON.stringify({
+            expiry: expiryTime
+          }));
+        }
+        
+        setPassword('');
+        return;
       }
+
+      if (data.user) {
+        // Reset failed attempts
+        setFailedAttempts(0);
+        localStorage.setItem('adminFailedAttempts', '0');
+        
+        // Auth context will handle the rest via onAuthStateChange
+        handleLogin({ 
+          email: data.user.email || '',
+          role: 'admin',
+          name: data.user.user_metadata?.name,
+          avatarUrl: data.user.user_metadata?.avatar_url
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: "Login Failed",
+        description: err.message || "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
     
     setPassword('');
