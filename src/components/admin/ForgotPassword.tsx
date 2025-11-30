@@ -6,33 +6,43 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, MailIcon, ShieldCheck, CheckCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Link } from 'react-router-dom';
-import { findAdminByEmail } from '@/services/admin-users-storage';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setIsLoading(true);
 
-    // Check if the email exists in admin users
-    const adminUser = findAdminByEmail(email);
-    
-    if (!adminUser) {
-      setError('No account found with this email address.');
-      return;
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/admin/reset-password`,
+      });
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setIsSubmitted(true);
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to send reset email",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-
-    // In a real application, this would send a password reset email
-    // For this demo, we'll just simulate success
-    
-    // Store the email in localStorage for the reset form
-    localStorage.setItem('adminResetEmail', email);
-    
-    // Show success message
-    setIsSubmitted(true);
   };
 
   if (isSubmitted) {
@@ -47,12 +57,12 @@ const ForgotPassword = () => {
             </div>
             <CardTitle className="text-center text-2xl">Check Your Email</CardTitle>
             <CardDescription className="text-center">
-              If an account exists with {email}, we've sent instructions to reset your password.
+              We've sent password reset instructions to {email}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-center text-gray-500 mb-4">
-              Please check your inbox and follow the instructions in the email.
+              Please check your inbox and follow the instructions in the email to reset your password.
             </p>
           </CardContent>
           <CardFooter className="flex justify-center">
@@ -85,12 +95,6 @@ const ForgotPassword = () => {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <div className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <MailIcon className="h-4 w-4 text-gray-400" />
@@ -102,6 +106,7 @@ const ForgotPassword = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -110,9 +115,9 @@ const ForgotPassword = () => {
             <Button 
               type="submit" 
               className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90"
-              disabled={!email}
+              disabled={!email || isLoading}
             >
-              Send Reset Instructions
+              {isLoading ? 'Sending...' : 'Send Reset Instructions'}
             </Button>
             <Link to="/admin" className="text-sm text-center text-hamptons-accent hover:underline">
               Back to Login
