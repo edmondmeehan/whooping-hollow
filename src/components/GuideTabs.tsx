@@ -38,32 +38,57 @@ const GuideTabs: React.FC<GuideTabsProps> = ({ propertyId }) => {
 
   return (
     <Tabs defaultValue="welcome" className="w-full">
-      <TabsList className="grid grid-cols-2 md:grid-cols-5 h-auto">
-        <TabsTrigger value="welcome" className="py-3">Welcome</TabsTrigger>
-        <TabsTrigger value="house" className="py-3">House Info</TabsTrigger>
-        <TabsTrigger value="local" className="py-3">Local Area</TabsTrigger>
-        <TabsTrigger value="checkout" className="py-3">Check-out</TabsTrigger>
-        <TabsTrigger value="emergency" className="py-3">Emergency</TabsTrigger>
+      <TabsList className="grid grid-cols-2 md:grid-cols-5 h-auto bg-muted/50 p-2 rounded-xl border border-border shadow-[var(--shadow-soft)]">
+        <TabsTrigger 
+          value="welcome" 
+          className="py-3 px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[var(--shadow-elegant)] transition-all duration-300 rounded-lg font-medium"
+        >
+          Welcome
+        </TabsTrigger>
+        <TabsTrigger 
+          value="house" 
+          className="py-3 px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[var(--shadow-elegant)] transition-all duration-300 rounded-lg font-medium"
+        >
+          House Info
+        </TabsTrigger>
+        <TabsTrigger 
+          value="local" 
+          className="py-3 px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[var(--shadow-elegant)] transition-all duration-300 rounded-lg font-medium"
+        >
+          Local Area
+        </TabsTrigger>
+        <TabsTrigger 
+          value="checkout" 
+          className="py-3 px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[var(--shadow-elegant)] transition-all duration-300 rounded-lg font-medium"
+        >
+          Check-out
+        </TabsTrigger>
+        <TabsTrigger 
+          value="emergency" 
+          className="py-3 px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[var(--shadow-elegant)] transition-all duration-300 rounded-lg font-medium"
+        >
+          Emergency
+        </TabsTrigger>
       </TabsList>
       
-      <div className="mt-8">
-        <TabsContent value="welcome">
+      <div className="mt-12">
+        <TabsContent value="welcome" className="bg-card rounded-xl p-6 md:p-8 border border-border shadow-[var(--shadow-soft)]">
           <WelcomeTab key={`welcome-${refreshKey}`} />
         </TabsContent>
         
-        <TabsContent value="house">
+        <TabsContent value="house" className="bg-card rounded-xl p-6 md:p-8 border border-border shadow-[var(--shadow-soft)]">
           <HouseInfoTab key={`house-${refreshKey}`} />
         </TabsContent>
         
-        <TabsContent value="local">
+        <TabsContent value="local" className="bg-card rounded-xl p-6 md:p-8 border border-border shadow-[var(--shadow-soft)]">
           <LocalAreaTab key={`local-${refreshKey}`} />
         </TabsContent>
         
-        <TabsContent value="checkout">
+        <TabsContent value="checkout" className="bg-card rounded-xl p-6 md:p-8 border border-border shadow-[var(--shadow-soft)]">
           <CheckoutTab key={`checkout-${refreshKey}`} />
         </TabsContent>
         
-        <TabsContent value="emergency">
+        <TabsContent value="emergency" className="bg-card rounded-xl p-6 md:p-8 border border-border shadow-[var(--shadow-soft)]">
           <EmergencyTab key={`emergency-${refreshKey}`} />
         </TabsContent>
       </div>
