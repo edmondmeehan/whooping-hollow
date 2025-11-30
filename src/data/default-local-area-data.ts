@@ -32,12 +32,14 @@ export const defaultLocalAreaData: LocalAreaData = {
       {
         name: "Wölffer Estate Vineyard",
         description: "Wine tasting with a view",
-        distance: "20 min drive"
+        distance: "20 min drive",
+        imageUrl: "/wolffer-estate.jpg"
       },
       {
         name: "The Lobster Roll (LUNCH)",
         description: "Classic roadside seafood shack",
-        distance: "15 min drive"
+        distance: "15 min drive",
+        imageUrl: "/lobster-roll.jpg"
       },
       {
         name: "Cavaniola's Gourmet",

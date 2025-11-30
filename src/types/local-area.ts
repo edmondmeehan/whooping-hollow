@@ -19,6 +19,7 @@ export type LocalAreaData = {
       name: string;
       description: string;
       distance: string;
+      imageUrl?: string;
     }>;
   };
   summerEvents: {
