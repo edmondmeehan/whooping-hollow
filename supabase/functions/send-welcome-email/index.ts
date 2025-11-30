@@ -10,6 +10,21 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+/**
+ * Escape HTML special characters to prevent HTML injection
+ * @param text - The text to escape
+ * @returns The escaped text safe for HTML insertion
+ */
+function escapeHtml(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -25,8 +40,13 @@ serve(async (req) => {
       property
     } = await req.json()
 
-    // Get door code from last 4 digits of phone number
-    const doorCode = phoneNumber.replace(/\D/g, '').slice(-4)
+    // Sanitize all user inputs
+    const safeGuestName = escapeHtml(guestName);
+    const safeSpecialInstructions = escapeHtml(specialInstructions || '');
+
+    // Get door code from last 4 digits of phone number (sanitize numeric only)
+    const sanitizedPhone = phoneNumber ? phoneNumber.replace(/\D/g, '') : '';
+    const doorCode = sanitizedPhone.slice(-4) || '0000';
 
     // Format dates
     const formattedCheckIn = format(new Date(checkInDate), 'EEEE, MMMM do')
@@ -44,7 +64,7 @@ serve(async (req) => {
       subject: `Welcome to ${propertyName}!`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #333;">Welcome to ${propertyName}, ${guestName}!</h1>
+          <h1 style="color: #333;">Welcome to ${propertyName}, ${safeGuestName}!</h1>
           
           <p>We're excited to have you stay with us. Here's everything you need to know for your stay:</p>
           
@@ -66,7 +86,7 @@ serve(async (req) => {
           ${specialInstructions ? `
             <div style="background-color: #fff3e0; padding: 20px; border-radius: 5px; margin: 20px 0;">
               <h2 style="color: #333; margin-top: 0;">Special Instructions</h2>
-              <p>${specialInstructions}</p>
+              <p>${safeSpecialInstructions}</p>
             </div>
           ` : ''}
 
