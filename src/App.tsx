@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Properties from "./pages/Properties";
 import BookDirect from "./pages/BookDirect";
 import ForgotPassword from "./components/admin/ForgotPassword";
+import ResetPassword from "./components/admin/ResetPassword";
 import LocalArea from "./pages/LocalArea";
 import React from "react";
 
@@ -30,6 +31,7 @@ const App = () => {
               <Route path="/guide" element={<Guide />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+              <Route path="/admin/reset-password" element={<ResetPassword />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/book-direct" element={<BookDirect />} />
               <Route path="/local-area" element={<LocalArea />} />
