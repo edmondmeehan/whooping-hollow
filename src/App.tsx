@@ -13,6 +13,7 @@ import BookDirect from "./pages/BookDirect";
 import ForgotPassword from "./components/admin/ForgotPassword";
 import ResetPassword from "./components/admin/ResetPassword";
 import LocalArea from "./pages/LocalArea";
+import Availability from "./pages/Availability";
 import React from "react";
 
 // Create a client
@@ -35,6 +36,7 @@ const App = () => {
               <Route path="/properties" element={<Properties />} />
               <Route path="/book-direct" element={<BookDirect />} />
               <Route path="/local-area" element={<LocalArea />} />
+              <Route path="/availability" element={<Availability />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
