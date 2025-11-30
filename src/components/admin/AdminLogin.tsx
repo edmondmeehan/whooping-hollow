@@ -16,22 +16,24 @@ const AdminLogin = () => {
     failedAttempts,
     isLocked,
     timeRemaining,
-    handleSubmit,
+    isLoadingMagicLink,
+    handlePasswordLogin,
+    handleMagicLinkLogin,
     formatTime
   } = useAdminAuthForm();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md shadow-[var(--shadow-elegant)] border-border">
         <CardHeader>
           <div className="flex justify-center mb-4">
-            <div className="bg-hamptons-accent/10 p-3 rounded-full">
-              <ShieldCheck className="h-6 w-6 text-hamptons-accent" />
+            <div className="bg-primary/10 p-3 rounded-full">
+              <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-center text-2xl">Admin Login</CardTitle>
+          <CardTitle className="text-center text-2xl font-serif">Admin Login</CardTitle>
           <CardDescription className="text-center">
-            Sign in with your email and password to access the admin area
+            Sign in with your email and password, or use a magic link
           </CardDescription>
         </CardHeader>
         
@@ -48,8 +50,10 @@ const AdminLogin = () => {
           setEmail={setEmail}
           password={password}
           setPassword={setPassword}
-          handleSubmit={handleSubmit}
+          handlePasswordLogin={handlePasswordLogin}
+          handleMagicLinkLogin={handleMagicLinkLogin}
           isLocked={isLocked}
+          isLoadingMagicLink={isLoadingMagicLink}
           formattedTime={formatTime(timeRemaining)}
         />
       </Card>

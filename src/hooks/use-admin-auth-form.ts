@@ -11,6 +11,7 @@ export function useAdminAuthForm() {
   const [isLocked, setIsLocked] = useState(false);
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [isLoadingMagicLink, setIsLoadingMagicLink] = useState(false);
   
   const { handleLogin } = useAdminAuth();
   const { toast } = useToast();
@@ -55,7 +56,7 @@ export function useAdminAuthForm() {
     }
   }, [isLocked, timeRemaining]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isLocked) return;
@@ -118,6 +119,49 @@ export function useAdminAuthForm() {
     setPassword('');
   };
 
+  const handleMagicLinkLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    
+    if (isLocked || !email) return;
+    
+    setIsLoadingMagicLink(true);
+    
+    try {
+      const redirectUrl = `${window.location.origin}/admin`;
+      
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: redirectUrl,
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Magic Link Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Magic Link Sent!",
+        description: "Check your email for a login link. It may take a few minutes to arrive.",
+      });
+      
+      setEmail('');
+    } catch (err: any) {
+      toast({
+        title: "Magic Link Failed",
+        description: err.message || "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingMagicLink(false);
+    }
+  };
+
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -132,7 +176,9 @@ export function useAdminAuthForm() {
     failedAttempts,
     isLocked,
     timeRemaining,
-    handleSubmit,
+    isLoadingMagicLink,
+    handlePasswordLogin,
+    handleMagicLinkLogin,
     formatTime
   };
 }
