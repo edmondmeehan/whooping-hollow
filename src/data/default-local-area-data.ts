@@ -13,7 +13,7 @@ export const defaultLocalAreaData: LocalAreaData = {
       "Dining: The area is home to world-class restaurants, wineries, and scenic biking trails.",
       "Celebrity Spotting: Keep your eyes open — you just might spot a few familiar faces from the big screen."
     ],
-    imageUrl: "https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&q=80"
+    imageUrl: "/east-hampton-beach.webp"
   },
   sagHarbor: {
     title: "Sag Harbor: Historic & Artsy Harbor Town",
@@ -24,7 +24,7 @@ export const defaultLocalAreaData: LocalAreaData = {
       "Dining: Don't miss sunset drinks by the water at The American Hotel or Baron's Cove.",
       "Arts Scene: Catch an independent film or live performance at the Sag Harbor Cinema Arts Center."
     ],
-    imageUrl: "https://images.unsplash.com/photo-1600607688066-890987f18a86?auto=format&fit=crop&q=80"
+    imageUrl: "/sag-harbor.jpg"
   },
   nearbyFavorites: {
     title: "Nearby Favorites",
