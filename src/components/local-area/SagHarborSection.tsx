@@ -15,40 +15,40 @@ const SagHarborSection: React.FC<SagHarborSectionProps> = ({
   return (
     <section className="mb-20">
       <div className="flex items-center gap-3 mb-8">
-        <Anchor className="text-coastal-600" size={32} />
-        <h2 className="text-2xl md:text-3xl font-serif font-bold text-hamptons-dark">
+        <Anchor className="text-primary" size={32} />
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
           {title}
         </h2>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="order-2 md:order-1 rounded-xl overflow-hidden shadow-[var(--shadow-elegant)] border border-border group">
           <img 
             src={imageUrl} 
             alt="Sag Harbor Marina" 
-            className="w-full h-full object-cover"
+            className="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
         
         <div className="order-1 md:order-2">
-          <p className="text-gray-600 mb-6 font-sans">
+          <p className="text-muted-foreground mb-6 font-sans leading-relaxed text-lg">
             {description}
           </p>
           
-          <h3 className="font-serif font-semibold text-lg mb-3 text-hamptons-dark">Highlights:</h3>
-          <ul className="space-y-3 text-gray-600 font-sans">
+          <h3 className="font-serif font-semibold text-lg mb-4 text-foreground">Highlights:</h3>
+          <ul className="space-y-3 text-muted-foreground font-sans">
             {highlights.map((highlight, index) => {
               const parts = highlight.includes(':') 
                 ? highlight.split(':', 2)
                 : [null, highlight];
               
               return (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-coastal-600 font-bold">•</span>
-                  <span>
+                <li key={index} className="flex items-start gap-3">
+                  <span className="text-primary font-bold text-xl leading-none mt-1">•</span>
+                  <span className="flex-1">
                     {parts[0] ? (
                       <>
-                        <span className="font-medium">{parts[0]}:</span> {parts[1]}
+                        <span className="font-semibold text-foreground">{parts[0]}:</span> {parts[1]}
                       </>
                     ) : (
                       parts[1]
