@@ -38,8 +38,8 @@ const Hero = () => {
   
   const currentFeature = heroFeatures[currentFeatureIndex] || {
     id: "",
-    title: "Whooping Hollow",
-    subtitle: "Experience luxury in the heart of the Hamptons",
+    title: "Your Private Hamptons Sanctuary",
+    subtitle: "Where coastal elegance meets refined luxury • Minutes from pristine beaches",
     imageUrl: "/hero-image.jpg",
     videoUrl: ""
   };
@@ -58,7 +58,7 @@ const Hero = () => {
   const fallbackImage = "/hero-image.jpg";
   
   const heroBackgroundStyle = {
-    backgroundImage: `linear-gradient(rgba(28, 59, 68, 0.35), rgba(28, 59, 68, 0.35)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
+    backgroundImage: `linear-gradient(rgba(20, 50, 70, 0.25), rgba(20, 50, 70, 0.4)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   };
@@ -66,7 +66,7 @@ const Hero = () => {
   return (
     <div className="hero-section flex items-center justify-center text-center relative overflow-hidden">
       <div className="absolute inset-0 w-full h-full z-0">
-        <div className="absolute inset-0 bg-hamptons-dark/40 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-primary/30 to-primary/40 z-10"></div>
         {currentFeature.videoUrl && !imageError ? (
           <video
             key={currentFeature.id}
@@ -125,24 +125,28 @@ const Hero = () => {
           </div>
         ) : (
           <>
-            <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6 drop-shadow-md">
+            <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 drop-shadow-2xl tracking-tight">
               {currentFeature.title}
             </h1>
-            <p className="text-white text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto drop-shadow">
+            <p className="text-white/95 text-lg md:text-xl lg:text-2xl font-light mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed">
               {currentFeature.subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button className="bg-hamptons-accent hover:bg-hamptons-accent/90 text-hamptons-dark text-lg font-medium px-8 py-6 shadow-md" asChild>
+            <div className="flex flex-col sm:flex-row justify-center gap-5">
+              <Button 
+                className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg font-semibold px-10 py-7 shadow-2xl transition-all duration-300 hover:scale-105" 
+                asChild
+              >
                 <Link to="/book-direct" className="flex items-center">
-                  Book Now
+                  Reserve Your Stay
                 </Link>
               </Button>
               <Button 
                 variant="outline" 
-                className="bg-white/30 backdrop-blur-sm text-white border-white hover:bg-white/40 text-lg font-medium px-8 py-6 shadow-md"
+                className="bg-white/95 backdrop-blur-md text-primary border-2 border-white hover:bg-white hover:scale-105 text-lg font-semibold px-10 py-7 shadow-2xl transition-all duration-300"
+                asChild
               >
                 <a href="#about" className="flex items-center">
-                  Learn More
+                  Explore the Property
                 </a>
               </Button>
             </div>
