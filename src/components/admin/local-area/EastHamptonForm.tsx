@@ -96,6 +96,23 @@ const EastHamptonForm: React.FC<EastHamptonFormProps> = ({ data, onUpdate }) => 
                   <FormControl>
                     <Input {...field} placeholder="https://example.com/image.jpg" />
                   </FormControl>
+                  {field.value && (
+                    <div className="mt-3">
+                      <p className="text-sm text-muted-foreground mb-2">Preview:</p>
+                      <div className="rounded-lg overflow-hidden border border-border max-w-md">
+                        <img 
+                          src={field.value} 
+                          alt="Preview" 
+                          className="w-full h-48 object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '';
+                            e.currentTarget.alt = 'Failed to load image';
+                            e.currentTarget.className = 'w-full h-48 flex items-center justify-center bg-muted text-muted-foreground';
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </FormItem>
               )}
             />
