@@ -10,6 +10,21 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+/**
+ * Escape HTML special characters to prevent HTML injection
+ * @param text - The text to escape
+ * @returns The escaped text safe for HTML insertion
+ */
+function escapeHtml(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -74,6 +89,11 @@ async function sendBookingConfirmationToGuest(data: any) {
     guests
   } = data;
 
+  // Sanitize all user inputs
+  const safeGuestName = escapeHtml(guestName);
+  const safeCheckIn = escapeHtml(checkIn);
+  const safeCheckOut = escapeHtml(checkOut);
+  const safeGuests = escapeHtml(guests);
   const propertyName = formatPropertyName(property);
 
   return await resend.emails.send({
@@ -84,16 +104,16 @@ async function sendBookingConfirmationToGuest(data: any) {
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #3b82f6; margin-bottom: 20px;">Booking Request Confirmation</h1>
-        <p>Dear ${guestName},</p>
+        <p>Dear ${safeGuestName},</p>
         <p>Thank you for your booking request at Whooping Hollow Haven! We've received your inquiry and will get back to you within 24 hours with a special direct booking discount.</p>
         
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 5px; margin: 20px 0;">
           <h2 style="color: #4b5563; font-size: 18px; margin-top: 0;">Your Request Details:</h2>
           <ul style="list-style: none; padding: 0;">
             <li style="margin-bottom: 10px;"><strong>Property:</strong> ${propertyName}</li>
-            <li style="margin-bottom: 10px;"><strong>Check-in:</strong> ${checkIn}</li>
-            <li style="margin-bottom: 10px;"><strong>Check-out:</strong> ${checkOut}</li>
-            <li style="margin-bottom: 10px;"><strong>Guests:</strong> ${guests}</li>
+            <li style="margin-bottom: 10px;"><strong>Check-in:</strong> ${safeCheckIn}</li>
+            <li style="margin-bottom: 10px;"><strong>Check-out:</strong> ${safeCheckOut}</li>
+            <li style="margin-bottom: 10px;"><strong>Guests:</strong> ${safeGuests}</li>
           </ul>
         </div>
         
@@ -124,6 +144,14 @@ async function sendBookingNotificationToAdmin(data: any) {
     specialRequests
   } = data;
 
+  // Sanitize all user inputs
+  const safeGuestName = escapeHtml(guestName);
+  const safeGuestEmail = escapeHtml(guestEmail);
+  const safePhone = escapeHtml(phone);
+  const safeCheckIn = escapeHtml(checkIn);
+  const safeCheckOut = escapeHtml(checkOut);
+  const safeGuests = escapeHtml(guests);
+  const safeSpecialRequests = escapeHtml(specialRequests || '');
   const propertyName = formatPropertyName(property);
 
   return await resend.emails.send({
@@ -137,14 +165,14 @@ async function sendBookingNotificationToAdmin(data: any) {
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 5px; margin: 20px 0;">
           <h2 style="color: #4b5563; font-size: 18px; margin-top: 0;">Guest Information:</h2>
           <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 10px;"><strong>Name:</strong> ${guestName}</li>
-            <li style="margin-bottom: 10px;"><strong>Email:</strong> ${guestEmail}</li>
-            <li style="margin-bottom: 10px;"><strong>Phone:</strong> ${phone}</li>
+            <li style="margin-bottom: 10px;"><strong>Name:</strong> ${safeGuestName}</li>
+            <li style="margin-bottom: 10px;"><strong>Email:</strong> ${safeGuestEmail}</li>
+            <li style="margin-bottom: 10px;"><strong>Phone:</strong> ${safePhone}</li>
             <li style="margin-bottom: 10px;"><strong>Property:</strong> ${propertyName}</li>
-            <li style="margin-bottom: 10px;"><strong>Check-in:</strong> ${checkIn}</li>
-            <li style="margin-bottom: 10px;"><strong>Check-out:</strong> ${checkOut}</li>
-            <li style="margin-bottom: 10px;"><strong>Guests:</strong> ${guests}</li>
-            ${specialRequests ? `<li style="margin-bottom: 10px;"><strong>Special Requests:</strong> ${specialRequests}</li>` : ''}
+            <li style="margin-bottom: 10px;"><strong>Check-in:</strong> ${safeCheckIn}</li>
+            <li style="margin-bottom: 10px;"><strong>Check-out:</strong> ${safeCheckOut}</li>
+            <li style="margin-bottom: 10px;"><strong>Guests:</strong> ${safeGuests}</li>
+            ${specialRequests ? `<li style="margin-bottom: 10px;"><strong>Special Requests:</strong> ${safeSpecialRequests}</li>` : ''}
           </ul>
         </div>
         
@@ -167,8 +195,13 @@ async function sendWelcomeEmail(data: any) {
     specialInstructions
   } = data;
 
-  // Generate door code from last 4 digits of phone number
-  const doorCode = phoneNumber ? phoneNumber.slice(-4) : "0000";
+  // Sanitize all user inputs
+  const safeGuestName = escapeHtml(guestName);
+  const safeSpecialInstructions = escapeHtml(specialInstructions || '');
+  
+  // Generate door code from last 4 digits of phone number (sanitize numeric only)
+  const sanitizedPhone = phoneNumber ? phoneNumber.replace(/\D/g, '') : '';
+  const doorCode = sanitizedPhone.slice(-4) || "0000";
   const propertyName = formatPropertyName(property || 'whooping_hollow');
 
   return await resend.emails.send({
@@ -178,7 +211,7 @@ async function sendWelcomeEmail(data: any) {
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #3b82f6; margin-bottom: 20px;">Welcome to ${propertyName}!</h1>
-        <p>Dear ${guestName},</p>
+        <p>Dear ${safeGuestName},</p>
         <p>We're excited to have you stay with us! Here's all the information you'll need for your upcoming stay.</p>
         
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 5px; margin: 20px 0;">
@@ -205,7 +238,7 @@ async function sendWelcomeEmail(data: any) {
         ${specialInstructions ? `
         <div style="background-color: #fff9e8; padding: 20px; border-radius: 5px; margin: 20px 0; border: 1px solid #ffe8b6;">
           <h2 style="color: #8a6d3b; font-size: 18px; margin-top: 0;">Special Instructions:</h2>
-          <p>${specialInstructions}</p>
+          <p>${safeSpecialInstructions}</p>
         </div>
         ` : ''}
         
