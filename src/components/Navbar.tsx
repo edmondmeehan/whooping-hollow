@@ -10,29 +10,29 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-coastal-100">
-      <div className="container-custom py-4">
+    <nav className="bg-background/95 backdrop-blur-lg sticky top-0 z-50 shadow-[var(--shadow-soft)] border-b border-border">
+      <div className="container-custom py-5">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <h1 className="text-xl md:text-2xl font-serif font-semibold text-hamptons-dark">
+          <Link to="/" className="flex items-center group">
+            <h1 className="text-2xl md:text-3xl font-serif font-bold text-foreground group-hover:text-primary transition-colors duration-300">
               Whooping Hollow
             </h1>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
+          <div className="hidden md:flex items-center space-x-10">
+            <Link to="/" className="text-foreground hover:text-primary transition-colors duration-300 font-medium">
               Home
             </Link>
-            <Link to="/local-area" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
-              Local Area
+            <Link to="/local-area" className="text-foreground hover:text-primary transition-colors duration-300 font-medium">
+              The Area
             </Link>
-            <Link to="/guide" className="text-hamptons-dark hover:text-coastal-600 transition-colors">
+            <Link to="/guide" className="text-foreground hover:text-primary transition-colors duration-300 font-medium">
               Guest Guide
             </Link>
-            <Button className="bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90 shadow-sm" asChild>
+            <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-lg transition-all duration-300 font-semibold" asChild>
               <Link to="/properties" className="flex items-center">
-                Book Now
+                Reserve Now
               </Link>
             </Button>
           </div>
@@ -41,44 +41,44 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-hamptons-dark hover:text-coastal-600 transition-colors"
+              className="text-foreground hover:text-primary transition-colors duration-300"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden pt-4 pb-4 space-y-4">
+          <div className="md:hidden pt-6 pb-4 space-y-5 animate-fade-in">
             <Link 
               to="/" 
-              className="block py-2 text-hamptons-dark hover:text-coastal-600 transition-colors"
+              className="block py-2 text-foreground hover:text-primary transition-colors duration-300 font-medium"
               onClick={toggleMenu}
             >
               Home
             </Link>
             <Link 
               to="/local-area" 
-              className="block py-2 text-hamptons-dark hover:text-coastal-600 transition-colors"
+              className="block py-2 text-foreground hover:text-primary transition-colors duration-300 font-medium"
               onClick={toggleMenu}
             >
-              Local Area
+              The Area
             </Link>
             <Link 
               to="/guide" 
-              className="block py-2 text-hamptons-dark hover:text-coastal-600 transition-colors"
+              className="block py-2 text-foreground hover:text-primary transition-colors duration-300 font-medium"
               onClick={toggleMenu}
             >
               Guest Guide
             </Link>
-            <Button className="w-full bg-hamptons-accent text-hamptons-dark hover:bg-hamptons-accent/90" asChild>
+            <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold" asChild>
               <Link 
                 to="/properties" 
                 className="flex items-center justify-center w-full"
                 onClick={toggleMenu}
               >
-                Book Now
+                Reserve Now
               </Link>
             </Button>
           </div>

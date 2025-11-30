@@ -1,51 +1,57 @@
 
 import React from 'react';
-import { Wifi, Tv, Utensils, Car, Waves, Thermometer, Coffee, Wind } from 'lucide-react';
+import { Wifi, Sparkles, Utensils, Waves, Wind, Home, Users, Wine } from 'lucide-react';
 
 const Features = () => {
   const amenities = [
-    { icon: <Wifi className="amenity-icon" />, name: 'High-Speed WiFi' },
-    { icon: <Tv className="amenity-icon" />, name: 'Smart TV' },
-    { icon: <Utensils className="amenity-icon" />, name: 'Fully Equipped Kitchen' },
-    { icon: <Car className="amenity-icon" />, name: 'Free Parking' },
-    { icon: <Waves className="amenity-icon" />, name: 'Swimming Pool' },
-    { icon: <Thermometer className="amenity-icon" />, name: 'Central AC & Heating' },
-    { icon: <Coffee className="amenity-icon" />, name: 'Coffee Maker' },
-    { icon: <Wind className="amenity-icon" />, name: 'Outdoor Space' },
+    { icon: <Sparkles className="amenity-icon" />, name: 'Concierge Service', description: 'Personalized assistance for reservations and experiences' },
+    { icon: <Waves className="amenity-icon" />, name: 'Heated Pool & Hot Tub', description: 'Private saltwater pool with spa overlooking gardens' },
+    { icon: <Utensils className="amenity-icon" />, name: 'Chef\'s Kitchen', description: 'Gourmet kitchen with premium appliances' },
+    { icon: <Wind className="amenity-icon" />, name: 'Outdoor Living', description: 'Expansive terraces with lounge and dining areas' },
+    { icon: <Wifi className="amenity-icon" />, name: 'High-Speed WiFi', description: 'Fiber optic internet throughout the property' },
+    { icon: <Home className="amenity-icon" />, name: 'Luxury Linens', description: 'Premium bedding and plush towels' },
+    { icon: <Users className="amenity-icon" />, name: 'Entertainment Space', description: 'Media room with state-of-the-art sound system' },
+    { icon: <Wine className="amenity-icon" />, name: 'Wine Cellar', description: 'Temperature-controlled storage for your collection' },
   ];
 
   return (
-    <section className="section-padding bg-coastal-50">
+    <section className="section-padding bg-background">
       <div className="container-custom">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-hamptons-dark mb-4">
-            Amenities & Features
+        <div className="text-center mb-20">
+          <p className="text-primary font-semibold uppercase tracking-wider text-sm mb-3">Luxury Amenities</p>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6 luxury-text">
+            Designed for Comfort
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Everything you need for a comfortable and luxurious stay.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Every detail curated to elevate your experience and exceed expectations.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {amenities.map((amenity, index) => (
             <div 
               key={index} 
-              className="bg-white rounded-lg p-6 shadow-md card-hover border-t-2 border-coastal-300"
+              className="group bg-card rounded-2xl p-8 shadow-[var(--shadow-soft)] card-hover border border-border hover:border-primary/50 transition-all duration-500"
             >
-              <div className="flex items-center mb-4">
+              <div className="mb-6 transform group-hover:scale-110 transition-transform duration-500">
                 {amenity.icon}
-                <h3 className="ml-3 font-medium text-hamptons-dark">{amenity.name}</h3>
               </div>
-              <p className="text-gray-600 text-sm">
-                Enjoy our {amenity.name.toLowerCase()} during your stay at Whooping Hollow.
+              <h3 className="font-serif font-bold text-xl text-foreground mb-3">
+                {amenity.name}
+              </h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {amenity.description}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-gray-600">
-            And many more amenities to make your stay comfortable and enjoyable.
+        <div className="mt-16 text-center p-8 bg-secondary/30 rounded-2xl border border-border">
+          <p className="text-foreground text-lg font-medium mb-2">
+            Beach access • Premium toiletries • Workspace • BBQ grill • And more
+          </p>
+          <p className="text-muted-foreground">
+            Everything thoughtfully provided for an unforgettable Hamptons experience.
           </p>
         </div>
       </div>
