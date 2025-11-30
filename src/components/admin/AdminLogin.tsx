@@ -11,13 +11,9 @@ const AdminLogin = () => {
   const {
     email,
     setEmail,
-    password,
-    setPassword,
-    failedAttempts,
     isLocked,
     timeRemaining,
     isLoadingMagicLink,
-    handlePasswordLogin,
     handleMagicLinkLogin,
     formatTime
   } = useAdminAuthForm();
@@ -33,7 +29,7 @@ const AdminLogin = () => {
           </div>
           <CardTitle className="text-center text-2xl font-serif">Admin Login</CardTitle>
           <CardDescription className="text-center">
-            Sign in with your email and password, or use a magic link
+            Enter your email to receive a secure login link
           </CardDescription>
         </CardHeader>
         
@@ -41,20 +37,12 @@ const AdminLogin = () => {
           <AdminLockoutAlert formattedTime={formatTime(timeRemaining)} />
         )}
         
-        {!isLocked && failedAttempts > 0 && (
-          <AdminWarningAlert attemptsRemaining={3 - failedAttempts} />
-        )}
-        
         <AdminLoginForm
           email={email}
           setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          handlePasswordLogin={handlePasswordLogin}
           handleMagicLinkLogin={handleMagicLinkLogin}
           isLocked={isLocked}
           isLoadingMagicLink={isLoadingMagicLink}
-          formattedTime={formatTime(timeRemaining)}
         />
       </Card>
     </div>
