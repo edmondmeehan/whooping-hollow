@@ -2,17 +2,29 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import GuideTabs from '@/components/GuideTabs';
+import GuideLogin from '@/components/GuideLogin';
 import Footer from '@/components/Footer';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, BookOpen } from 'lucide-react';
 import generatePDF from 'react-to-pdf';
 import { initialGuideSections } from '@/data/initialGuideSections';
+import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { guideCredentials } = useGuideCredentials();
   const defaultProperty = '26-whooping-hollow';
   const contentRef = useRef(null);
+
+  // Check if user is already authenticated
+  useEffect(() => {
+    const authStatus = localStorage.getItem('guideAuthenticated');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
@@ -49,6 +61,19 @@ const Guide = () => {
     });
   }, []);
 
+  const handleLogin = (username: string, password: string): boolean => {
+    if (username === guideCredentials.username && password === guideCredentials.password) {
+      setIsAuthenticated(true);
+      localStorage.setItem('guideAuthenticated', 'true');
+      toast({
+        title: "Welcome!",
+        description: "You now have access to the guest guide",
+      });
+      return true;
+    }
+    return false;
+  };
+
   const handleDownloadPDF = async () => {
     toast({
       title: "Preparing PDF...",
@@ -78,6 +103,17 @@ const Guide = () => {
       });
     }
   };
+
+  // Show login if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <GuideLogin onLogin={handleLogin} />
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
