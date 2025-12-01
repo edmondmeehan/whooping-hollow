@@ -5,8 +5,8 @@ import { useToast } from './use-toast';
 
 // Simplified guide credentials - no longer used for authentication
 const initialGuideCredentials: GuideCredentials = {
-  username: '',
-  password: ''
+  username: 'guest@whoopinghollow.com',
+  password: '26'
 };
 
 const STORAGE_KEY_CREDENTIALS = 'guideCredentials';
