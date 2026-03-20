@@ -1,9 +1,11 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 import { useHeroFeatures } from '@/hooks/use-hero-features';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
   const { heroFeatures } = useHeroFeatures();
@@ -27,7 +29,6 @@ const Hero = () => {
   
   useEffect(() => {
     if (heroFeatures.length <= 1) return;
-    
     const intervalId = setInterval(cycleFeature, 10000);
     return () => clearInterval(intervalId);
   }, [cycleFeature, heroFeatures.length]);
@@ -44,130 +45,119 @@ const Hero = () => {
     videoUrl: ""
   };
   
-  const handleImageError = () => {
-    console.error("Failed to load hero image:", currentFeature.imageUrl);
-    setImageError(true);
-  };
-  
-  const defaultStyle = {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4))`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  };
-  
   const fallbackImage = "/hero-image.jpg";
   
   const heroBackgroundStyle = {
-    backgroundImage: `linear-gradient(rgba(20, 50, 70, 0.25), rgba(20, 50, 70, 0.4)), url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
+    backgroundImage: `url('${imageError ? fallbackImage : currentFeature.imageUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   };
 
   return (
-    <div className="hero-section flex items-center justify-center text-center relative overflow-hidden">
+    <div className="relative min-h-screen flex items-end justify-center overflow-hidden">
+      {/* Background */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-primary/30 to-primary/40 z-10"></div>
         {currentFeature.videoUrl && !imageError ? (
           <video
             key={currentFeature.id}
-            autoPlay
-            muted
-            loop
-            playsInline
+            autoPlay muted loop playsInline
             className="w-full h-full object-cover"
             poster={currentFeature.imageUrl || undefined}
-            onError={() => {
-              console.error("Video failed to load:", currentFeature.videoUrl);
-              setImageError(true);
-            }}
+            onError={() => setImageError(true)}
           >
             <source src={currentFeature.videoUrl} type="video/mp4" />
-            <div 
-              className="absolute inset-0 w-full h-full" 
-              style={heroBackgroundStyle}
-            ></div>
           </video>
         ) : (
-          <div 
-            className="absolute inset-0 w-full h-full" 
-            style={imageError ? defaultStyle : heroBackgroundStyle}
-            onLoad={() => setImageError(false)}
-            onError={handleImageError}
-          ></div>
+          <div className="absolute inset-0 w-full h-full" style={heroBackgroundStyle} />
         )}
+        {/* Cinematic overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-foreground/10 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/20 to-transparent z-10" />
       </div>
       
-      <div className="container-custom px-4 py-32 md:py-48 relative z-20">
+      <div className="container-custom px-4 pb-24 pt-48 relative z-20 w-full">
         {loading ? (
-          <>
-            <div className="mx-auto mb-6">
-              <Skeleton className="h-16 w-3/4 mx-auto" />
-            </div>
-            <Skeleton className="h-8 w-1/2 mx-auto mb-8" />
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Skeleton className="h-14 w-32 mx-auto sm:mx-0" />
-              <Skeleton className="h-14 w-32 mx-auto sm:mx-0" />
-            </div>
-          </>
+          <div className="max-w-3xl">
+            <Skeleton className="h-16 w-3/4 mb-4" />
+            <Skeleton className="h-8 w-1/2 mb-8" />
+          </div>
         ) : error ? (
-          <div className="text-white bg-red-500/20 p-4 rounded-md">
-            <div className="flex gap-2 items-center justify-center mb-2">
+          <div className="text-white bg-destructive/20 p-4 rounded-md">
+            <div className="flex gap-2 items-center mb-2">
               <AlertCircle className="h-5 w-5" />
               <p className="font-medium">Error loading hero content</p>
             </div>
             <p>{error}</p>
-            <Button 
-              onClick={() => window.location.reload()}
-              className="mt-4 bg-white text-red-500"
-            >
-              Retry
-            </Button>
           </div>
         ) : (
-          <>
-            <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 drop-shadow-2xl tracking-tight">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="max-w-4xl"
+          >
+            {/* Location tag */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="flex items-center gap-3 mb-6"
+            >
+              <div className="h-px w-12 bg-accent" />
+              <span className="text-accent uppercase tracking-[0.3em] text-sm font-medium">
+                East Hampton, New York
+              </span>
+            </motion.div>
+
+            <h1 className="text-white text-5xl md:text-7xl lg:text-8xl font-bold font-serif mb-6 leading-[0.95] tracking-tight">
               {currentFeature.title}
             </h1>
-            <p className="text-white/95 text-lg md:text-xl lg:text-2xl font-light mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed">
+            <p className="text-white/80 text-lg md:text-xl font-light mb-10 max-w-2xl leading-relaxed">
               {currentFeature.subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-5">
+            
+            <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg font-semibold px-10 py-7 shadow-2xl transition-all duration-300 hover:scale-105" 
+                className="bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold px-10 py-7 shadow-2xl transition-all duration-300 hover:scale-105 uppercase tracking-wider" 
                 asChild
               >
-                <Link to="/book-direct" className="flex items-center">
-                  Reserve Your Stay
-                </Link>
+                <Link to="/book-direct">Reserve Your Stay</Link>
               </Button>
               <Button 
                 variant="outline" 
-                className="bg-white/95 backdrop-blur-md text-primary border-2 border-white hover:bg-white hover:scale-105 text-lg font-semibold px-10 py-7 shadow-2xl transition-all duration-300"
+                className="bg-transparent backdrop-blur-sm text-white border border-white/30 hover:bg-white/10 hover:border-white/60 text-base font-medium px-10 py-7 transition-all duration-300 uppercase tracking-wider"
                 asChild
               >
-                <a href="#about" className="flex items-center">
-                  Explore the Property
-                </a>
+                <a href="#about">Explore</a>
               </Button>
             </div>
             
             {heroFeatures.length > 1 && (
-              <div className="flex justify-center mt-8 gap-2">
+              <div className="flex mt-12 gap-2">
                 {heroFeatures.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentFeatureIndex(index)}
-                    className={`h-2 w-8 rounded-full transition-all duration-300 ${
-                      index === currentFeatureIndex ? 'bg-white' : 'bg-white/40'
+                    className={`h-1 rounded-full transition-all duration-500 ${
+                      index === currentFeatureIndex ? 'bg-accent w-12' : 'bg-white/30 w-6'
                     }`}
                     aria-label={`Go to feature ${index + 1}`}
-                  ></button>
+                  />
                 ))}
               </div>
             )}
-          </>
+          </motion.div>
         )}
       </div>
+      
+      {/* Scroll indicator */}
+      <motion.div 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+      >
+        <ChevronDown className="w-6 h-6 text-white/50" />
+      </motion.div>
     </div>
   );
 };
