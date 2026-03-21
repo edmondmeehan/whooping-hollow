@@ -48,61 +48,7 @@ const Guide = () => {
     });
   }, []);
 
-  const handleLogin = (username: string, password: string): boolean => {
-    if (username === guideCredentials.username && password === guideCredentials.password) {
-      setIsAuthenticated(true);
-      localStorage.setItem('guideAuthenticated', 'true');
-      toast({
-        title: "Welcome!",
-        description: "You now have access to the guest guide",
-      });
-      return true;
-    }
-    return false;
-  };
-
   const handleDownloadPDF = async () => {
-    toast({
-      title: "Preparing PDF...",
-      description: "Your guest guide PDF is being generated",
-    });
-    
-    try {
-      // Use the default import from react-to-pdf
-      await generatePDF(contentRef, {
-        filename: 'whooping-hollow-guest-guide.pdf',
-        page: {
-          margin: 20,
-          format: 'letter',
-        },
-      });
-      
-      toast({
-        title: "PDF Downloaded Successfully",
-        description: "Your guest guide PDF has been downloaded",
-      });
-    } catch (err) {
-      console.error("PDF generation error:", err);
-      toast({
-        title: "Error",
-        description: "Failed to generate the PDF. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Show login if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <GuideLogin onLogin={handleLogin} />
-        <Footer />
-      </div>
-    );
-  }
-
-  return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
