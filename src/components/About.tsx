@@ -26,7 +26,7 @@ const About = () => {
           <motion.div 
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: '200px' }}
             transition={{ duration: 0.8 }}
             className="relative"
           >
