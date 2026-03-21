@@ -2,10 +2,17 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import About from '../components/About';
-import Features from '../components/Features';
+import QuickDetails from '../components/QuickDetails';
+import Experience from '../components/Experience';
 import Gallery from '../components/Gallery';
+import WhatYouGet from '../components/WhatYouGet';
+import Features from '../components/Features';
+import PerfectFor from '../components/PerfectFor';
+import Location from '../components/Location';
+import SocialProof from '../components/SocialProof';
+import AvailabilityUrgency from '../components/AvailabilityUrgency';
 import CTA from '../components/CTA';
+import FinalCTA from '../components/FinalCTA';
 import OtherPropertiesBanner from '../components/OtherPropertiesBanner';
 import Footer from '../components/Footer';
 
@@ -14,11 +21,18 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
-      <About />
-      <Features />
+      <QuickDetails />
+      <Experience />
       <Gallery />
+      <WhatYouGet />
+      <Features />
+      <PerfectFor />
+      <Location />
+      <SocialProof />
+      <AvailabilityUrgency />
       <CTA />
       <OtherPropertiesBanner />
+      <FinalCTA />
       <Footer />
     </div>
   );

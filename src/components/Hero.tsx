@@ -39,8 +39,8 @@ const Hero = () => {
   
   const currentFeature = heroFeatures[currentFeatureIndex] || {
     id: "",
-    title: "Your Private Hamptons Sanctuary",
-    subtitle: "Where coastal elegance meets refined luxury • Minutes from pristine beaches",
+    title: "Private East Hampton Escape",
+    subtitle: "Skip the hotels. Stay in a fully private home just minutes from town, beaches, and everything that matters.",
     imageUrl: "/hero-image.jpg",
     videoUrl: ""
   };
@@ -109,11 +109,11 @@ const Hero = () => {
               </span>
             </motion.div>
 
-            <h1 className="text-white text-5xl md:text-7xl lg:text-8xl font-bold font-serif mb-6 leading-[0.95] tracking-tight">
-              {currentFeature.title}
+            <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 leading-[0.95] tracking-tight">
+              Private East Hampton Escape — Pool, Privacy & Space to Actually Relax
             </h1>
             <p className="text-white/80 text-lg md:text-xl font-light mb-10 max-w-2xl leading-relaxed">
-              {currentFeature.subtitle}
+              Skip the hotels. Stay in a fully private home just minutes from town, beaches, and everything that matters.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -121,14 +121,14 @@ const Hero = () => {
                 className="bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold px-10 py-7 shadow-2xl transition-all duration-300 hover:scale-105 uppercase tracking-wider" 
                 asChild
               >
-                <Link to="/book-direct">Reserve Your Stay</Link>
+                <Link to="/properties">Check Availability</Link>
               </Button>
               <Button 
                 variant="outline" 
                 className="bg-transparent backdrop-blur-sm text-white border border-white/30 hover:bg-white/10 hover:border-white/60 text-base font-medium px-10 py-7 transition-all duration-300 uppercase tracking-wider"
                 asChild
               >
-                <a href="#about">Explore</a>
+                <Link to="/book-direct">Book Direct & Save on Fees</Link>
               </Button>
             </div>
             
