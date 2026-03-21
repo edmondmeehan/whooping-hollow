@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import OtherPropertiesBanner from '@/components/OtherPropertiesBanner';
 import AvailabilityCalendar from '@/components/AvailabilityCalendar';
 
 const Availability = () => {
