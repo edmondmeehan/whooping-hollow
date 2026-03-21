@@ -11,18 +11,7 @@ import { initialGuideSections } from '@/data/initialGuideSections';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { guideCredentials } = useGuideCredentials();
-  const defaultProperty = '26-whooping-hollow';
   const contentRef = useRef(null);
-
-  // Check if user is already authenticated
-  useEffect(() => {
-    const authStatus = localStorage.getItem('guideAuthenticated');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
