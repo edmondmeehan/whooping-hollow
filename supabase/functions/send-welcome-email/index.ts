@@ -53,13 +53,13 @@ serve(async (req) => {
     const formattedCheckOut = format(new Date(checkOutDate), 'EEEE, MMMM do')
 
     const propertyName = property === 'whooping_hollow' 
-      ? 'Whooping Hollow Haven'
+      ? 'Whooping Hollow'
       : property === 'nashville_downtown'
         ? 'Nashville Downtown'
         : 'Nashville Music Row'
 
     const { data, error } = await resend.emails.send({
-      from: 'Whooping Hollow Haven <onboarding@resend.dev>',
+      from: 'Whooping Hollow <onboarding@resend.dev>',
       to: 'eddie@please.co',
       subject: `Welcome to ${propertyName}!`,
       html: `
