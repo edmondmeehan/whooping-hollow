@@ -50,7 +50,7 @@ const CTA = () => {
               className="bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold px-12 py-7 shadow-2xl hover:scale-105 transition-all duration-300 uppercase tracking-wider group" 
               asChild
             >
-              <Link to="/book-direct" className="flex items-center gap-2">
+              <Link to="/properties" className="flex items-center gap-2">
                 Book Direct & Save
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
