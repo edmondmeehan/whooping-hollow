@@ -2,14 +2,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import GuideTabs from '@/components/GuideTabs';
-import GuideLogin from '@/components/GuideLogin';
 import Footer from '@/components/Footer';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, BookOpen } from 'lucide-react';
 import generatePDF from 'react-to-pdf';
 import { initialGuideSections } from '@/data/initialGuideSections';
-import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
