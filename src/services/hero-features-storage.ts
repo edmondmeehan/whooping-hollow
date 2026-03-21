@@ -28,7 +28,7 @@ export const heroFeaturesStorage = {
     // Return default feature if nothing valid in storage
     const defaultFeature = {
       id: "default-feature",
-      title: "Whooping Hollow Haven",
+      title: "Whooping Hollow",
       subtitle: "A luxurious retreat in the heart of East Hampton",
       imageUrl: "/hero-image.jpg",
       videoUrl: "https://d3ioifgscy1qpn.cloudfront.net/videos/general/footer_video.mov.65e79d1da7050.mp4"

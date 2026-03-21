@@ -29,7 +29,7 @@ export const formatDate = (date: Date): string => {
 export const formatPropertyName = (propertyCode: string): string => {
   switch(propertyCode) {
     case 'whooping_hollow':
-      return 'Whooping Hollow Haven (Montauk, NY)';
+      return 'Whooping Hollow (Montauk, NY)';
     case 'nashville_downtown':
       return 'Nashville Downtown Property';
     case 'nashville_music_row':

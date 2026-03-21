@@ -7,7 +7,7 @@ import { sendEmail } from './emailService';
 export const sendNewsletterEmail = async (recipients: string[], subject: string, content: string): Promise<boolean> => {
   // For better deliverability, we use BCC to hide recipient emails from each other
   return sendEmail({
-    from: 'Whooping Hollow Haven <onboarding@resend.dev>',
+    from: 'Whooping Hollow <onboarding@resend.dev>',
     to: 'onboarding@resend.dev', // Send to yourself first for testing
     bcc: recipients, // BCC all recipients 
     subject: subject,
@@ -22,7 +22,7 @@ export const sendNewsletterEmail = async (recipients: string[], subject: string,
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
           <p>You're receiving this email because you subscribed to our newsletter.</p>
           <p>To unsubscribe, please reply with "Unsubscribe" in the subject line.</p>
-          <p>Whooping Hollow Haven | 123 Hollow Road, Montauk, NY</p>
+          <p>Whooping Hollow | 123 Hollow Road, Montauk, NY</p>
         </div>
       </div>
     `

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Anchor } from 'lucide-react';
 import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,6 +8,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  
+  // Only use transparent/white-text mode on the homepage hero
+  const isHomepage = location.pathname === '/';
+  const showDarkText = scrolled || !isHomepage;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -19,16 +24,16 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-      scrolled 
+      showDarkText 
         ? 'bg-background/95 backdrop-blur-xl shadow-[var(--shadow-elegant)] border-b border-border/50' 
         : 'bg-transparent'
     }`}>
       <div className="container-custom py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
-            <Anchor className={`w-6 h-6 transition-colors duration-300 ${scrolled ? 'text-primary' : 'text-white'}`} />
+            <Anchor className={`w-6 h-6 transition-colors duration-300 ${showDarkText ? 'text-primary' : 'text-white'}`} />
             <span className={`text-xl md:text-2xl font-serif font-bold tracking-wide transition-colors duration-300 ${
-              scrolled ? 'text-foreground' : 'text-white'
+              showDarkText ? 'text-foreground' : 'text-white'
             }`}>
               Whooping Hollow
             </span>
@@ -44,7 +49,7 @@ const Navbar = () => {
                 key={link.to}
                 to={link.to} 
                 className={`relative text-sm uppercase tracking-widest font-medium transition-colors duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:transition-all after:duration-300 hover:after:w-full ${
-                  scrolled 
+                  showDarkText 
                     ? 'text-foreground hover:text-primary after:bg-primary' 
                     : 'text-white/90 hover:text-white after:bg-white'
                 }`}
@@ -66,7 +71,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className={`transition-colors duration-300 ${scrolled ? 'text-foreground' : 'text-white'}`}
+              className={`transition-colors duration-300 ${showDarkText ? 'text-foreground' : 'text-white'}`}
             >
               {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
