@@ -15,20 +15,15 @@ const Guide = () => {
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
-    // Ensure localStorage has guide content
     const STORAGE_KEY_SECTIONS = 'guideContentSections';
     const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
     
     if (!storedSections) {
-      // Initialize with default data if nothing exists
       localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(initialGuideSections));
-      console.log('Initialized guide sections in localStorage');
     }
     
-    // This will trigger a re-render of all tabs
     setForceUpdate(prev => prev + 1);
     
-    // Force reload data from localStorage with a small delay to ensure localStorage is set
     setTimeout(() => {
       const event = new StorageEvent('storage', {
         key: STORAGE_KEY_SECTIONS,
@@ -36,12 +31,9 @@ const Guide = () => {
         storageArea: localStorage
       });
       window.dispatchEvent(event);
-      
-      // Also dispatch custom event
       window.dispatchEvent(new CustomEvent('guideContentUpdated'));
     }, 100);
     
-    // Show welcome toast
     toast({
       title: "Welcome to the Guest Guide",
       description: "Browse through the tabs to find information about your stay",
@@ -49,6 +41,35 @@ const Guide = () => {
   }, []);
 
   const handleDownloadPDF = async () => {
+    toast({
+      title: "Preparing PDF...",
+      description: "Your guest guide PDF is being generated",
+    });
+    
+    try {
+      await generatePDF(contentRef, {
+        filename: 'whooping-hollow-guest-guide.pdf',
+        page: {
+          margin: 20,
+          format: 'letter',
+        },
+      });
+      
+      toast({
+        title: "PDF Downloaded Successfully",
+        description: "Your guest guide PDF has been downloaded",
+      });
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      toast({
+        title: "Error",
+        description: "Failed to generate the PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
