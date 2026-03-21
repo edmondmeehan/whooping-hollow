@@ -34,6 +34,7 @@ const Availability = () => {
           </div>
         </div>
       </main>
+      <OtherPropertiesBanner />
       <Footer />
     </div>
   );

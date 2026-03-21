@@ -60,6 +60,7 @@ const LocalArea = () => {
         </div>
       </div>
       
+      <OtherPropertiesBanner />
       <Footer />
     </div>
   );
