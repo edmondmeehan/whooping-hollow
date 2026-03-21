@@ -10,8 +10,8 @@ const About = () => {
 
   const stats = [
     { icon: MapPin, label: 'Prime Location', value: 'East Hampton, NY' },
-    { icon: Users, label: 'Sleeps 8', value: 'Comfortably' },
-    { icon: Home, label: '4 Bedrooms', value: 'Luxury suites' },
+    { icon: Users, label: 'Sleeps 6', value: 'Comfortably' },
+    { icon: Home, label: '3 Bedrooms', value: 'Luxury suites' },
     { icon: Star, label: '5-Star Rated', value: 'Exceptional stays' },
   ];
 
