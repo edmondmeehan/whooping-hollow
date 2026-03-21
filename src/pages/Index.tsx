@@ -6,6 +6,7 @@ import About from '../components/About';
 import Features from '../components/Features';
 import Gallery from '../components/Gallery';
 import CTA from '../components/CTA';
+import OtherPropertiesBanner from '../components/OtherPropertiesBanner';
 import Footer from '../components/Footer';
 
 const Index = () => {
@@ -17,6 +18,7 @@ const Index = () => {
       <Features />
       <Gallery />
       <CTA />
+      <OtherPropertiesBanner />
       <Footer />
     </div>
   );
