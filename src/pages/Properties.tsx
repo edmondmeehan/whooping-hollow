@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { ExternalLink, MapPin } from 'lucide-react';
+import { ExternalLink, MapPin, MessageCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import OtherPropertiesBanner from '../components/OtherPropertiesBanner';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useProperties } from '@/hooks/use-properties';
+import InquiryForm from '@/components/booking/InquiryForm';
 
 const Properties = () => {
   const { propertiesData } = useProperties();
@@ -25,7 +28,7 @@ const Properties = () => {
           <div className="bg-card rounded-xl shadow-md overflow-hidden border border-border">
             <div className="md:flex">
               <div className="md:w-1/2">
-              <img 
+                <img 
                   src={featured.image === '/hero-image.jpg' ? 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200' : featured.image} 
                   alt={featured.name}
                   className="h-64 md:h-full w-full object-cover"
@@ -56,8 +59,27 @@ const Properties = () => {
             </div>
           </div>
         </div>
+
+        {/* Inquiry Form */}
+        <div className="max-w-2xl mx-auto mt-16">
+          <Card className="border-accent/20">
+            <CardHeader className="text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <MessageCircle className="w-5 h-5 text-accent" />
+              </div>
+              <CardTitle className="text-2xl font-serif">Request More Information</CardTitle>
+              <p className="text-muted-foreground mt-2">
+                Have questions about our property? Fill out the form below and we'll get back to you shortly.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <InquiryForm />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-      
+
+      <OtherPropertiesBanner />
       <Footer />
     </div>
   );
