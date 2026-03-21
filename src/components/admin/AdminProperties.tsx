@@ -40,7 +40,7 @@ const AdminProperties = () => {
     return {
       featured: {
         id: "wh-haven",
-        name: "Whooping Hollow",
+        name: "The Ranch Modern",
         location: "Montauk, NY",
         description: "Experience the ultimate Hamptons getaway at our luxurious retreat, nestled in the picturesque surroundings of Montauk.",
         image: "/hero-image.jpg",

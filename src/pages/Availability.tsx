@@ -15,7 +15,7 @@ const Availability = () => {
               Availability Calendar
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              View available dates for Whooping Hollow. Dates shown in gray are already booked.
+              View available dates for The Ranch Modern. Dates shown in gray are already booked.
             </p>
           </div>
           

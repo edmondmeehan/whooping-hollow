@@ -44,7 +44,7 @@ const LocationField: React.FC<LocationFieldProps> = ({ form }) => {
                   <SelectValue placeholder="Select a location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="whooping_hollow">Whooping Hollow (Montauk, NY)</SelectItem>
+                  <SelectItem value="whooping_hollow">The Ranch Modern (East Hampton, NY)</SelectItem>
                   <SelectItem value="nashville_downtown">Nashville Downtown</SelectItem>
                   <SelectItem value="nashville_music_row">Nashville Music Row</SelectItem>
                 </SelectContent>
