@@ -17,17 +17,15 @@ const About = () => {
 
   return (
     <section id="about" className="py-24 md:py-32 bg-background relative overflow-hidden">
-      {/* Subtle texture */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/3 rounded-full blur-[120px]" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
       
       <div className="container-custom relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Image side */}
           <motion.div 
             initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
@@ -35,8 +33,10 @@ const About = () => {
                 src={featured.image} 
                 alt={featured.name} 
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://cpryayfndzfeyfrnsesr.supabase.co/storage/v1/object/public/images/public/80bbb436-d90a-40ad-b9e2-7c4f25bd56dc.jpg';
+                }}
               />
-              {/* Gradient overlay at bottom */}
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-foreground/60 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="flex items-center gap-2 text-white">
@@ -45,7 +45,6 @@ const About = () => {
                 </div>
               </div>
             </div>
-            {/* Floating accent card */}
             <div className="absolute -bottom-6 -right-6 bg-accent text-accent-foreground p-6 rounded-xl shadow-2xl hidden lg:block">
               <p className="text-3xl font-serif font-bold">5★</p>
               <p className="text-xs uppercase tracking-wider font-medium mt-1">Guest Rating</p>
@@ -55,9 +54,8 @@ const About = () => {
           {/* Content side */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px w-12 bg-accent" />
@@ -77,7 +75,6 @@ const About = () => {
               enjoy effortless access to world-class dining, pristine beaches, and boutique shopping.
             </p>
 
-            {/* Stats grid */}
             <div className="grid grid-cols-2 gap-4">
               {stats.map((stat, i) => (
                 <div key={i} className="group p-5 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-[var(--shadow-soft)] transition-all duration-300">

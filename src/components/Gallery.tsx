@@ -7,7 +7,6 @@ import GalleryLoading from './gallery/GalleryLoading';
 import GalleryError from './gallery/GalleryError';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { motion } from 'framer-motion';
 
 const Gallery = () => {
   const { images, loading, error, usingDemoImages } = useGalleryImages();
@@ -15,13 +14,7 @@ const Gallery = () => {
   return (
     <section className="py-24 md:py-32 bg-background" id="gallery">
       <div className="container-custom">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="h-px w-12 bg-accent" />
             <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">Gallery</span>
@@ -51,7 +44,7 @@ const Gallery = () => {
               </AlertDescription>
             </Alert>
           )}
-        </motion.div>
+        </div>
 
         {loading && (
           <>
