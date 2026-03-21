@@ -14,7 +14,7 @@ const Features = () => {
     { icon: WashingMachine, name: 'Washer & Dryer', description: 'Full-size in-unit laundry machines' },
     { icon: Snowflake, name: 'Air Conditioning', description: 'Central air conditioning throughout' },
     { icon: Flame, name: 'Heating', description: 'Full heating system for cooler months' },
-    { icon: Waves, name: 'Pure Well Water', description: 'Whole-house advanced filtration delivering crystal-clear, naturally sourced artesian well water' },
+    { icon: Droplets, name: 'Pure Well Water', description: 'Whole-house advanced filtration delivering crystal-clear, naturally sourced artesian well water' },
   ];
 
   return (
