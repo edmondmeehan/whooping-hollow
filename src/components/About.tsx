@@ -35,6 +35,10 @@ const About = () => {
                 src={featured.image} 
                 alt={featured.name} 
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Fallback to a known working image
+                  (e.target as HTMLImageElement).src = 'https://cpryayfndzfeyfrnsesr.supabase.co/storage/v1/object/public/images/public/80bbb436-d90a-40ad-b9e2-7c4f25bd56dc.jpg';
+                }}
               />
               {/* Gradient overlay at bottom */}
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-foreground/60 to-transparent" />
