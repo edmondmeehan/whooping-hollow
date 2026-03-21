@@ -41,7 +41,6 @@ const Footer = () => {
               {[
                 { to: '/', label: 'Home' },
                 { to: '/local-area', label: 'The Area' },
-                { to: '/guide', label: 'Guest Guide' },
                 { to: '/properties', label: 'Availability' },
               ].map((link) => (
                 <li key={link.to}>
