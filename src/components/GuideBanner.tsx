@@ -9,7 +9,7 @@ const GuideBanner = () => {
           Guest Guide
         </h1>
         <p className="text-xl text-coastal-100 max-w-3xl mx-auto text-center">
-          Everything you need to know for a comfortable and enjoyable stay at Whooping Hollow.
+          Everything you need to know for a comfortable and enjoyable stay at The Ranch Modern.
         </p>
       </div>
     </div>

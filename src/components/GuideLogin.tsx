@@ -74,7 +74,7 @@ const GuideLogin = ({ onLogin }: GuideLoginProps) => {
             Guest Guide
           </CardTitle>
           <CardDescription className="text-muted-foreground mt-2 font-sans">
-            Welcome to Whooping Hollow
+            Welcome to The Ranch Modern
           </CardDescription>
           
           {/* Decorative divider */}

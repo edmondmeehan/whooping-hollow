@@ -6,8 +6,8 @@ export const initialGuideSections: GuideSections = {
   welcome: [
     {
       id: 'welcome-1',
-      title: 'Welcome to Whooping Hollow',
-      content: 'Welcome to 26 Whooping Hollow in East Hampton! We\'re delighted to have you stay with us. This guide contains everything you need to know to make your stay comfortable and enjoyable.'
+      title: 'Welcome to The Ranch Modern',
+      content: 'Welcome to The Ranch Modern in East Hampton! We\'re delighted to have you stay with us. This guide contains everything you need to know to make your stay comfortable and enjoyable.'
     },
     {
       id: 'welcome-2',
@@ -41,7 +41,7 @@ export const initialGuideSections: GuideSections = {
     {
       id: 'local-1',
       title: 'Directions & Location',
-      content: 'Our property is located at 26 Whooping Hollow, East Hampton, NY.'
+      content: 'Our property is located at The Ranch Modern, East Hampton, NY.'
     },
     {
       id: 'local-2',
@@ -65,7 +65,7 @@ export const initialGuideSections: GuideSections = {
     {
       id: 'emergency-1',
       title: 'Emergency Contacts',
-      content: 'In case of emergency, dial 911\nOur exact address is: 26 Whooping Hollow Road, East Hampton, NY\n\nOwner: Eddie - (916) 616-5376 - eddie@please.co\nHandyman: John Sebastian Ramirez (Prestine Management) - (631) 605-0294 - prestinemanagement631@gmail.com\nCleaning Service: Isabel Acevedo (Sisters Cleaning) - (631) 833-7932 - isabelacevedop@gmail.com\nProperty Manager: Stay Marquis - (631) 301-2960 - maintenance@staymarquis.com\nEast Hampton Hospital: (631) 324-8400\nPolice (Non-Emergency): (631) 324-0777'
+      content: 'In case of emergency, dial 911\nOur exact address is: The Ranch Modern Road, East Hampton, NY\n\nOwner: Eddie - (916) 616-5376 - eddie@please.co\nHandyman: John Sebastian Ramirez (Prestine Management) - (631) 605-0294 - prestinemanagement631@gmail.com\nCleaning Service: Isabel Acevedo (Sisters Cleaning) - (631) 833-7932 - isabelacevedop@gmail.com\nProperty Manager: Stay Marquis - (631) 301-2960 - maintenance@staymarquis.com\nEast Hampton Hospital: (631) 324-8400\nPolice (Non-Emergency): (631) 324-0777'
     }
   ]
 };

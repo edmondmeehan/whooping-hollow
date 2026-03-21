@@ -32,7 +32,7 @@ const Gallery = () => {
           
           {!loading && !error && !usingDemoImages && (
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Explore the beauty of Whooping Hollow through our lens.
+              Explore the beauty of The Ranch Modern through our lens.
             </p>
           )}
 

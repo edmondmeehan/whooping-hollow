@@ -273,7 +273,7 @@ async function sendWelcomeEmail(data: any) {
 function formatPropertyName(propertyCode: string): string {
   switch(propertyCode) {
     case 'whooping_hollow':
-      return 'Whooping Hollow (Montauk, NY)';
+      return 'The Ranch Modern (East Hampton, NY)';
     case 'nashville_downtown':
       return 'Nashville Downtown Property';
     case 'nashville_music_row':

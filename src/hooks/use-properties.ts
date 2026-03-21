@@ -22,7 +22,7 @@ export type PropertiesData = {
 const defaultPropertiesData: PropertiesData = {
   featured: {
     id: "wh-haven",
-    name: "Whooping Hollow",
+    name: "The Ranch Modern",
     location: "East Hampton, NY",
     description: "Experience the ultimate Hamptons getaway at our luxurious retreat, nestled in the picturesque surroundings of East Hampton.",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200",
