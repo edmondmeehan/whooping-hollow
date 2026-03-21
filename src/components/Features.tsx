@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Waves, BedDouble, Bath, Umbrella, Wind as HairDryer, Shirt, WashingMachine, Wind, Snowflake, Flame } from 'lucide-react';
+import { Waves, BedDouble, Bath, Umbrella, Wind as HairDryer, Shirt, WashingMachine, Wind, Snowflake, Flame, Droplets } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Features = () => {
