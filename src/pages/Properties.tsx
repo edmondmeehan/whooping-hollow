@@ -25,8 +25,8 @@ const Properties = () => {
           <div className="bg-card rounded-xl shadow-md overflow-hidden border border-border">
             <div className="md:flex">
               <div className="md:w-1/2">
-                <img 
-                  src={featured.image} 
+              <img 
+                  src={featured.image === '/hero-image.jpg' ? 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/dd42ec84-5df3-43bf-9da9-ce67e57f1422.jpeg?im_w=1200' : featured.image} 
                   alt={featured.name}
                   className="h-64 md:h-full w-full object-cover"
                 />
