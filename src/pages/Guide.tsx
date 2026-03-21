@@ -53,7 +53,7 @@ const Guide = () => {
               Guest Guide
             </h1>
             <p className="text-xl md:text-2xl text-primary-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              Everything you need to know for a comfortable and enjoyable stay at Whooping Hollow.
+              Everything you need to know for a comfortable and enjoyable stay at The Ranch Modern.
             </p>
           </div>
         </div>

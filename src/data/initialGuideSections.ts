@@ -6,8 +6,8 @@ export const initialGuideSections: GuideSections = {
   welcome: [
     {
       id: 'welcome-1',
-      title: 'Welcome to Whooping Hollow',
-      content: 'Welcome to 26 Whooping Hollow in East Hampton! We\'re delighted to have you stay with us. This guide contains everything you need to know to make your stay comfortable and enjoyable.'
+      title: 'Welcome to The Ranch Modern',
+      content: 'Welcome to The Ranch Modern in East Hampton! We\'re delighted to have you stay with us. This guide contains everything you need to know to make your stay comfortable and enjoyable.'
     },
     {
       id: 'welcome-2',
