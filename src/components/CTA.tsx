@@ -3,7 +3,6 @@ import React from 'react';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 import { CheckCircle, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const CTA = () => {
   const benefits = [
@@ -15,22 +14,13 @@ const CTA = () => {
 
   return (
     <section className="relative py-32 overflow-hidden">
-      {/* Dark sophisticated background */}
       <div className="absolute inset-0 bg-foreground" />
       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/10" />
-      
-      {/* Decorative elements */}
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[120px]" />
       
       <div className="container-custom relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '200px' }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center"
-        >
+        <div className="max-w-3xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-8">
             <div className="h-px w-12 bg-accent" />
             <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">Book Direct</span>
@@ -46,7 +36,6 @@ const CTA = () => {
             Book directly for the best rates, exclusive perks, and our dedicated concierge service.
           </p>
           
-          {/* Benefits */}
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-12">
             {benefits.map((benefit) => (
               <div key={benefit} className="flex items-center gap-2 text-white/70">
@@ -78,7 +67,7 @@ const CTA = () => {
           <p className="mt-12 text-white/40 text-sm">
             Questions? <a href="mailto:info@whoopinghollow.com" className="text-accent/80 hover:text-accent underline-offset-4 hover:underline transition-colors">info@whoopinghollow.com</a>
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

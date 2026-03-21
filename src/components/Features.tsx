@@ -20,13 +20,7 @@ const Features = () => {
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]" />
       
       <div className="container-custom relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '200px' }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
+        <div className="text-center mb-20">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="h-px w-12 bg-accent" />
             <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">Amenities</span>
@@ -38,15 +32,14 @@ const Features = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Every detail curated to elevate your experience and exceed expectations.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {amenities.map((amenity, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '100px' }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className="group relative bg-card rounded-2xl p-7 border border-border hover:border-primary/30 transition-all duration-500 hover:shadow-[var(--shadow-elegant)] hover:-translate-y-1"
             >
@@ -63,17 +56,11 @@ const Features = () => {
           ))}
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '100px' }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 text-center"
-        >
+        <div className="mt-16 text-center">
           <p className="text-muted-foreground text-sm uppercase tracking-widest">
             Beach access • Premium toiletries • Workspace • BBQ grill • And much more
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
