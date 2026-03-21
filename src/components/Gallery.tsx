@@ -21,27 +21,23 @@ const Gallery = () => {
             <div className="h-px w-12 bg-accent" />
           </div>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
-            A Visual Tour
+            Take a Look Inside
           </h2>
           
           {loading && (
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Loading images...
-            </p>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">Loading images...</p>
           )}
           
           {!loading && !error && !usingDemoImages && (
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Explore the beauty of The Ranch Modern through our lens.
+              Everything you need, nothing you don't.
             </p>
           )}
 
           {usingDemoImages && (
             <Alert variant="default" className="max-w-3xl mx-auto mb-6 mt-4 bg-accent/10 border-accent/30">
               <AlertCircle className="h-4 w-4 text-accent" />
-              <AlertDescription className="text-muted-foreground">
-                Demo Mode: Showing sample images.
-              </AlertDescription>
+              <AlertDescription className="text-muted-foreground">Demo Mode: Showing sample images.</AlertDescription>
             </Alert>
           )}
         </div>

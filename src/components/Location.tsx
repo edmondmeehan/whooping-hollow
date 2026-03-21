@@ -10,12 +10,7 @@ const Location = () => {
       
       <div className="container-custom relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="h-px w-12 bg-accent" />
               <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">Location</span>
@@ -29,7 +24,7 @@ const Location = () => {
             </h2>
             
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Located in East Hampton, you're just minutes from the village, beaches, restaurants, and everything that makes the Hamptons special — while still enjoying total privacy when you want to unwind.
+              Minutes from East Hampton Village, top restaurants, and beaches — while still offering the privacy and quiet you came here for.
             </p>
           </motion.div>
         </div>
