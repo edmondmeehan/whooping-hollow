@@ -25,7 +25,7 @@ const defaultPropertiesData: PropertiesData = {
     name: "Whooping Hollow Haven",
     location: "East Hampton, NY",
     description: "Experience the ultimate Hamptons getaway at our luxurious retreat, nestled in the picturesque surroundings of East Hampton.",
-    image: "https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/dd42ec84-5df3-43bf-9da9-ce67e57f1422.jpeg?im_w=1200",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200",
     airbnbLink: "https://www.airbnb.com/rooms/1314531825053234635",
     directLink: "https://staymarquis.com/properties/the-ranch-modern"
   },

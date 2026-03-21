@@ -26,7 +26,7 @@ const Properties = () => {
             <div className="md:flex">
               <div className="md:w-1/2">
               <img 
-                  src={featured.image === '/hero-image.jpg' ? 'https://a0.muscache.com/im/pictures/miso/Hosting-1314531825053234635/original/dd42ec84-5df3-43bf-9da9-ce67e57f1422.jpeg?im_w=1200' : featured.image} 
+                  src={featured.image === '/hero-image.jpg' ? 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200' : featured.image} 
                   alt={featured.name}
                   className="h-64 md:h-full w-full object-cover"
                 />
