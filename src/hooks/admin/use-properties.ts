@@ -4,7 +4,7 @@ import { Property } from '@/components/admin/services/PropertySelector';
 
 // We're hardcoding properties for now, but this could be connected to a database in the future
 const DEFAULT_PROPERTIES: Property[] = [
-  { id: '26-whooping-hollow', name: '26 Whooping Hollow' },
+  { id: '26-whooping-hollow', name: 'The Ranch Modern' },
   { id: '1304b-montgomery', name: '1304B Montgomery' },
   { id: '402-cleveland', name: '402 Cleveland' }
 ];
