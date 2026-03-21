@@ -60,7 +60,7 @@ const BookDirect = () => {
           <div className="mt-8 text-center">
             <p className="text-sm text-muted-foreground">
               We'll respond within 24 hours with availability and a custom quote. 
-              Prefer to text? <a href="sms:+1XXXXXXXXXX" className="text-primary hover:underline">Text us to book</a>
+              Prefer to text? <a href="sms:+19166165376" className="text-primary hover:underline">Text us to book</a>
             </p>
           </div>
         </div>

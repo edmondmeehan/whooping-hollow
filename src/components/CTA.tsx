@@ -49,7 +49,7 @@ const CTA = () => {
           </Button>
           
           <p className="mt-8 text-muted-foreground text-sm">
-            Prefer to text? <a href="sms:+1XXXXXXXXXX" className="text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors">Text us to book</a> · <a href="mailto:info@whoopinghollow.com" className="text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors">info@whoopinghollow.com</a>
+            Prefer to text? <a href="sms:+19166165376" className="text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors">Text us to book</a> · <a href="mailto:info@whoopinghollow.com" className="text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors">info@whoopinghollow.com</a>
           </p>
         </div>
       </div>
