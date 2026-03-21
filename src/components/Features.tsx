@@ -1,18 +1,19 @@
 
 import React from 'react';
-import { Wifi, Sparkles, Utensils, Waves, Wind, Home, Users, Wine } from 'lucide-react';
+import { Waves, BedDouble, Bath, Umbrella, Wind as HairDryer, Shirt, WashingMachine, Wind, Snowflake, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Features = () => {
   const amenities = [
-    { icon: Sparkles, name: 'Concierge Service', description: 'Personalized assistance for reservations and experiences' },
-    { icon: Waves, name: 'Heated Pool & Hot Tub', description: 'Private saltwater pool with spa overlooking gardens' },
-    { icon: Utensils, name: "Chef's Kitchen", description: 'Gourmet kitchen with premium appliances' },
-    { icon: Wind, name: 'Outdoor Living', description: 'Expansive terraces with lounge and dining areas' },
-    { icon: Wifi, name: 'High-Speed WiFi', description: 'Fiber optic internet throughout the property' },
-    { icon: Home, name: 'Luxury Linens', description: 'Premium bedding and plush towels' },
-    { icon: Users, name: 'Entertainment Space', description: 'Media room with state-of-the-art sound system' },
-    { icon: Wine, name: 'Wine Cellar', description: 'Temperature-controlled storage for your collection' },
+    { icon: Waves, name: 'Private Pool', description: 'Heated saltwater pool for your exclusive use' },
+    { icon: BedDouble, name: 'Bed Linens', description: 'Premium quality linens on all beds' },
+    { icon: Bath, name: 'Bath Towels', description: 'Plush bath towels provided for all guests' },
+    { icon: Umbrella, name: 'Pool/Beach Towels', description: 'Towels for the pool and nearby beaches' },
+    { icon: HairDryer, name: 'Hair Dryer', description: 'Available in each bathroom' },
+    { icon: Shirt, name: 'Iron/Ironing Board', description: 'Keep your wardrobe crisp and fresh' },
+    { icon: WashingMachine, name: 'Washer & Dryer', description: 'Full-size in-unit laundry machines' },
+    { icon: Snowflake, name: 'Air Conditioning', description: 'Central air conditioning throughout' },
+    { icon: Flame, name: 'Heating', description: 'Full heating system for cooler months' },
   ];
 
   return (
@@ -34,7 +35,7 @@ const Features = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {amenities.map((amenity, index) => (
             <motion.div
               key={index}
@@ -58,7 +59,7 @@ const Features = () => {
 
         <div className="mt-16 text-center">
           <p className="text-muted-foreground text-sm uppercase tracking-widest">
-            Beach access • Premium toiletries • Workspace • BBQ grill • And much more
+            Fire pit • Gas BBQ • Outdoor dining • Contemporary design
           </p>
         </div>
       </div>
