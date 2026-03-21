@@ -4,16 +4,13 @@ import Navbar from '@/components/Navbar';
 import GuideTabs from '@/components/GuideTabs';
 import Footer from '@/components/Footer';
 import { toast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Download, BookOpen } from 'lucide-react';
-import generatePDF from 'react-to-pdf';
+import { BookOpen } from 'lucide-react';
 import { initialGuideSections } from '@/data/initialGuideSections';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
   const contentRef = useRef(null);
 
-  // Force a reload of guide data when the page loads
   useEffect(() => {
     const STORAGE_KEY_SECTIONS = 'guideContentSections';
     const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
@@ -40,35 +37,6 @@ const Guide = () => {
     });
   }, []);
 
-  const handleDownloadPDF = async () => {
-    toast({
-      title: "Preparing PDF...",
-      description: "Your guest guide PDF is being generated",
-    });
-    
-    try {
-      await generatePDF(contentRef, {
-        filename: 'whooping-hollow-guest-guide.pdf',
-        page: {
-          margin: 20,
-          format: 'letter',
-        },
-      });
-      
-      toast({
-        title: "PDF Downloaded Successfully",
-        description: "Your guest guide PDF has been downloaded",
-      });
-    } catch (err) {
-      console.error("PDF generation error:", err);
-      toast({
-        title: "Error",
-        description: "Failed to generate the PDF. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -94,16 +62,6 @@ const Guide = () => {
       {/* Main Content */}
       <div className="flex-1 bg-background">
         <div className="container-custom py-12 md:py-16">
-          <div className="flex flex-col sm:flex-row justify-end gap-4 mb-8">
-            <Button 
-              onClick={handleDownloadPDF} 
-              className="flex items-center gap-2 bg-primary hover:bg-primary/90 shadow-[var(--shadow-elegant)]"
-            >
-              <Download size={18} />
-              Download Guide PDF
-            </Button>
-          </div>
-          
           <div ref={contentRef} className="max-w-6xl mx-auto">
             <GuideTabs key={`guide-tabs-${forceUpdate}`} />
           </div>
