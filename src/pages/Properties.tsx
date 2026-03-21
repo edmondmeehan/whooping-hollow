@@ -25,8 +25,8 @@ const Properties = () => {
           <div className="bg-card rounded-xl shadow-md overflow-hidden border border-border">
             <div className="md:flex">
               <div className="md:w-1/2">
-                <img 
-                  src={featured.image} 
+              <img 
+                  src={featured.image === '/hero-image.jpg' ? 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200' : featured.image} 
                   alt={featured.name}
                   className="h-64 md:h-full w-full object-cover"
                 />
