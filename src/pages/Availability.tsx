@@ -26,7 +26,7 @@ const Availability = () => {
               Ready to book your Hamptons getaway?
             </p>
             <a 
-              href="/book-direct"
+              href="/properties"
               className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all duration-300 shadow-[var(--shadow-soft)]"
             >
               Request Your Dates
