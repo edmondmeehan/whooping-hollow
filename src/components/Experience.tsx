@@ -9,12 +9,7 @@ const Experience = () => {
       
       <div className="container-custom relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="h-px w-12 bg-accent" />
               <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">The Experience</span>
@@ -22,17 +17,17 @@ const Experience = () => {
             </div>
             
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-8 leading-tight">
-              This Is What a Hamptons Weekend Should Feel Like
+              The Weekend You Actually Want
             </h2>
             
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-              No crowded lobbies. No noise. No compromises.
+              Arrive Friday and settle in without the chaos.
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-              Just a private, beautifully designed home where you can unwind, host, and enjoy the Hamptons the way it was meant to be experienced.
+              Spend your mornings slow, your afternoons by the pool, and your evenings outside with friends, family, and zero distractions.
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Whether you're here for a summer weekend, a family getaway, or a quiet escape from the city — this is your space to reset.
+              No crowded hotels. No shared spaces. Just your own private place to enjoy the Hamptons.
             </p>
           </motion.div>
         </div>

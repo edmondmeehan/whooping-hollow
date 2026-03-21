@@ -23,7 +23,7 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+    <nav className={`fixed top-[36px] w-full z-50 transition-all duration-500 ${
       showDarkText 
         ? 'bg-background/95 backdrop-blur-xl shadow-[var(--shadow-elegant)] border-b border-border/50' 
         : 'bg-transparent'

@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 
 const WhatYouGet = () => {
   const items = [
-    'Fully private home (no shared spaces)',
-    'Spacious indoor + outdoor living',
+    'Fully private home — no shared areas',
+    'Spacious indoor and outdoor living',
     'Pool with lounge seating',
-    'Outdoor dining + entertaining areas',
+    'Outdoor dining and entertaining space',
     'Fully equipped kitchen',
     'Fast WiFi + smart TV',
     'Easy parking',
@@ -23,11 +23,11 @@ const WhatYouGet = () => {
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="h-px w-12 bg-accent" />
-              <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">Included</span>
+              <span className="text-accent uppercase tracking-[0.3em] text-xs font-semibold">Features</span>
               <div className="h-px w-12 bg-accent" />
             </div>
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">
-              Everything You Need — And Nothing You Don't
+              Designed for Comfort, Space, and Ease
             </h2>
           </div>
 
