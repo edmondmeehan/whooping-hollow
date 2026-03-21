@@ -2,6 +2,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import OtherPropertiesBanner from '../components/OtherPropertiesBanner';
 import HeroSection from '../components/local-area/HeroSection';
 import EastHamptonSection from '../components/local-area/EastHamptonSection';
 import SagHarborSection from '../components/local-area/SagHarborSection';
