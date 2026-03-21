@@ -59,7 +59,7 @@ const Features = () => {
 
         <div className="mt-16 text-center">
           <p className="text-muted-foreground text-sm uppercase tracking-widest">
-            Beach access • Premium toiletries • Workspace • BBQ grill • And much more
+            Fire pit • Gas BBQ • Outdoor dining • Contemporary design
           </p>
         </div>
       </div>
