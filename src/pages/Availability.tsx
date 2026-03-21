@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AvailabilityCalendar from '@/components/AvailabilityCalendar';
 
 const Availability = () => {
   return (
@@ -13,24 +14,15 @@ const Availability = () => {
               Availability Calendar
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Check real-time availability and pricing for The Ranch Modern.
+              View available dates for Whooping Hollow. Dates shown in gray are already booked.
             </p>
           </div>
           
-          <div className="w-full rounded-lg overflow-hidden border border-border shadow-[var(--shadow-elegant)]">
-            <iframe
-              src="https://staymarquis.com/properties/the-ranch-modern"
-              title="The Ranch Modern — Availability Calendar"
-              className="w-full border-0"
-              style={{ height: '800px' }}
-              loading="lazy"
-              allow="fullscreen"
-            />
-          </div>
+          <AvailabilityCalendar />
           
           <div className="mt-12 text-center">
             <p className="text-muted-foreground mb-6">
-              Want a special direct booking discount?
+              Ready to book your Hamptons getaway?
             </p>
             <a 
               href="/book-direct"
