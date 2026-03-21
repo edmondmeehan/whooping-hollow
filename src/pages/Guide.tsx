@@ -2,46 +2,28 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import GuideTabs from '@/components/GuideTabs';
-import GuideLogin from '@/components/GuideLogin';
 import Footer from '@/components/Footer';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, BookOpen } from 'lucide-react';
 import generatePDF from 'react-to-pdf';
 import { initialGuideSections } from '@/data/initialGuideSections';
-import { useGuideCredentials } from '@/hooks/use-guide-credentials';
 
 const Guide = () => {
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { guideCredentials } = useGuideCredentials();
-  const defaultProperty = '26-whooping-hollow';
   const contentRef = useRef(null);
-
-  // Check if user is already authenticated
-  useEffect(() => {
-    const authStatus = localStorage.getItem('guideAuthenticated');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   // Force a reload of guide data when the page loads
   useEffect(() => {
-    // Ensure localStorage has guide content
     const STORAGE_KEY_SECTIONS = 'guideContentSections';
     const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
     
     if (!storedSections) {
-      // Initialize with default data if nothing exists
       localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(initialGuideSections));
-      console.log('Initialized guide sections in localStorage');
     }
     
-    // This will trigger a re-render of all tabs
     setForceUpdate(prev => prev + 1);
     
-    // Force reload data from localStorage with a small delay to ensure localStorage is set
     setTimeout(() => {
       const event = new StorageEvent('storage', {
         key: STORAGE_KEY_SECTIONS,
@@ -49,30 +31,14 @@ const Guide = () => {
         storageArea: localStorage
       });
       window.dispatchEvent(event);
-      
-      // Also dispatch custom event
       window.dispatchEvent(new CustomEvent('guideContentUpdated'));
     }, 100);
     
-    // Show welcome toast
     toast({
       title: "Welcome to the Guest Guide",
       description: "Browse through the tabs to find information about your stay",
     });
   }, []);
-
-  const handleLogin = (username: string, password: string): boolean => {
-    if (username === guideCredentials.username && password === guideCredentials.password) {
-      setIsAuthenticated(true);
-      localStorage.setItem('guideAuthenticated', 'true');
-      toast({
-        title: "Welcome!",
-        description: "You now have access to the guest guide",
-      });
-      return true;
-    }
-    return false;
-  };
 
   const handleDownloadPDF = async () => {
     toast({
@@ -81,7 +47,6 @@ const Guide = () => {
     });
     
     try {
-      // Use the default import from react-to-pdf
       await generatePDF(contentRef, {
         filename: 'whooping-hollow-guest-guide.pdf',
         page: {
@@ -103,17 +68,6 @@ const Guide = () => {
       });
     }
   };
-
-  // Show login if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <GuideLogin onLogin={handleLogin} />
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -39,7 +39,6 @@ const Navbar = () => {
             {[
               { to: '/', label: 'Home' },
               { to: '/local-area', label: 'The Area' },
-              { to: '/guide', label: 'Guest Guide' },
             ].map((link) => (
               <Link 
                 key={link.to}
@@ -87,7 +86,6 @@ const Navbar = () => {
                 {[
                   { to: '/', label: 'Home' },
                   { to: '/local-area', label: 'The Area' },
-                  { to: '/guide', label: 'Guest Guide' },
                 ].map((link) => (
                   <Link 
                     key={link.to}
