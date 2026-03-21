@@ -46,7 +46,7 @@ const Features = () => {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: '100px' }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className="group relative bg-card rounded-2xl p-7 border border-border hover:border-primary/30 transition-all duration-500 hover:shadow-[var(--shadow-elegant)] hover:-translate-y-1"
             >
