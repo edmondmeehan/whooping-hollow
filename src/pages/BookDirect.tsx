@@ -8,6 +8,7 @@ import { Clock, CalendarDays, Tag, Shield } from 'lucide-react';
 const BookDirect = () => {
   return (
     <div className="min-h-screen bg-background">
+      <StickyHeader />
       <Navbar />
       
       <div className="container-custom pt-32 pb-20">
