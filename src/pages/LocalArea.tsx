@@ -15,10 +15,11 @@ const LocalArea = () => {
   const { localAreaData } = useLocalArea();
   
   return (
-    <div className="bg-white min-h-screen flex flex-col">
+    <div className="bg-background min-h-screen flex flex-col">
+      <StickyHeader />
       <Navbar />
       
-      <div className="pt-24 pb-16 flex-grow">
+      <div className="pt-32 pb-16 flex-grow">
         <div className="container-custom">
           {/* Hero Section */}
           <HeroSection />
