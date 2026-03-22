@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Navbar from '../components/Navbar';
+import StickyHeader from '../components/StickyHeader';
 import Footer from '../components/Footer';
 import BookingForm from '../components/booking/BookingForm';
 import { Clock, CalendarDays, Tag, Shield } from 'lucide-react';
@@ -8,6 +9,7 @@ import { Clock, CalendarDays, Tag, Shield } from 'lucide-react';
 const BookDirect = () => {
   return (
     <div className="min-h-screen bg-background">
+      <StickyHeader />
       <Navbar />
       
       <div className="container-custom pt-32 pb-20">

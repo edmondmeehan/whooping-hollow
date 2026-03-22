@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
+import StickyHeader from '@/components/StickyHeader';
 import GuideTabs from '@/components/GuideTabs';
 import Footer from '@/components/Footer';
 import { toast } from '@/hooks/use-toast';
@@ -38,7 +39,8 @@ const Guide = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
+      <StickyHeader />
       <Navbar />
       
       {/* Hero Section */}
