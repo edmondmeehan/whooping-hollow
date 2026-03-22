@@ -2,6 +2,7 @@
 import React from 'react';
 import { ExternalLink, MapPin, MessageCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import StickyHeader from '../components/StickyHeader';
 import Footer from '../components/Footer';
 import OtherPropertiesBanner from '../components/OtherPropertiesBanner';
 import { Button } from '@/components/ui/button';

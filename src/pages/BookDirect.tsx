@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Navbar from '../components/Navbar';
+import StickyHeader from '../components/StickyHeader';
 import Footer from '../components/Footer';
 import BookingForm from '../components/booking/BookingForm';
 import { Clock, CalendarDays, Tag, Shield } from 'lucide-react';
