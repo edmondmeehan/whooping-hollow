@@ -34,6 +34,7 @@ const Index = () => {
       <Features />
       <PerfectFor />
       <Location />
+      <WeatherWidget />
       <SocialProof />
       <PricingClarity />
       <AvailabilityUrgency />
