@@ -12,159 +12,168 @@ export interface WeatherData {
   icon: React.ReactNode;
 }
 
-// Separate function to map weather codes to icons
-export const getWeatherIcon = (conditionCode: string): React.ReactNode => {
+export interface ForecastDay {
+  date: string;
+  dayName: string;
+  tempMax: number;
+  tempMin: number;
+  condition: string;
+  icon: React.ReactNode;
+}
+
+export interface WeatherWithForecast {
+  current: WeatherData;
+  forecast: ForecastDay[];
+}
+
+export const getWeatherIcon = (conditionCode: string, size: string = "h-10 w-10"): React.ReactNode => {
   const code = conditionCode.toLowerCase();
   
   if (code.includes('thunder') || code.includes('lightning')) {
-    return <CloudLightning className="text-purple-500 h-10 w-10" />;
+    return <CloudLightning className={`text-purple-500 ${size}`} />;
   } else if (code.includes('drizzle')) {
-    return <CloudDrizzle className="text-blue-400 h-10 w-10" />;
+    return <CloudDrizzle className={`text-blue-400 ${size}`} />;
   } else if (code.includes('rain') || code.includes('shower')) {
-    return <CloudRain className="text-blue-500 h-10 w-10" />;
+    return <CloudRain className={`text-blue-500 ${size}`} />;
   } else if (code.includes('snow') || code.includes('ice') || code.includes('sleet')) {
-    return <CloudSnow className="text-blue-200 h-10 w-10" />;
+    return <CloudSnow className={`text-blue-200 ${size}`} />;
   } else if (code.includes('fog') || code.includes('mist')) {
-    return <CloudFog className="text-gray-400 h-10 w-10" />;
+    return <CloudFog className={`text-muted-foreground ${size}`} />;
   } else if (code.includes('wind')) {
-    return <Wind className="text-gray-400 h-10 w-10" />;
+    return <Wind className={`text-muted-foreground ${size}`} />;
   } else if (code.includes('clear') || code.includes('sunny')) {
-    return <Sun className="text-yellow-500 h-10 w-10" />;
+    return <Sun className={`text-yellow-500 ${size}`} />;
   } else if (code.includes('cloud') || code.includes('overcast') || code.includes('part')) {
-    return <Cloud className="text-gray-500 h-10 w-10" />;
+    return <Cloud className={`text-muted-foreground ${size}`} />;
   }
   
-  // Default icon for unknown weather codes
-  return <Cloud className="text-gray-500 h-10 w-10" />;
+  return <Cloud className={`text-muted-foreground ${size}`} />;
 };
 
-// Function to map weather condition strings to icons for simulated data
-export const getIconForCondition = (condition: string): React.ReactNode => {
+export const getIconForCondition = (condition: string, size: string = "h-10 w-10"): React.ReactNode => {
   switch (condition) {
     case 'Clear':
-      return <Sun className="text-yellow-500 h-10 w-10" />;
+      return <Sun className={`text-yellow-500 ${size}`} />;
     case 'Partly Cloudy':
     case 'Cloudy':
-      return <Cloud className="text-gray-500 h-10 w-10" />;
+      return <Cloud className={`text-muted-foreground ${size}`} />;
     case 'Rain':
-      return <CloudRain className="text-blue-500 h-10 w-10" />;
+      return <CloudRain className={`text-blue-500 ${size}`} />;
     case 'Thunderstorm':
-      return <CloudLightning className="text-purple-500 h-10 w-10" />;
+      return <CloudLightning className={`text-purple-500 ${size}`} />;
     case 'Snow':
-      return <CloudSnow className="text-blue-200 h-10 w-10" />;
+      return <CloudSnow className={`text-blue-200 ${size}`} />;
     case 'Drizzle':
-      return <CloudDrizzle className="text-blue-400 h-10 w-10" />;
+      return <CloudDrizzle className={`text-blue-400 ${size}`} />;
     case 'Windy':
-      return <Wind className="text-gray-400 h-10 w-10" />;
+      return <Wind className={`text-muted-foreground ${size}`} />;
     default:
-      return <Sun className="text-yellow-500 h-10 w-10" />;
+      return <Sun className={`text-yellow-500 ${size}`} />;
   }
 };
 
-// Get the VisualCrossing API key from localStorage
 export const getWeatherApiKey = (): string => {
-  // Try to find an existing API key from the stored API keys
   try {
     const savedApiKeys = localStorage.getItem('whh_api_keys');
-    console.log('Raw API keys from localStorage:', savedApiKeys);
-    
     if (savedApiKeys) {
       const apiKeys = JSON.parse(savedApiKeys);
-      console.log('Parsed API keys:', apiKeys);
-      
-      // Try to find a key specifically for VisualCrossing
       const weatherApiKey = apiKeys.find((api: any) => 
         api.name.toLowerCase().includes('visualcrossing') || 
         api.name.toLowerCase().includes('weather') ||
         api.name.toLowerCase().includes('visual crossing')
       );
-      
-      if (weatherApiKey) {
-        console.log('Found weather API key:', weatherApiKey.name, 'Key exists:', !!weatherApiKey.key, 'Key length:', weatherApiKey.key?.length);
-        
-        if (weatherApiKey.key && weatherApiKey.key.trim() !== '') {
-          console.log('Using VisualCrossing API key from storage:', weatherApiKey.name);
-          return weatherApiKey.key;
-        } else {
-          console.log('Weather API key found but empty or invalid');
-        }
-      } else {
-        console.log('No specific weather API key found');
+      if (weatherApiKey?.key?.trim()) {
+        return weatherApiKey.key;
       }
-    } else {
-      console.log('No API keys found in localStorage');
     }
   } catch (err) {
     console.error('Error parsing API keys from localStorage:', err);
   }
-  
-  // Return empty string as fallback (will trigger simulation)
-  console.log('No valid API key found, returning empty string');
   return '';
 };
 
-export const fetchWeatherData = async (location: string): Promise<WeatherData> => {
-  // Get the API key from localStorage
+const getDayName = (dateStr: string): string => {
+  const date = new Date(dateStr + 'T12:00:00');
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  if (date.toDateString() === today.toDateString()) return 'Today';
+  if (date.toDateString() === tomorrow.toDateString()) return 'Tomorrow';
+  return date.toLocaleDateString('en-US', { weekday: 'short' });
+};
+
+export const fetchWeatherData = async (location: string): Promise<WeatherWithForecast> => {
   const apiKey = getWeatherApiKey();
   
   if (!apiKey) {
-    console.error('No valid VisualCrossing API key found');
     throw new Error('VisualCrossing Weather API key is missing. Please add a valid key in the admin panel.');
   }
   
-  const city = encodeURIComponent(location.split(',')[0].trim()); // Extract and encode city from location
-  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=us&key=${apiKey}&contentType=json`;
+  const city = encodeURIComponent(location.split(',')[0].trim());
+  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}/next7days?unitGroup=us&key=${apiKey}&contentType=json&include=current,days`;
   
-  console.log('Fetching weather from:', url.replace(apiKey, '***API_KEY***'));
+  console.log('Fetching weather from:', url.replace(apiKey, '***'));
   
-  try {
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Weather API error (${response.status}):`, errorText);
-      throw new Error(`Weather API error: ${response.status} ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    console.log('Weather data received:', data);
-    
-    // Extract the current conditions from the VisualCrossing API response
-    const currentConditions = data.currentConditions;
-    const icon = getWeatherIcon(currentConditions.conditions || 'cloudy');
-    
-    return {
-      temperature: Math.round(currentConditions.temp),
-      condition: currentConditions.conditions || 'Unknown',
-      humidity: currentConditions.humidity || 0,
-      windSpeed: Math.round(currentConditions.windspeed || 0),
-      icon: icon
-    };
-  } catch (error) {
-    console.error('Failed to fetch weather data:', error);
-    throw error;
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error(`Weather API error (${response.status}):`, errorText);
+    throw new Error(`Weather API error: ${response.status} ${response.statusText}`);
   }
+  
+  const data = await response.json();
+  const cc = data.currentConditions;
+  
+  const current: WeatherData = {
+    temperature: Math.round(cc.temp),
+    condition: cc.conditions || 'Unknown',
+    humidity: cc.humidity || 0,
+    windSpeed: Math.round(cc.windspeed || 0),
+    icon: getWeatherIcon(cc.conditions || 'cloudy'),
+  };
+
+  const forecast: ForecastDay[] = (data.days || []).slice(0, 7).map((day: any) => ({
+    date: day.datetime,
+    dayName: getDayName(day.datetime),
+    tempMax: Math.round(day.tempmax),
+    tempMin: Math.round(day.tempmin),
+    condition: day.conditions || 'Unknown',
+    icon: getWeatherIcon(day.conditions || 'cloudy', 'h-5 w-5'),
+  }));
+
+  return { current, forecast };
 };
 
-export const simulateWeatherData = (): WeatherData => {
-  // This is a simulation - as a fallback when API fails
-  const conditions = [
-    'Clear', 'Partly Cloudy', 'Cloudy', 'Rain', 
-    'Thunderstorm', 'Snow', 'Drizzle', 'Windy'
-  ];
+export const simulateWeatherData = (): WeatherWithForecast => {
+  const conditions = ['Clear', 'Partly Cloudy', 'Cloudy', 'Rain', 'Thunderstorm', 'Snow', 'Drizzle', 'Windy'];
   const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
-  const randomTemp = Math.floor(Math.random() * 35) + 50; // 50-85°F
-  const randomHumidity = Math.floor(Math.random() * 50) + 30; // 30-80%
-  const randomWind = Math.floor(Math.random() * 15) + 2; // 2-17 mph
   
-  // Get icon based on condition using the new helper function
-  const icon = getIconForCondition(randomCondition);
-  
-  return {
-    temperature: randomTemp,
+  const current: WeatherData = {
+    temperature: Math.floor(Math.random() * 35) + 50,
     condition: randomCondition,
-    humidity: randomHumidity,
-    windSpeed: randomWind,
-    icon: icon
+    humidity: Math.floor(Math.random() * 50) + 30,
+    windSpeed: Math.floor(Math.random() * 15) + 2,
+    icon: getIconForCondition(randomCondition),
   };
+
+  const today = new Date();
+  const forecast: ForecastDay[] = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() + i);
+    const cond = conditions[Math.floor(Math.random() * conditions.length)];
+    const hi = Math.floor(Math.random() * 25) + 55;
+    return {
+      date: date.toISOString().split('T')[0],
+      dayName: i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : date.toLocaleDateString('en-US', { weekday: 'short' }),
+      tempMax: hi,
+      tempMin: hi - Math.floor(Math.random() * 15) - 5,
+      condition: cond,
+      icon: getIconForCondition(cond, 'h-5 w-5'),
+    };
+  });
+
+  return { current, forecast };
 };
