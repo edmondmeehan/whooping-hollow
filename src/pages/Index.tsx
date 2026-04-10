@@ -19,6 +19,7 @@ import TrustSection from '../components/TrustSection';
 import OtherPropertiesBanner from '../components/OtherPropertiesBanner';
 import FinalCTA from '../components/FinalCTA';
 import Footer from '../components/Footer';
+import WeatherWidget from '../components/WeatherWidget';
 
 const Index = () => {
   return (
