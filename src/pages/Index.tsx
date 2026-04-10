@@ -30,11 +30,11 @@ const Index = () => {
       <QuickDetails />
       <Experience />
       <Gallery />
+      <WeatherWidget />
       <WhatYouGet />
       <Features />
       <PerfectFor />
       <Location />
-      <WeatherWidget />
       <SocialProof />
       <PricingClarity />
       <AvailabilityUrgency />
