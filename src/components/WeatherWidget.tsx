@@ -141,14 +141,17 @@ const WeatherWidget = ({ location = "East Hampton, NY" }: WeatherWidgetProps) =>
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: i * 0.05 }}
-                      className={`flex flex-col items-center text-center gap-1.5 py-3 rounded-lg transition-colors ${
+                      className={`flex flex-col items-center text-center gap-1.5 py-3 px-0.5 rounded-lg transition-colors overflow-hidden ${
                         i === 0 ? 'bg-primary/5' : 'hover:bg-muted/60'
                       }`}
                     >
-                      <span className={`text-[11px] font-sans font-medium ${
+                      <span className={`text-[10px] sm:text-[11px] font-sans font-medium truncate max-w-full ${
                         i === 0 ? 'text-primary' : 'text-muted-foreground'
                       }`}>
-                        {day.dayName}
+                        <span className="sm:hidden">
+                          {day.dayName === 'Today' ? 'Today' : day.dayName === 'Tomorrow' ? 'Tmrw' : day.dayName}
+                        </span>
+                        <span className="hidden sm:inline">{day.dayName}</span>
                       </span>
                       <div className="my-0.5">{day.icon}</div>
                       <span className="text-sm font-semibold font-sans text-foreground">
