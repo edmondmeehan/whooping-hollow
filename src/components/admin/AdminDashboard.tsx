@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { usePathname } from '@/hooks/use-pathname';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import AdminHero from './AdminHero';
 import AdminSiteContent from './AdminSiteContent';
 import AdminProperties from './AdminProperties';
@@ -15,40 +14,37 @@ import AdminApis from './AdminApis';
 import AdminUsers from './AdminUsers';
 import ServiceLinks from './ServiceLinks';
 import WelcomeEmailForm from './welcome-email/WelcomeEmailForm';
+import AdminSidebar, { adminSections } from './AdminSidebar';
+import AdminNavbar from './AdminNavbar';
 
 const AdminDashboard = () => {
-  const pathname = usePathname();
-  const { adminData } = useAdminAuth();
-  const isMobile = useIsMobile();
+  const { adminData, handleLogout } = useAdminAuth();
+  const initialTab = window.location.hash.replace('#', '');
   const [activeTab, setActiveTab] = useState<string>(
-    pathname.includes('#') 
-      ? pathname.split('#')[1] 
-      : 'bookings'
+    adminSections.some((section) => section.value === initialTab) ? initialTab : 'bookings'
   );
 
   const handleTabChange = (newTab: string) => {
     setActiveTab(newTab);
-    window.history.pushState({}, '', `#${newTab}`);
+    window.history.replaceState({}, '', `#${newTab}`);
   };
 
+  const activeSection = adminSections.find((section) => section.value === activeTab);
+
   return (
-    <div className={`container-custom ${isMobile ? "py-3" : "py-8"}`}>
-      <Tabs defaultValue={activeTab} onValueChange={handleTabChange}>
-        <div className="overflow-x-auto -mx-2 px-2">
-          <TabsList className={`grid grid-cols-3 ${isMobile ? "text-xs" : ""} md:grid-cols-5 lg:grid-cols-11 mb-4 md:mb-8 w-full md:w-auto`}>
-            <TabsTrigger value="bookings">Bookings</TabsTrigger>
-            <TabsTrigger value="properties">Properties</TabsTrigger>
-            <TabsTrigger value="local-area">Local Area</TabsTrigger>
-            <TabsTrigger value="hero">Home Page</TabsTrigger>
-            <TabsTrigger value="site-content">Page Content</TabsTrigger>
-            <TabsTrigger value="guide">Guest Guide</TabsTrigger>
-            <TabsTrigger value="images">Images</TabsTrigger>
-            <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
-            <TabsTrigger value="apis">API Keys</TabsTrigger>
-            <TabsTrigger value="users">Users</TabsTrigger>
-            <TabsTrigger value="welcome-email">Welcome Email</TabsTrigger>
-          </TabsList>
-        </div>
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <SidebarProvider>
+        <AdminSidebar />
+        <SidebarInset className="min-w-0 bg-admin-bg">
+          <AdminNavbar
+            title={activeSection?.label || 'Admin'}
+            onLogout={() => handleLogout(false)}
+            adminEmail={adminData?.email}
+            adminName={adminData?.name}
+            adminAvatar={adminData?.avatarUrl}
+          />
+          <main className="w-full px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
+            <div className="mx-auto max-w-7xl admin-content">
         <TabsContent value="bookings">
           <AdminBookings />
         </TabsContent>
@@ -73,6 +69,9 @@ const AdminDashboard = () => {
         <TabsContent value="newsletter">
           <AdminNewsletter />
         </TabsContent>
+        <TabsContent value="services">
+          <ServiceLinks />
+        </TabsContent>
         <TabsContent value="apis">
           <AdminApis />
         </TabsContent>
@@ -82,11 +81,11 @@ const AdminDashboard = () => {
         <TabsContent value="welcome-email">
           <WelcomeEmailForm />
         </TabsContent>
-      </Tabs>
-      <div className={`${isMobile ? "mt-4" : "mt-8"}`}>
-        <ServiceLinks />
-      </div>
-    </div>
+            </div>
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+    </Tabs>
   );
 };
 

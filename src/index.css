@@ -186,3 +186,80 @@ html {
   padding-left: clamp(20px, 4vw, 48px);
   padding-right: clamp(20px, 4vw, 48px);
 }
+
+/* Whooping Hollow administration */
+.admin-shell {
+  --admin-bg: 40 100% 99%;
+  --admin-surface: 0 0% 100%;
+  --admin-ink: 30 8% 10%;
+  --admin-body: 33 13% 28%;
+  --admin-muted: 38 8% 50%;
+  --admin-gold: 42 72% 49%;
+  --admin-gold-text: 42 79% 36%;
+  --admin-line: 41 46% 90%;
+  --admin-strip: 41 55% 92%;
+
+  --background: var(--admin-bg);
+  --foreground: var(--admin-ink);
+  --card: var(--admin-surface);
+  --card-foreground: var(--admin-ink);
+  --popover: var(--admin-surface);
+  --popover-foreground: var(--admin-ink);
+  --primary: var(--admin-ink);
+  --primary-foreground: var(--admin-bg);
+  --secondary: var(--admin-strip);
+  --secondary-foreground: var(--admin-ink);
+  --muted: var(--admin-strip);
+  --muted-foreground: var(--admin-muted);
+  --accent: var(--admin-strip);
+  --accent-foreground: var(--admin-ink);
+  --border: var(--admin-line);
+  --input: var(--admin-line);
+  --ring: var(--admin-gold);
+  --sidebar-background: var(--admin-surface);
+  --sidebar-foreground: var(--admin-body);
+  --sidebar-primary: var(--admin-ink);
+  --sidebar-primary-foreground: var(--admin-bg);
+  --sidebar-accent: var(--admin-strip);
+  --sidebar-accent-foreground: var(--admin-ink);
+  --sidebar-border: var(--admin-line);
+  --sidebar-ring: var(--admin-gold);
+  background: hsl(var(--admin-bg));
+  color: hsl(var(--admin-ink));
+  letter-spacing: 0;
+}
+
+.admin-shell,
+.admin-shell h1,
+.admin-shell h2,
+.admin-shell h3,
+.admin-shell h4,
+.admin-shell p,
+.admin-shell span,
+.admin-shell a,
+.admin-shell button,
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select,
+.admin-shell label {
+  font-family: 'Manrope', system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.admin-content [role="tabpanel"] {
+  margin-top: 0;
+}
+
+.admin-content > [role="tabpanel"] > div > h2,
+.admin-content > [role="tabpanel"] > div > div:first-child h2 {
+  color: hsl(var(--admin-ink));
+  font-weight: 700;
+}
+
+.admin-content [class*="shadow"] {
+  box-shadow: none;
+}
+
+.admin-content [class*="rounded-lg"] {
+  border-radius: 0.25rem;
+}
