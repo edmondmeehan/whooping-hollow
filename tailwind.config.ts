@@ -87,6 +87,17 @@ export default {
 					800: '#745134',
 					900: '#5f432e',
 				},
+				hh: {
+					bg: 'var(--hh-bg)',
+					ink: 'var(--hh-ink)',
+					body: 'var(--hh-body)',
+					muted: 'var(--hh-muted)',
+					'muted-dark': 'var(--hh-muted-dark)',
+					gold: 'var(--hh-gold)',
+					'gold-text': 'var(--hh-gold-text)',
+					line: 'var(--hh-line)',
+					strip: 'var(--hh-strip)'
+				},
 				hamptons: {
 					dark: '#1E3A44',
 					light: '#F9F7F3',
@@ -134,6 +145,7 @@ export default {
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
 				serif: ['Playfair Display', 'serif'],
+				display: ['Manrope', 'system-ui', 'sans-serif'],
 			},
 			backgroundImage: {
 				'hero-pattern': "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/hero-image.jpg')",
