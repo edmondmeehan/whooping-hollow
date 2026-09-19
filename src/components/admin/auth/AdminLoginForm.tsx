@@ -2,8 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CardContent } from '@/components/ui/card';
-import { Mail, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface AdminLoginFormProps {
   email: string;
@@ -21,31 +20,26 @@ const AdminLoginForm = ({
   isLoadingMagicLink,
 }: AdminLoginFormProps) => {
   return (
-    <CardContent className="pt-6">
+    <div>
       <form onSubmit={handleMagicLinkLogin}>
-        <div className="space-y-4">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Mail className="h-4 w-4 text-muted-foreground" />
-            </div>
+        <div className="space-y-7">
+          <div className="group">
+            <label htmlFor="admin-email" className="mb-3 block text-[10px] font-bold uppercase text-admin-muted transition-colors group-focus-within:text-admin-ink">Email address</label>
             <Input
+              id="admin-email"
               type="email"
-              placeholder="Enter your email address"
+              placeholder="name@whoopinghollow.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10"
+              className="h-11 rounded-none border-x-0 border-t-0 border-admin-line bg-transparent px-0 text-sm text-admin-ink shadow-none placeholder:text-admin-muted/60 focus-visible:border-admin-ink focus-visible:ring-0 focus-visible:ring-offset-0"
               disabled={isLocked || isLoadingMagicLink}
               required
             />
           </div>
           
-          <p className="text-sm text-muted-foreground text-center">
-            We'll send you a secure magic link to sign in
-          </p>
-
           <Button 
             type="submit"
-            className="w-full bg-primary hover:bg-primary/90"
+            className="h-12 w-full rounded-sm bg-admin-ink text-xs font-bold uppercase text-admin-bg hover:bg-admin-body"
             disabled={isLocked || !email || isLoadingMagicLink}
           >
             {isLoadingMagicLink && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -53,7 +47,7 @@ const AdminLoginForm = ({
           </Button>
         </div>
       </form>
-    </CardContent>
+    </div>
   );
 };
 

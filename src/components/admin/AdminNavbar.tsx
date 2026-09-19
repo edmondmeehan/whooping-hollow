@@ -1,60 +1,52 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut, ArrowLeft } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 interface AdminNavbarProps {
   onLogout: () => void;
   adminEmail?: string;
   adminAvatar?: string;
   adminName?: string;
-  isMobile?: boolean;
+  title: string;
 }
 
-const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName, isMobile = false }: AdminNavbarProps) => {
+const AdminNavbar = ({ onLogout, adminEmail, adminAvatar, adminName, title }: AdminNavbarProps) => {
   return (
-    <div className="bg-white border-b border-gray-200 shadow-sm">
-      <div className="container-custom flex items-center justify-between py-3">
-        <div className="flex items-center space-x-3 md:space-x-6">
-          <Link to="/" className="flex items-center text-hamptons-dark hover:text-hamptons-accent transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            <span className={isMobile ? "text-xs" : ""}>Back</span>
-          </Link>
-          
-          <div className="hidden sm:flex items-center text-hamptons-dark font-bold">
-            Admin Dashboard
-          </div>
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-admin-line bg-admin-bg/95 px-4 backdrop-blur-sm sm:px-6 lg:px-10">
+        <div className="flex min-w-0 items-center gap-3">
+          <SidebarTrigger className="h-9 w-9 rounded-sm text-admin-body hover:bg-admin-strip hover:text-admin-ink" />
+          <div className="h-5 w-px bg-admin-line" />
+          <h1 className="truncate text-base font-bold text-admin-ink sm:text-lg">{title}</h1>
         </div>
-        
-        <div className="flex items-center space-x-2 md:space-x-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {adminEmail && (
             <div className="flex items-center text-sm">
-              <Avatar className="h-7 w-7 mr-2">
+              <Avatar className="mr-2 h-8 w-8 border border-admin-line">
                 {adminAvatar ? (
                   <AvatarImage src={adminAvatar} alt={adminName || adminEmail} />
                 ) : (
-                  <AvatarFallback className="bg-gray-200 text-gray-700 text-xs">
+                  <AvatarFallback className="bg-admin-strip text-xs text-admin-ink">
                     {(adminName || adminEmail).charAt(0).toUpperCase()}
                   </AvatarFallback>
                 )}
               </Avatar>
-              <span className="text-gray-600 hidden sm:inline">{adminName || adminEmail}</span>
+              <span className="hidden max-w-52 truncate text-xs text-admin-muted sm:inline">{adminName || adminEmail}</span>
             </div>
           )}
           <Button 
-            variant="outline" 
-            size={isMobile ? "sm" : "default"} 
+            variant="ghost"
+            size="icon"
             onClick={onLogout}
-            className="flex items-center gap-1"
+            className="h-9 w-9 rounded-sm text-admin-muted hover:bg-admin-strip hover:text-admin-ink"
+            title="Sign out"
           >
             <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Logout</span>
           </Button>
         </div>
-      </div>
-    </div>
+    </header>
   );
 };
 

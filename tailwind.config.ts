@@ -20,6 +20,17 @@ export default {
 		},
 		extend: {
 			colors: {
+				admin: {
+					bg: 'hsl(var(--admin-bg))',
+					surface: 'hsl(var(--admin-surface))',
+					ink: 'hsl(var(--admin-ink))',
+					body: 'hsl(var(--admin-body))',
+					muted: 'hsl(var(--admin-muted))',
+					gold: 'hsl(var(--admin-gold))',
+					'gold-text': 'hsl(var(--admin-gold-text))',
+					line: 'hsl(var(--admin-line))',
+					strip: 'hsl(var(--admin-strip))',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
