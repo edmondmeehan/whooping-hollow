@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      blocked_dates: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          source_id: string | null
+          source_name: string
+          start_date: string
+          summary: string | null
+          uid: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          source_id?: string | null
+          source_name?: string
+          start_date: string
+          summary?: string | null
+          uid?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          source_id?: string | null
+          source_name?: string
+          start_date?: string
+          summary?: string | null
+          uid?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blocked_dates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       booking_requests: {
         Row: {
           adults: number
@@ -59,6 +103,39 @@ export type Database = {
           property?: string
           special_requests?: string | null
           status?: string | null
+        }
+        Relationships: []
+      }
+      calendar_sources: {
+        Row: {
+          created_at: string
+          ical_url: string | null
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_synced_at: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ical_url?: string | null
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_synced_at?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ical_url?: string | null
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_synced_at?: string | null
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
