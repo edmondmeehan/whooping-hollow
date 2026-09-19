@@ -52,7 +52,8 @@ export const defaultSiteContent: SiteContent = {
   headline: 'Your Hamptons house with a heated pool.',
   intro:
     '4 bedrooms, sleeps 8. Halfway between East Hampton Village and Sag Harbor, backing onto a 21\u2011acre nature preserve.',
-  heroImageUrl: poolAsset.url,
+  heroImageUrl:
+    'https://cpryayfndzfeyfrnsesr.supabase.co/storage/v1/object/public/images/public/c545e081-d167-460b-a8fa-ce0e22480462.jpg',
   airbnbUrl: 'https://www.airbnb.com/rooms/1314531825053234635',
   marquisUrl: 'https://staymarquis.com/properties/whooping-hollow-haven',
   phone: '+19166165376',
