@@ -14,7 +14,7 @@ const navItems = [
 
 const HollowHeader: React.FC<Props> = ({ content }) => (
   <header className="hh-gutter sticky top-0 z-50 flex items-center justify-between gap-4 border-b border-hh-line bg-hh-bg py-5">
-    <a href="#top" className="text-[18px] font-extrabold tracking-[-0.02em] text-hh-ink">
+    <a href="#top" className="whitespace-nowrap text-[18px] font-extrabold tracking-[-0.02em] text-hh-ink">
       {content.brandName}
     </a>
 
