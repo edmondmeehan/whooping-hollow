@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   BookOpen,
   Building2,
+  CalendarCheck,
   CalendarDays,
   ExternalLink,
   FileText,
@@ -32,6 +33,7 @@ import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const sections = [
   { value: 'bookings', label: 'Bookings', icon: CalendarDays },
+  { value: 'availability', label: 'Availability', icon: CalendarCheck },
   { value: 'properties', label: 'Properties', icon: Building2 },
   { value: 'local-area', label: 'Local Area', icon: MapPinned },
   { value: 'hero', label: 'Home Page', icon: LayoutTemplate },
