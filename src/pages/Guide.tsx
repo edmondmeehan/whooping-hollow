@@ -1,16 +1,11 @@
 
-import React, { useEffect, useState, useRef } from 'react';
-import Navbar from '@/components/Navbar';
-import StickyHeader from '@/components/StickyHeader';
-import GuideTabs from '@/components/GuideTabs';
-import Footer from '@/components/Footer';
-import { toast } from '@/hooks/use-toast';
-import { BookOpen } from 'lucide-react';
+import React, { useEffect } from 'react';
+import LongformGuide from '@/components/guide/LongformGuide';
 import { initialGuideSections } from '@/data/initialGuideSections';
+import { useSiteContent } from '@/hooks/use-site-content';
 
 const Guide = () => {
-  const [forceUpdate, setForceUpdate] = useState(0);
-  const contentRef = useRef(null);
+  const { content } = useSiteContent();
 
   useEffect(() => {
     const STORAGE_KEY_SECTIONS = 'guideContentSections';
@@ -20,57 +15,50 @@ const Guide = () => {
       localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(initialGuideSections));
     }
     
-    setForceUpdate(prev => prev + 1);
-    
-    setTimeout(() => {
-      const event = new StorageEvent('storage', {
-        key: STORAGE_KEY_SECTIONS,
-        newValue: localStorage.getItem(STORAGE_KEY_SECTIONS),
-        storageArea: localStorage
-      });
-      window.dispatchEvent(event);
-      window.dispatchEvent(new CustomEvent('guideContentUpdated'));
-    }, 100);
-    
-    toast({
-      title: "Welcome to the Guest Guide",
-      description: "Browse through the tabs to find information about your stay",
-    });
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <StickyHeader />
-      <Navbar />
-      
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground">
-        <div className="absolute inset-0 bg-[url('/east-hampton-beach.webp')] bg-cover bg-center opacity-10"></div>
-        <div className="relative container-custom py-16 md:py-24">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/20 backdrop-blur-sm rounded-full mb-6">
-              <BookOpen className="w-8 h-8 text-accent" />
-            </div>
-            <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6">
-              Guest Guide
-            </h1>
-            <p className="text-xl md:text-2xl text-primary-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              Everything you need to know for a comfortable and enjoyable stay at The Ranch Modern.
+    <div className="hh min-h-screen bg-hh-bg">
+      <header className="hh-gutter flex items-center justify-between gap-5 border-b border-hh-line bg-hh-bg py-5">
+        <a href="/" className="whitespace-nowrap text-lg font-extrabold text-hh-ink">{content.brandName}</a>
+        <a href={`sms:${content.phone}`} className="text-sm font-bold text-hh-gold-text">Text your host</a>
+      </header>
+
+      <section className="hh-gutter border-b border-hh-line bg-hh-bg py-14 md:py-24">
+        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.4fr_0.6fr] md:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase text-hh-gold-text">Your stay at {content.brandName}</p>
+            <h1 className="mt-4 max-w-4xl text-5xl font-extrabold leading-[1.02] text-hh-ink md:text-7xl">The guest guide.</h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-hh-body md:text-xl">
+              Everything you need before arrival, throughout your stay, and when it’s time to head home.
             </p>
           </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 bg-background">
-        <div className="container-custom py-12 md:py-16">
-          <div ref={contentRef} className="max-w-6xl mx-auto">
-            <GuideTabs key={`guide-tabs-${forceUpdate}`} />
+          <div className="border-l-2 border-hh-gold pl-5 text-sm leading-6 text-hh-muted">
+            <p className="font-bold text-hh-ink">Save this page for your stay.</p>
+            <p>It is available anytime and works well on your phone.</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <Footer />
+      <LongformGuide />
+
+      <section className="hh-gutter bg-hh-ink py-16 text-hh-bg md:py-20">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 md:flex-row md:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase text-hh-muted-dark">Need a hand?</p>
+            <h2 className="mt-3 max-w-2xl text-3xl font-extrabold md:text-5xl">We’re here throughout your stay.</h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <a href={`sms:${content.phone}`} className="rounded-full bg-hh-gold px-5 py-3 text-sm font-bold text-hh-ink">Text {content.phoneDisplay}</a>
+            <a href={`mailto:${content.email}`} className="rounded-full border border-hh-muted px-5 py-3 text-sm font-bold text-hh-bg">Email us</a>
+          </div>
+        </div>
+      </section>
+
+      <footer className="hh-gutter flex flex-wrap justify-between gap-3 py-8 text-xs text-hh-muted">
+        <span>{content.address}</span>
+        <a href="/" className="font-bold text-hh-ink">Back to Whooping Hollow</a>
+      </footer>
     </div>
   );
 };
