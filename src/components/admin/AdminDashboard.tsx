@@ -10,6 +10,7 @@ import AdminImages from './AdminImages';
 import AdminNewsletter from './AdminNewsletter';
 import AdminGuide from './AdminGuide';
 import AdminBookings from './AdminBookings';
+import AdminAvailability from './AdminAvailability';
 import AdminApis from './AdminApis';
 import AdminUsers from './AdminUsers';
 import ServiceLinks from './ServiceLinks';
@@ -47,6 +48,9 @@ const AdminDashboard = () => {
             <div className="mx-auto max-w-7xl admin-content">
         <TabsContent value="bookings">
           <AdminBookings />
+        </TabsContent>
+        <TabsContent value="availability">
+          <AdminAvailability />
         </TabsContent>
         <TabsContent value="properties">
           <AdminProperties />

@@ -8,6 +8,7 @@ import StatsSection from '@/components/home/StatsSection';
 import AmenitiesList from '@/components/home/AmenitiesList';
 import WhereSection from '@/components/home/WhereSection';
 import NashvilleSection from '@/components/home/NashvilleSection';
+import AvailabilitySection from '@/components/home/AvailabilitySection';
 import BookingBanner from '@/components/home/BookingBanner';
 import HollowFooter from '@/components/home/HollowFooter';
 
@@ -24,6 +25,7 @@ const Index = () => {
       <AmenitiesList amenities={content.amenities} />
       <WhereSection content={content} />
       <NashvilleSection content={content} />
+      <AvailabilitySection content={content} />
       <BookingBanner content={content} />
       <HollowFooter content={content} />
     </div>
