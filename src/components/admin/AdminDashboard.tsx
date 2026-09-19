@@ -4,6 +4,7 @@ import { usePathname } from '@/hooks/use-pathname';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import AdminHero from './AdminHero';
+import AdminSiteContent from './AdminSiteContent';
 import AdminProperties from './AdminProperties';
 import AdminLocalArea from './AdminLocalArea';
 import AdminImages from './AdminImages';
@@ -34,11 +35,12 @@ const AdminDashboard = () => {
     <div className={`container-custom ${isMobile ? "py-3" : "py-8"}`}>
       <Tabs defaultValue={activeTab} onValueChange={handleTabChange}>
         <div className="overflow-x-auto -mx-2 px-2">
-          <TabsList className={`grid grid-cols-3 ${isMobile ? "text-xs" : ""} md:grid-cols-5 lg:grid-cols-10 mb-4 md:mb-8 w-full md:w-auto`}>
+          <TabsList className={`grid grid-cols-3 ${isMobile ? "text-xs" : ""} md:grid-cols-5 lg:grid-cols-11 mb-4 md:mb-8 w-full md:w-auto`}>
             <TabsTrigger value="bookings">Bookings</TabsTrigger>
             <TabsTrigger value="properties">Properties</TabsTrigger>
             <TabsTrigger value="local-area">Local Area</TabsTrigger>
             <TabsTrigger value="hero">Home Page</TabsTrigger>
+            <TabsTrigger value="site-content">Page Content</TabsTrigger>
             <TabsTrigger value="guide">Guest Guide</TabsTrigger>
             <TabsTrigger value="images">Images</TabsTrigger>
             <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
@@ -58,6 +60,9 @@ const AdminDashboard = () => {
         </TabsContent>
         <TabsContent value="hero">
           <AdminHero />
+        </TabsContent>
+        <TabsContent value="site-content">
+          <AdminSiteContent />
         </TabsContent>
         <TabsContent value="guide">
           <AdminGuide />
