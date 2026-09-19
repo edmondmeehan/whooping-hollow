@@ -9,7 +9,6 @@ const navItems = [
   { label: 'Photos', href: '#photos' },
   { label: 'The house', href: '#house' },
   { label: 'Where', href: '#where' },
-  { label: 'Guest guide', href: '/guide' },
 ];
 
 const HollowHeader: React.FC<Props> = ({ content }) => (
