@@ -1,4 +1,3 @@
-import poolAsset from '@/assets/property/pool.jpg.asset.json';
 
 export interface NashvilleListing {
   id: string;
