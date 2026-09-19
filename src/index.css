@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -139,4 +139,50 @@
 
 .sand-gradient {
   background: var(--gradient-sand);
+}
+
+/* --- Whooping Hollow marketing theme (design handoff) --- */
+html {
+  scroll-behavior: smooth;
+}
+
+.hh {
+  --hh-bg: #fffdf9;
+  --hh-ink: #1c1a17;
+  --hh-body: #52493d;
+  --hh-muted: #8a8275;
+  --hh-muted-dark: #b8b0a2;
+  --hh-gold: #d9a323;
+  --hh-gold-text: #a57a12;
+  --hh-line: #f1e9d8;
+  --hh-strip: #f6efdf;
+
+  background: var(--hh-bg);
+  color: var(--hh-ink);
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+.hh h1,
+.hh h2,
+.hh h3,
+.hh p,
+.hh span,
+.hh a,
+.hh strong,
+.hh div {
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+.hh a {
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.hh a:hover {
+  opacity: 0.85;
+}
+
+.hh-gutter {
+  padding-left: clamp(20px, 4vw, 48px);
+  padding-right: clamp(20px, 4vw, 48px);
 }
