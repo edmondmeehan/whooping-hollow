@@ -166,6 +166,50 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_reviews: {
+        Row: {
+          body: string
+          created_at: string
+          guest_name: string
+          id: string
+          is_approved: boolean
+          rating: number
+          stay_id: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          guest_name: string
+          id?: string
+          is_approved?: boolean
+          rating: number
+          stay_id?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          guest_name?: string
+          id?: string
+          is_approved?: boolean
+          rating?: number
+          stay_id?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_reviews_stay_id_fkey"
+            columns: ["stay_id"]
+            isOneToOne: false
+            referencedRelation: "stays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       home_systems: {
         Row: {
           access: string | null
@@ -256,6 +300,48 @@ export type Database = {
         }
         Relationships: []
       }
+      stays: {
+        Row: {
+          check_in: string
+          check_out: string
+          created_at: string
+          guest_email: string
+          guest_name: string
+          id: string
+          notes: string | null
+          review_email_error: string | null
+          review_email_sent_at: string | null
+          review_token: string
+          updated_at: string
+        }
+        Insert: {
+          check_in: string
+          check_out: string
+          created_at?: string
+          guest_email: string
+          guest_name: string
+          id?: string
+          notes?: string | null
+          review_email_error?: string | null
+          review_email_sent_at?: string | null
+          review_token?: string
+          updated_at?: string
+        }
+        Update: {
+          check_in?: string
+          check_out?: string
+          created_at?: string
+          guest_email?: string
+          guest_name?: string
+          id?: string
+          notes?: string | null
+          review_email_error?: string | null
+          review_email_sent_at?: string | null
+          review_token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -282,12 +368,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_stay_for_review: {
+        Args: { _token: string }
+        Returns: {
+          already_reviewed: boolean
+          check_out: string
+          guest_name: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_guest_review: {
+        Args: { _body: string; _rating: number; _title: string; _token: string }
+        Returns: string
       }
     }
     Enums: {

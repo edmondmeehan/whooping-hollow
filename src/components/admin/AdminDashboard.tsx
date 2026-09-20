@@ -8,6 +8,7 @@ import AdminProperties from './AdminProperties';
 import AdminLocalArea from './AdminLocalArea';
 import AdminImages from './AdminImages';
 import AdminNewsletter from './AdminNewsletter';
+import AdminReviews from './AdminReviews';
 import AdminGuide from './AdminGuide';
 import AdminBookings from './AdminBookings';
 import AdminAvailability from './AdminAvailability';
@@ -69,6 +70,9 @@ const AdminDashboard = () => {
         </TabsContent>
         <TabsContent value="images">
           <AdminImages />
+        </TabsContent>
+        <TabsContent value="reviews">
+          <AdminReviews />
         </TabsContent>
         <TabsContent value="newsletter">
           <AdminNewsletter />

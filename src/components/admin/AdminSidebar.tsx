@@ -13,6 +13,7 @@ import {
   LayoutTemplate,
   Mail,
   MapPinned,
+  Star,
   Users,
   Wrench,
 } from 'lucide-react';
@@ -40,6 +41,7 @@ const sections = [
   { value: 'site-content', label: 'Page Content', icon: FileText },
   { value: 'guide', label: 'Guest Guide', icon: BookOpen },
   { value: 'images', label: 'Images', icon: Image },
+  { value: 'reviews', label: 'Reviews', icon: Star },
   { value: 'newsletter', label: 'Newsletter', icon: Mail },
   { value: 'services', label: 'House Services', icon: Wrench },
   { value: 'apis', label: 'API Keys', icon: KeyRound },

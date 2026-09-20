@@ -14,6 +14,7 @@ import ForgotPassword from "./components/admin/ForgotPassword";
 import ResetPassword from "./components/admin/ResetPassword";
 import LocalArea from "./pages/LocalArea";
 import Availability from "./pages/Availability";
+import Review from "./pages/Review";
 import React from "react";
 
 // Create a client
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="/book-direct" element={<BookDirect />} />
               <Route path="/local-area" element={<LocalArea />} />
               <Route path="/availability" element={<Availability />} />
+              <Route path="/review/:token" element={<Review />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
