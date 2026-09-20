@@ -57,6 +57,18 @@ const Review = () => {
       toast.error(error.message || 'Something went wrong. Please try again.');
       return;
     }
+    // Fire-and-forget: email the submission to the owner.
+    supabase.functions.invoke('notify-review', {
+      body: {
+        guestName: stay?.guest_name || 'A guest',
+        rating,
+        title: title.trim() || null,
+        body: body.trim(),
+        checkOut: stay?.check_out || null,
+      },
+    }).catch(() => {
+      // The review is saved either way; don't block the thank-you screen.
+    });
     setDone(true);
   };
 
